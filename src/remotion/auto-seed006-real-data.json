@@ -1,0 +1,335 @@
+{
+  "seedId": "seed-006",
+  "title": "717 粉丝盛典真实素材自动裂变测试",
+  "duration": 30.744,
+  "canvasRatio": "9:16",
+  "voiceProfile": {
+    "voiceId": "male-qn-daxuesheng-jingpin",
+    "label": "青年大学生音色-beta",
+    "inputRule": "语音输入统一写作“七幺七”，字幕和画面文字保留“717”。"
+  },
+  "bgm": {
+    "src": "seed006-real/bgm-source.mp4",
+    "volume": 0.16,
+    "duration": 139.2,
+    "loopWhenShorterThanVideo": false
+  },
+  "timelineBeats": [
+    {
+      "id": "beat-01",
+      "segmentName": "入口开场",
+      "text": "717粉丝盛典，开场了。",
+      "voiceText": "七幺七粉丝盛典，开场了。",
+      "start": 0,
+      "duration": 2.952,
+      "phrases": [
+        {
+          "text": "717粉丝盛典",
+          "highlight": true
+        },
+        {
+          "text": "开场了"
+        }
+      ],
+      "materialName": "红旗盛典拱门",
+      "materialType": "强绑定素材",
+      "visualNeed": "入口开场 / 红旗盛典拱门"
+    },
+    {
+      "id": "beat-02",
+      "segmentName": "入口开场",
+      "text": "红毯一铺开，人气马上就起来了。",
+      "voiceText": "红毯一铺开，人气马上就起来了。",
+      "start": 2.952,
+      "duration": 3.312,
+      "phrases": [
+        {
+          "text": "红毯一铺开",
+          "highlight": true
+        },
+        {
+          "text": "人气马上就起来了"
+        }
+      ],
+      "materialName": "红毯人流",
+      "materialType": "强绑定素材",
+      "visualNeed": "入口开场 / 红毯人流"
+    },
+    {
+      "id": "beat-03",
+      "segmentName": "现场打卡",
+      "text": "看见“欢迎回家”，一下就有那味儿了。",
+      "voiceText": "看见欢迎回家，一下就有那味儿了。",
+      "start": 6.263999999999999,
+      "duration": 2.952,
+      "phrases": [
+        {
+          "text": "欢迎回家",
+          "highlight": true
+        },
+        {
+          "text": "一下就有那味儿了"
+        }
+      ],
+      "materialName": "欢迎回家指示牌",
+      "materialType": "强绑定素材",
+      "visualNeed": "现场打卡 / 欢迎回家指示牌"
+    },
+    {
+      "id": "beat-04",
+      "segmentName": "互动打卡",
+      "text": "拍照、打卡、围观，全都很热闹。",
+      "voiceText": "互动区这边，拍照、打卡、围观，全都很热闹。",
+      "start": 9.216,
+      "duration": 5.328,
+      "phrases": [
+        {
+          "text": "拍照、打卡、围观",
+          "highlight": true
+        },
+        {
+          "text": "全都很热闹"
+        }
+      ],
+      "materialName": "互动打卡动作",
+      "materialType": "强绑定素材",
+      "visualNeed": "互动打卡 / 互动打卡动作"
+    },
+    {
+      "id": "beat-05",
+      "segmentName": "舞台演出",
+      "text": "舞台演出也没闲着，现场氛围一直在线。",
+      "voiceText": "舞台演出也没闲着，现场氛围一直在线。",
+      "start": 14.544,
+      "duration": 3.744,
+      "phrases": [
+        {
+          "text": "舞台演出",
+          "highlight": true
+        },
+        {
+          "text": "现场氛围一直在线"
+        }
+      ],
+      "materialName": "精彩演出区域",
+      "materialType": "强绑定素材",
+      "visualNeed": "舞台演出 / 精彩演出区域"
+    },
+    {
+      "id": "beat-06",
+      "segmentName": "休闲体验",
+      "text": "草坪、帐篷、休闲区，逛累了还能坐一会儿。",
+      "voiceText": "草坪、帐篷、休闲区，逛累了还能坐一会儿。",
+      "start": 18.288,
+      "duration": 4.716,
+      "phrases": [
+        {
+          "text": "草坪、帐篷、休闲区",
+          "highlight": true
+        },
+        {
+          "text": "逛累了还能坐一会儿"
+        }
+      ],
+      "materialName": "露营休闲区",
+      "materialType": "强绑定素材",
+      "visualNeed": "休闲体验 / 露营休闲区"
+    },
+    {
+      "id": "beat-07",
+      "segmentName": "赛车展示",
+      "text": "再去赛车展区看看，实车近看真的更有冲击力。",
+      "voiceText": "再去赛车展区看看，实车近看真的更有冲击力。",
+      "start": 23.004,
+      "duration": 4.536,
+      "phrases": [
+        {
+          "text": "赛车展区",
+          "highlight": true
+        },
+        {
+          "text": "实车近看更有冲击力"
+        }
+      ],
+      "materialName": "车身外观",
+      "materialType": "强绑定素材",
+      "visualNeed": "赛车展示 / 车身外观"
+    },
+    {
+      "id": "beat-08",
+      "segmentName": "提问收尾",
+      "text": "你最想打卡哪一块？评论区告诉我。",
+      "voiceText": "你最想打卡哪一块？评论区告诉我。",
+      "start": 27.54,
+      "duration": 3.204,
+      "phrases": [
+        {
+          "text": "你最想打卡哪一块？",
+          "highlight": true
+        },
+        {
+          "text": "评论区告诉我"
+        }
+      ],
+      "materialName": "红旗粉丝墙",
+      "materialType": "强绑定素材",
+      "visualNeed": "提问收尾 / 红旗粉丝墙"
+    }
+  ],
+  "voiceClips": [
+    {
+      "id": "voice-01",
+      "src": "seed006-real/voice-01.mp3",
+      "start": 0,
+      "duration": 2.952,
+      "volume": 1
+    },
+    {
+      "id": "voice-02",
+      "src": "seed006-real/voice-02.mp3",
+      "start": 2.952,
+      "duration": 3.312,
+      "volume": 1
+    },
+    {
+      "id": "voice-03",
+      "src": "seed006-real/voice-03.mp3",
+      "start": 6.263999999999999,
+      "duration": 2.952,
+      "volume": 1
+    },
+    {
+      "id": "voice-04",
+      "src": "seed006-real/voice-04.mp3",
+      "start": 9.216,
+      "duration": 5.328,
+      "volume": 1
+    },
+    {
+      "id": "voice-05",
+      "src": "seed006-real/voice-05.mp3",
+      "start": 14.544,
+      "duration": 3.744,
+      "volume": 1
+    },
+    {
+      "id": "voice-06",
+      "src": "seed006-real/voice-06.mp3",
+      "start": 18.288,
+      "duration": 4.716,
+      "volume": 1
+    },
+    {
+      "id": "voice-07",
+      "src": "seed006-real/voice-07.mp3",
+      "start": 23.004,
+      "duration": 4.536,
+      "volume": 1
+    },
+    {
+      "id": "voice-08",
+      "src": "seed006-real/voice-08.mp3",
+      "start": 27.54,
+      "duration": 3.204,
+      "volume": 1
+    }
+  ],
+  "materialClips": [
+    {
+      "id": "clip-01-entry",
+      "index": 1,
+      "segment": "入口开场",
+      "detail": "红旗盛典拱门",
+      "src": "seed006-real/01-entry-arch.mp4",
+      "start": 0,
+      "duration": 2.952,
+      "materialName": "红旗盛典拱门",
+      "materialType": "强绑定素材",
+      "visualNeed": "入口开场 / 红旗盛典拱门"
+    },
+    {
+      "id": "clip-02-red-carpet",
+      "index": 2,
+      "segment": "入口开场",
+      "detail": "红毯人流",
+      "src": "seed006-real/02-red-carpet.mp4",
+      "start": 2.952,
+      "duration": 3.312,
+      "materialName": "红毯人流",
+      "materialType": "强绑定素材",
+      "visualNeed": "入口开场 / 红毯人流"
+    },
+    {
+      "id": "clip-03-signage",
+      "index": 3,
+      "segment": "现场打卡",
+      "detail": "欢迎回家指示牌",
+      "src": "seed006-real/03-welcome-sign.mp4",
+      "start": 6.263999999999999,
+      "duration": 2.952,
+      "materialName": "欢迎回家指示牌",
+      "materialType": "强绑定素材",
+      "visualNeed": "现场打卡 / 欢迎回家指示牌"
+    },
+    {
+      "id": "clip-04-interaction",
+      "index": 4,
+      "segment": "互动打卡",
+      "detail": "互动打卡动作",
+      "src": "seed006-real/04-interaction.mp4",
+      "start": 9.216,
+      "duration": 5.328,
+      "materialName": "互动打卡动作",
+      "materialType": "强绑定素材",
+      "visualNeed": "互动打卡 / 互动打卡动作"
+    },
+    {
+      "id": "clip-05-stage",
+      "index": 5,
+      "segment": "舞台演出",
+      "detail": "精彩演出区域",
+      "src": "seed006-real/05-stage.mp4",
+      "start": 14.544,
+      "duration": 3.744,
+      "materialName": "精彩演出区域",
+      "materialType": "强绑定素材",
+      "visualNeed": "舞台演出 / 精彩演出区域"
+    },
+    {
+      "id": "clip-06-camping",
+      "index": 6,
+      "segment": "休闲体验",
+      "detail": "露营休闲区",
+      "src": "seed006-real/06-camping.mp4",
+      "start": 18.288,
+      "duration": 4.716,
+      "materialName": "露营休闲区",
+      "materialType": "强绑定素材",
+      "visualNeed": "休闲体验 / 露营休闲区"
+    },
+    {
+      "id": "clip-07-racing",
+      "index": 7,
+      "segment": "赛车展示",
+      "detail": "车身外观",
+      "src": "seed006-real/07-racing-car.mp4",
+      "start": 23.004,
+      "duration": 4.536,
+      "materialName": "车身外观",
+      "materialType": "强绑定素材",
+      "visualNeed": "赛车展示 / 车身外观"
+    },
+    {
+      "id": "clip-08-fan-wall",
+      "index": 8,
+      "segment": "提问收尾",
+      "detail": "红旗粉丝墙",
+      "src": "seed006-real/08-fan-wall.mp4",
+      "start": 27.54,
+      "duration": 3.204,
+      "materialName": "红旗粉丝墙",
+      "materialType": "强绑定素材",
+      "visualNeed": "提问收尾 / 红旗粉丝墙"
+    }
+  ]
+}

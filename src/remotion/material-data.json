@@ -1,0 +1,136 @@
+{
+  "packageId": "seed-a",
+  "title": "种子 A：717 粉丝盛典现场探展",
+  "clips": [
+    {
+      "id": "Material-01-01",
+      "group": "节奏段1_进入现场/活动入口",
+      "name": "入口人群_01",
+      "duration": 4,
+      "theme": "现场氛围",
+      "caption": "入口人群流动，先建立现场感",
+      "tone": "red",
+      "motion": "push"
+    },
+    {
+      "id": "Material-01-02",
+      "group": "节奏段1_进入现场/品牌主视觉",
+      "name": "品牌主视觉_02",
+      "duration": 4,
+      "theme": "现场氛围",
+      "caption": "品牌主视觉扫过，适合做开头钩子",
+      "tone": "dark",
+      "motion": "pan"
+    },
+    {
+      "id": "Material-01-03",
+      "group": "节奏段1_进入现场/活动空间",
+      "name": "活动空间_03",
+      "duration": 4,
+      "theme": "现场氛围",
+      "caption": "活动空间远景，适合承接背景",
+      "tone": "blue",
+      "motion": "tilt"
+    },
+    {
+      "id": "Material-02-01",
+      "group": "节奏段3_细节承接/车灯细节",
+      "name": "车灯特写_01",
+      "duration": 5,
+      "theme": "展车细节",
+      "caption": "车灯细节推进，突出实车质感",
+      "tone": "red",
+      "motion": "push"
+    },
+    {
+      "id": "Material-02-02",
+      "group": "节奏段3_细节承接/内饰中控",
+      "name": "内饰中控_02",
+      "duration": 5,
+      "theme": "展车细节",
+      "caption": "中控与内饰扫镜，适合讲质感",
+      "tone": "gold",
+      "motion": "pan"
+    },
+    {
+      "id": "Material-02-03",
+      "group": "节奏段3_细节承接/车身线条",
+      "name": "车身线条_03",
+      "duration": 5,
+      "theme": "展车细节",
+      "caption": "车身线条移动，适合细节承接",
+      "tone": "dark",
+      "motion": "tilt"
+    },
+    {
+      "id": "Material-03-01",
+      "group": "节奏段2_现场观察/车友交流",
+      "name": "车友交流_01",
+      "duration": 4,
+      "theme": "人群互动",
+      "caption": "车友交流，适合非官方真实收尾",
+      "tone": "blue",
+      "motion": "pan"
+    },
+    {
+      "id": "Material-03-02",
+      "group": "节奏段2_现场观察/观众看车",
+      "name": "观众看车_02",
+      "duration": 4,
+      "theme": "人群互动",
+      "caption": "观众看车停留，适合评论引导",
+      "tone": "red",
+      "motion": "push"
+    },
+    {
+      "id": "Material-03-03",
+      "group": "节奏段4_互动收尾/结尾氛围",
+      "name": "结尾氛围_03",
+      "duration": 4,
+      "theme": "人群互动",
+      "caption": "氛围收尾镜头，适合结尾提问",
+      "tone": "gold",
+      "motion": "tilt"
+    },
+    {
+      "id": "Material-03-04",
+      "group": "节奏段2_现场观察/拍照记录",
+      "name": "拍照记录_03",
+      "duration": 4,
+      "theme": "人群互动",
+      "caption": "观众举手机拍摄，适合表现现场自传播",
+      "tone": "dark",
+      "motion": "push"
+    },
+    {
+      "id": "Material-03-05",
+      "group": "节奏段2_现场观察/现场讨论",
+      "name": "现场讨论_04",
+      "duration": 4,
+      "theme": "人群互动",
+      "caption": "两三人围绕展车讨论，适合普通人观察语气",
+      "tone": "blue",
+      "motion": "tilt"
+    },
+    {
+      "id": "Material-04-02",
+      "group": "节奏段4_互动收尾/评论引导",
+      "name": "评论引导_02",
+      "duration": 4,
+      "theme": "互动收尾",
+      "caption": "镜头停在展车与人群之间，适合抛出问题",
+      "tone": "red",
+      "motion": "pan"
+    },
+    {
+      "id": "Material-04-03",
+      "group": "节奏段4_互动收尾/回看展车",
+      "name": "回看展车_03",
+      "duration": 4,
+      "theme": "互动收尾",
+      "caption": "从人群回看展车，适合下一条内容预告",
+      "tone": "gold",
+      "motion": "push"
+    }
+  ]
+}

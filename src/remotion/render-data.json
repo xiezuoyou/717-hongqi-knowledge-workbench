@@ -1,0 +1,6583 @@
+{
+  "seedId": "seed-717-live",
+  "title": "717 粉丝盛典现场探展",
+  "subtitleStyle": "红旗活动字幕",
+  "packageConfig": {
+    "subtitleStyle": {
+      "type": "social",
+      "position": "bottom",
+      "highlightWords": [
+        "热闹",
+        "车灯",
+        "质感",
+        "现场",
+        "细节"
+      ]
+    },
+    "overlays": [
+      {
+        "type": "cornerBadge",
+        "text": "717 粉丝盛典",
+        "start": 0,
+        "duration": 99
+      },
+      {
+        "type": "sectionLabel",
+        "text": "通用素材",
+        "start": 8.107,
+        "duration": 2.4
+      }
+    ],
+    "transitions": {
+      "type": "cut",
+      "duration": 0
+    },
+    "effects": {
+      "vignette": 0.12,
+      "contrast": 1.03,
+      "saturation": 1.02
+    },
+    "summary": [
+      "保留自然开场",
+      "字幕关键词高亮",
+      "轻量画面增强",
+      "画面段直接切换"
+    ]
+  },
+  "voice": "MiniMax - 自然青年男声",
+  "request": "我是4S店的员工，我想强调一下我这个身份",
+  "selectedDetails": [
+    "车身线条",
+    "车灯细节"
+  ],
+  "canvasRatio": "3:4",
+  "timelineBeats": [
+    {
+      "id": "0-0",
+      "segmentName": "开头钩子",
+      "text": "作为红旗4S店的员工，",
+      "start": 0.043,
+      "duration": 1.792,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "0-1",
+      "segmentName": "开头钩子",
+      "text": "今天我来到717粉丝盛典现场，",
+      "start": 1.835,
+      "duration": 2.773,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "0-2",
+      "segmentName": "开头钩子",
+      "text": "真的比我想象中热闹。",
+      "start": 4.608,
+      "duration": 1.92,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "1-0",
+      "segmentName": "现场观察",
+      "text": "现场不像官方活动，",
+      "start": 6.528,
+      "duration": 1.579,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "1-1",
+      "segmentName": "现场观察",
+      "text": "更多是大家真的在看车、聊天、拍细节，",
+      "start": 8.107,
+      "duration": 3.157,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "1-2",
+      "segmentName": "现场观察",
+      "text": "我作为员工看到这种氛围特别亲切。",
+      "start": 11.264,
+      "duration": 4.043,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "2-0",
+      "segmentName": "细节承接",
+      "text": "近距离看这台车的车灯和线条，",
+      "start": 15.307,
+      "duration": 2.176,
+      "materialName": "车灯细节",
+      "materialType": "强绑定素材",
+      "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "2-1",
+      "segmentName": "细节承接",
+      "text": "质感确实比图片更直观，",
+      "start": 17.483,
+      "duration": 2.048,
+      "materialName": "车灯细节",
+      "materialType": "强绑定素材",
+      "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "2-2",
+      "segmentName": "细节承接",
+      "text": "我们店里的展车也是这个感觉",
+      "start": 19.531,
+      "duration": 2.73,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用展车细节支撑现场值得看的理由，让内容从氛围转向具体观察。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "3-0",
+      "segmentName": "互动收尾",
+      "text": "你们最想看哪一台？",
+      "start": 22.261,
+      "duration": 1.622,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "3-1",
+      "segmentName": "互动收尾",
+      "text": "我回店里可以给你们重点拍，",
+      "start": 23.883,
+      "duration": 2.261,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    },
+    {
+      "id": "3-2",
+      "segmentName": "互动收尾",
+      "text": "下一条继续分享现场。",
+      "start": 26.144,
+      "duration": 2.584,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "isRealVoice": true
+    }
+  ],
+  "materialClips": [
+    {
+      "id": "0-0|0-1|0-2",
+      "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+      "start": 0.043,
+      "duration": 6.484999999999999,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用户手动合并的通用画面段",
+      "locked": false,
+      "isMerged": true,
+      "beatIds": [
+        "0-0",
+        "0-1",
+        "0-2"
+      ],
+      "selectedMaterials": [
+        "活动空间_01.mp4",
+        "展车全景_01.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "活动空间_01.mp4",
+          "name": "活动空间",
+          "sourceDuration": 14,
+          "sourceStart": 2.5524992214768,
+          "sourceEnd": 5.2068173779101325,
+          "renderDuration": 2.654318156433332,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        },
+        {
+          "file": "展车全景_01.mp4",
+          "name": "展车全景",
+          "sourceDuration": 16,
+          "sourceStart": 2.2021256567540473,
+          "sourceEnd": 6.032807500320715,
+          "renderDuration": 3.8306818435666674,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1-0",
+      "text": "现场不像官方活动，",
+      "start": 6.528,
+      "duration": 1.579,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "1-0"
+      ],
+      "selectedMaterials": [
+        "展车全景_01.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "展车全景_01.mp4",
+          "name": "展车全景",
+          "sourceDuration": 16,
+          "sourceStart": 0,
+          "sourceEnd": 1.579,
+          "renderDuration": 1.579,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1-1",
+      "text": "更多是大家真的在看车、聊天、拍细节，",
+      "start": 8.107,
+      "duration": 3.157,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "1-1"
+      ],
+      "selectedMaterials": [
+        "现场氛围_02.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "现场氛围_02.mp4",
+          "name": "现场氛围",
+          "sourceDuration": 18,
+          "sourceStart": 0,
+          "sourceEnd": 3.157,
+          "renderDuration": 3.157,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "1-2",
+      "text": "我作为员工看到这种氛围特别亲切。",
+      "start": 11.264,
+      "duration": 4.043,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "1-2"
+      ],
+      "selectedMaterials": [
+        "车友互动_01.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "车友互动_01.mp4",
+          "name": "车友互动",
+          "sourceDuration": 13,
+          "sourceStart": 0,
+          "sourceEnd": 4.043,
+          "renderDuration": 4.043,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2-0",
+      "text": "近距离看这台车的车灯和线条，",
+      "start": 15.307,
+      "duration": 2.176,
+      "materialName": "车灯细节",
+      "materialType": "强绑定素材",
+      "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+      "locked": true,
+      "isMerged": false,
+      "beatIds": [
+        "2-0"
+      ],
+      "selectedMaterials": [
+        "车灯细节_01.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "车灯细节_01.mp4",
+          "name": "车灯细节",
+          "sourceDuration": 8,
+          "sourceStart": 0,
+          "sourceEnd": 2.176,
+          "renderDuration": 2.176,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2-1",
+      "text": "质感确实比图片更直观，",
+      "start": 17.483,
+      "duration": 2.048,
+      "materialName": "车灯细节",
+      "materialType": "强绑定素材",
+      "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+      "locked": true,
+      "isMerged": false,
+      "beatIds": [
+        "2-1"
+      ],
+      "selectedMaterials": [
+        "车灯细节_02.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "车灯细节_02.mp4",
+          "name": "车灯细节",
+          "sourceDuration": 7,
+          "sourceStart": 0,
+          "sourceEnd": 2.048,
+          "renderDuration": 2.048,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2-2",
+      "text": "我们店里的展车也是这个感觉",
+      "start": 19.531,
+      "duration": 2.73,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用展车细节支撑现场值得看的理由，让内容从氛围转向具体观察。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "2-2"
+      ],
+      "selectedMaterials": [
+        "现场氛围_02.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "现场氛围_02.mp4",
+          "name": "现场氛围",
+          "sourceDuration": 18,
+          "sourceStart": 0,
+          "sourceEnd": 2.73,
+          "renderDuration": 2.73,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3-0",
+      "text": "你们最想看哪一台？",
+      "start": 22.261,
+      "duration": 1.622,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "3-0"
+      ],
+      "selectedMaterials": [
+        "车友互动_01.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "车友互动_01.mp4",
+          "name": "车友互动",
+          "sourceDuration": 13,
+          "sourceStart": 0,
+          "sourceEnd": 1.622,
+          "renderDuration": 1.622,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3-1",
+      "text": "我回店里可以给你们重点拍，",
+      "start": 23.883,
+      "duration": 2.261,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "3-1"
+      ],
+      "selectedMaterials": [],
+      "materialPlan": []
+    },
+    {
+      "id": "3-2",
+      "text": "下一条继续分享现场。",
+      "start": 26.144,
+      "duration": 2.584,
+      "materialName": "通用素材",
+      "materialType": "通用素材",
+      "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+      "locked": false,
+      "isMerged": false,
+      "beatIds": [
+        "3-2"
+      ],
+      "selectedMaterials": [
+        "车友互动_01.mp4"
+      ],
+      "materialPlan": [
+        {
+          "file": "车友互动_01.mp4",
+          "name": "车友互动",
+          "sourceDuration": 13,
+          "sourceStart": 0,
+          "sourceEnd": 2.584,
+          "renderDuration": 2.584,
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "scale": 1,
+            "fit": "contain"
+          }
+        }
+      ]
+    }
+  ],
+  "materialSelections": {
+    "0-0|0-1|0-2": [
+      "活动空间_01.mp4",
+      "展车全景_01.mp4"
+    ],
+    "1-0": [
+      "展车全景_01.mp4"
+    ],
+    "1-1": [
+      "现场氛围_02.mp4"
+    ],
+    "1-2": [
+      "车友互动_01.mp4"
+    ],
+    "2-0": [
+      "车灯细节_01.mp4"
+    ],
+    "2-1": [
+      "车灯细节_02.mp4"
+    ],
+    "2-2": [
+      "现场氛围_02.mp4"
+    ],
+    "3-0": [
+      "车友互动_01.mp4"
+    ],
+    "3-2": [
+      "车友互动_01.mp4"
+    ]
+  },
+  "materialPlans": {
+    "0-0|0-1|0-2": [
+      {
+        "file": "活动空间_01.mp4",
+        "name": "活动空间",
+        "sourceDuration": 14,
+        "sourceStart": 2.5524992214768,
+        "sourceEnd": 5.2068173779101325,
+        "renderDuration": 2.654318156433332,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      },
+      {
+        "file": "展车全景_01.mp4",
+        "name": "展车全景",
+        "sourceDuration": 16,
+        "sourceStart": 2.2021256567540473,
+        "sourceEnd": 6.032807500320715,
+        "renderDuration": 3.8306818435666674,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "1-0": [
+      {
+        "file": "展车全景_01.mp4",
+        "name": "展车全景",
+        "sourceDuration": 16,
+        "sourceStart": 0,
+        "sourceEnd": 1.579,
+        "renderDuration": 1.579,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "1-1": [
+      {
+        "file": "现场氛围_02.mp4",
+        "name": "现场氛围",
+        "sourceDuration": 18,
+        "sourceStart": 0,
+        "sourceEnd": 3.157,
+        "renderDuration": 3.157,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "1-2": [
+      {
+        "file": "车友互动_01.mp4",
+        "name": "车友互动",
+        "sourceDuration": 13,
+        "sourceStart": 0,
+        "sourceEnd": 4.043,
+        "renderDuration": 4.043,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "2-0": [
+      {
+        "file": "车灯细节_01.mp4",
+        "name": "车灯细节",
+        "sourceDuration": 8,
+        "sourceStart": 0,
+        "sourceEnd": 2.176,
+        "renderDuration": 2.176,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "2-1": [
+      {
+        "file": "车灯细节_02.mp4",
+        "name": "车灯细节",
+        "sourceDuration": 7,
+        "sourceStart": 0,
+        "sourceEnd": 2.048,
+        "renderDuration": 2.048,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "2-2": [
+      {
+        "file": "现场氛围_02.mp4",
+        "name": "现场氛围",
+        "sourceDuration": 18,
+        "sourceStart": 0,
+        "sourceEnd": 2.73,
+        "renderDuration": 2.73,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "3-0": [
+      {
+        "file": "车友互动_01.mp4",
+        "name": "车友互动",
+        "sourceDuration": 13,
+        "sourceStart": 0,
+        "sourceEnd": 1.622,
+        "renderDuration": 1.622,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ],
+    "3-2": [
+      {
+        "file": "车友互动_01.mp4",
+        "name": "车友互动",
+        "sourceDuration": 13,
+        "sourceStart": 0,
+        "sourceEnd": 2.584,
+        "renderDuration": 2.584,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "fit": "contain"
+        }
+      }
+    ]
+  },
+  "voicePackage": {
+    "ok": true,
+    "packageId": "1784528442590-44c263f7",
+    "durationMs": 28728,
+    "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+    "audioName": "full-voice.mp3",
+    "subtitleUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.titles.json",
+    "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+    "timelineUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/voice-timeline.json",
+    "handoffUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/voice-handoff.json",
+    "segments": [
+      {
+        "name": "完整口播",
+        "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+        "durationMs": 28728,
+        "audioName": "full-voice.mp3",
+        "subtitleName": "full-voice.titles.json",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "subtitleUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.titles.json",
+        "extraInfo": {
+          "audio_length": 28728,
+          "audio_sample_rate": 32000,
+          "audio_size": 461364,
+          "bitrate": 128000,
+          "word_count": 149,
+          "invisible_character_ratio": 0,
+          "usage_characters": 280,
+          "audio_format": "mp3",
+          "audio_channel": 1
+        },
+        "startMs": 0,
+        "endMs": 28728,
+        "subtitles": [
+          {
+            "text": "作",
+            "startMs": 43,
+            "endMs": 384,
+            "textBegin": 0,
+            "textEnd": 1,
+            "granularity": "word"
+          },
+          {
+            "text": "为",
+            "startMs": 384,
+            "endMs": 555,
+            "textBegin": 1,
+            "textEnd": 2,
+            "granularity": "word"
+          },
+          {
+            "text": "红",
+            "startMs": 555,
+            "endMs": 683,
+            "textBegin": 2,
+            "textEnd": 3,
+            "granularity": "word"
+          },
+          {
+            "text": "旗",
+            "startMs": 683,
+            "endMs": 896,
+            "textBegin": 3,
+            "textEnd": 4,
+            "granularity": "word"
+          },
+          {
+            "text": "4",
+            "startMs": 896,
+            "endMs": 1067,
+            "textBegin": 4,
+            "textEnd": 5,
+            "granularity": "word"
+          },
+          {
+            "text": "S",
+            "startMs": 1067,
+            "endMs": 1280,
+            "textBegin": 5,
+            "textEnd": 6,
+            "granularity": "word"
+          },
+          {
+            "text": "店",
+            "startMs": 1280,
+            "endMs": 1451,
+            "textBegin": 6,
+            "textEnd": 7,
+            "granularity": "word"
+          },
+          {
+            "text": "的",
+            "startMs": 1451,
+            "endMs": 1493,
+            "textBegin": 7,
+            "textEnd": 8,
+            "granularity": "word"
+          },
+          {
+            "text": "员",
+            "startMs": 1493,
+            "endMs": 1664,
+            "textBegin": 8,
+            "textEnd": 9,
+            "granularity": "word"
+          },
+          {
+            "text": "工",
+            "startMs": 1664,
+            "endMs": 1792,
+            "textBegin": 9,
+            "textEnd": 10,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 1792,
+            "endMs": 1835,
+            "textBegin": 10,
+            "textEnd": 11,
+            "granularity": "word"
+          },
+          {
+            "text": "今",
+            "startMs": 1835,
+            "endMs": 2304,
+            "textBegin": 11,
+            "textEnd": 12,
+            "granularity": "word"
+          },
+          {
+            "text": "天",
+            "startMs": 2304,
+            "endMs": 2432,
+            "textBegin": 12,
+            "textEnd": 13,
+            "granularity": "word"
+          },
+          {
+            "text": "我",
+            "startMs": 2432,
+            "endMs": 2603,
+            "textBegin": 13,
+            "textEnd": 14,
+            "granularity": "word"
+          },
+          {
+            "text": "来",
+            "startMs": 2603,
+            "endMs": 2688,
+            "textBegin": 14,
+            "textEnd": 15,
+            "granularity": "word"
+          },
+          {
+            "text": "到",
+            "startMs": 2688,
+            "endMs": 2816,
+            "textBegin": 15,
+            "textEnd": 16,
+            "granularity": "word"
+          },
+          {
+            "text": "717",
+            "startMs": 2816,
+            "endMs": 3072,
+            "textBegin": 16,
+            "textEnd": 19,
+            "granularity": "word"
+          },
+          {
+            "text": "717",
+            "startMs": 3072,
+            "endMs": 3243,
+            "textBegin": 16,
+            "textEnd": 19,
+            "granularity": "word"
+          },
+          {
+            "text": "717",
+            "startMs": 3243,
+            "endMs": 3413,
+            "textBegin": 16,
+            "textEnd": 19,
+            "granularity": "word"
+          },
+          {
+            "text": "717",
+            "startMs": 3413,
+            "endMs": 3499,
+            "textBegin": 16,
+            "textEnd": 19,
+            "granularity": "word"
+          },
+          {
+            "text": "717",
+            "startMs": 3499,
+            "endMs": 3627,
+            "textBegin": 16,
+            "textEnd": 19,
+            "granularity": "word"
+          },
+          {
+            "text": "粉",
+            "startMs": 3627,
+            "endMs": 3840,
+            "textBegin": 19,
+            "textEnd": 20,
+            "granularity": "word"
+          },
+          {
+            "text": "丝",
+            "startMs": 3840,
+            "endMs": 4011,
+            "textBegin": 20,
+            "textEnd": 21,
+            "granularity": "word"
+          },
+          {
+            "text": "盛",
+            "startMs": 4011,
+            "endMs": 4139,
+            "textBegin": 21,
+            "textEnd": 22,
+            "granularity": "word"
+          },
+          {
+            "text": "典",
+            "startMs": 4139,
+            "endMs": 4309,
+            "textBegin": 22,
+            "textEnd": 23,
+            "granularity": "word"
+          },
+          {
+            "text": "现",
+            "startMs": 4309,
+            "endMs": 4437,
+            "textBegin": 23,
+            "textEnd": 24,
+            "granularity": "word"
+          },
+          {
+            "text": "场",
+            "startMs": 4437,
+            "endMs": 4565,
+            "textBegin": 24,
+            "textEnd": 25,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 4565,
+            "endMs": 4608,
+            "textBegin": 25,
+            "textEnd": 26,
+            "granularity": "word"
+          },
+          {
+            "text": "真",
+            "startMs": 4608,
+            "endMs": 4907,
+            "textBegin": 26,
+            "textEnd": 27,
+            "granularity": "word"
+          },
+          {
+            "text": "的",
+            "startMs": 4907,
+            "endMs": 5120,
+            "textBegin": 27,
+            "textEnd": 28,
+            "granularity": "word"
+          },
+          {
+            "text": "比",
+            "startMs": 5120,
+            "endMs": 5376,
+            "textBegin": 28,
+            "textEnd": 29,
+            "granularity": "word"
+          },
+          {
+            "text": "我",
+            "startMs": 5376,
+            "endMs": 5547,
+            "textBegin": 29,
+            "textEnd": 30,
+            "granularity": "word"
+          },
+          {
+            "text": "想",
+            "startMs": 5547,
+            "endMs": 5632,
+            "textBegin": 30,
+            "textEnd": 31,
+            "granularity": "word"
+          },
+          {
+            "text": "象",
+            "startMs": 5632,
+            "endMs": 5845,
+            "textBegin": 31,
+            "textEnd": 32,
+            "granularity": "word"
+          },
+          {
+            "text": "中",
+            "startMs": 5845,
+            "endMs": 5973,
+            "textBegin": 32,
+            "textEnd": 33,
+            "granularity": "word"
+          },
+          {
+            "text": "热",
+            "startMs": 5973,
+            "endMs": 6101,
+            "textBegin": 33,
+            "textEnd": 34,
+            "granularity": "word"
+          },
+          {
+            "text": "闹",
+            "startMs": 6101,
+            "endMs": 6315,
+            "textBegin": 34,
+            "textEnd": 35,
+            "granularity": "word"
+          },
+          {
+            "text": "。",
+            "startMs": 6315,
+            "endMs": 6485,
+            "textBegin": 35,
+            "textEnd": 36,
+            "granularity": "word"
+          },
+          {
+            "text": "现",
+            "startMs": 6528,
+            "endMs": 6912,
+            "textBegin": 36,
+            "textEnd": 37,
+            "granularity": "word"
+          },
+          {
+            "text": "场",
+            "startMs": 6912,
+            "endMs": 7125,
+            "textBegin": 37,
+            "textEnd": 38,
+            "granularity": "word"
+          },
+          {
+            "text": "不",
+            "startMs": 7125,
+            "endMs": 7339,
+            "textBegin": 38,
+            "textEnd": 39,
+            "granularity": "word"
+          },
+          {
+            "text": "像",
+            "startMs": 7339,
+            "endMs": 7467,
+            "textBegin": 39,
+            "textEnd": 40,
+            "granularity": "word"
+          },
+          {
+            "text": "官",
+            "startMs": 7467,
+            "endMs": 7595,
+            "textBegin": 40,
+            "textEnd": 41,
+            "granularity": "word"
+          },
+          {
+            "text": "方",
+            "startMs": 7595,
+            "endMs": 7765,
+            "textBegin": 41,
+            "textEnd": 42,
+            "granularity": "word"
+          },
+          {
+            "text": "活",
+            "startMs": 7765,
+            "endMs": 7893,
+            "textBegin": 42,
+            "textEnd": 43,
+            "granularity": "word"
+          },
+          {
+            "text": "动",
+            "startMs": 7893,
+            "endMs": 8064,
+            "textBegin": 43,
+            "textEnd": 44,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 8064,
+            "endMs": 8107,
+            "textBegin": 44,
+            "textEnd": 45,
+            "granularity": "word"
+          },
+          {
+            "text": "更",
+            "startMs": 8107,
+            "endMs": 8576,
+            "textBegin": 45,
+            "textEnd": 46,
+            "granularity": "word"
+          },
+          {
+            "text": "多",
+            "startMs": 8576,
+            "endMs": 8704,
+            "textBegin": 46,
+            "textEnd": 47,
+            "granularity": "word"
+          },
+          {
+            "text": "是",
+            "startMs": 8704,
+            "endMs": 8875,
+            "textBegin": 47,
+            "textEnd": 48,
+            "granularity": "word"
+          },
+          {
+            "text": "大",
+            "startMs": 8875,
+            "endMs": 9003,
+            "textBegin": 48,
+            "textEnd": 49,
+            "granularity": "word"
+          },
+          {
+            "text": "家",
+            "startMs": 9003,
+            "endMs": 9131,
+            "textBegin": 49,
+            "textEnd": 50,
+            "granularity": "word"
+          },
+          {
+            "text": "真",
+            "startMs": 9131,
+            "endMs": 9301,
+            "textBegin": 50,
+            "textEnd": 51,
+            "granularity": "word"
+          },
+          {
+            "text": "的",
+            "startMs": 9301,
+            "endMs": 9344,
+            "textBegin": 51,
+            "textEnd": 52,
+            "granularity": "word"
+          },
+          {
+            "text": "在",
+            "startMs": 9344,
+            "endMs": 9515,
+            "textBegin": 52,
+            "textEnd": 53,
+            "granularity": "word"
+          },
+          {
+            "text": "看",
+            "startMs": 9515,
+            "endMs": 9685,
+            "textBegin": 53,
+            "textEnd": 54,
+            "granularity": "word"
+          },
+          {
+            "text": "车",
+            "startMs": 9685,
+            "endMs": 9856,
+            "textBegin": 54,
+            "textEnd": 55,
+            "granularity": "word"
+          },
+          {
+            "text": "、",
+            "startMs": 9856,
+            "endMs": 9984,
+            "textBegin": 55,
+            "textEnd": 56,
+            "granularity": "word"
+          },
+          {
+            "text": "聊",
+            "startMs": 9984,
+            "endMs": 10325,
+            "textBegin": 56,
+            "textEnd": 57,
+            "granularity": "word"
+          },
+          {
+            "text": "天",
+            "startMs": 10325,
+            "endMs": 10539,
+            "textBegin": 57,
+            "textEnd": 58,
+            "granularity": "word"
+          },
+          {
+            "text": "、",
+            "startMs": 10539,
+            "endMs": 10667,
+            "textBegin": 58,
+            "textEnd": 59,
+            "granularity": "word"
+          },
+          {
+            "text": "拍",
+            "startMs": 10667,
+            "endMs": 10880,
+            "textBegin": 59,
+            "textEnd": 60,
+            "granularity": "word"
+          },
+          {
+            "text": "细",
+            "startMs": 10880,
+            "endMs": 11093,
+            "textBegin": 60,
+            "textEnd": 61,
+            "granularity": "word"
+          },
+          {
+            "text": "节",
+            "startMs": 11093,
+            "endMs": 11221,
+            "textBegin": 61,
+            "textEnd": 62,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 11221,
+            "endMs": 11264,
+            "textBegin": 62,
+            "textEnd": 63,
+            "granularity": "word"
+          },
+          {
+            "text": "我",
+            "startMs": 11264,
+            "endMs": 11648,
+            "textBegin": 63,
+            "textEnd": 64,
+            "granularity": "word"
+          },
+          {
+            "text": "作",
+            "startMs": 11648,
+            "endMs": 12160,
+            "textBegin": 64,
+            "textEnd": 65,
+            "granularity": "word"
+          },
+          {
+            "text": "为",
+            "startMs": 12160,
+            "endMs": 12245,
+            "textBegin": 65,
+            "textEnd": 66,
+            "granularity": "word"
+          },
+          {
+            "text": "员",
+            "startMs": 12245,
+            "endMs": 12373,
+            "textBegin": 66,
+            "textEnd": 67,
+            "granularity": "word"
+          },
+          {
+            "text": "工",
+            "startMs": 12373,
+            "endMs": 12544,
+            "textBegin": 67,
+            "textEnd": 68,
+            "granularity": "word"
+          },
+          {
+            "text": "看",
+            "startMs": 12544,
+            "endMs": 12757,
+            "textBegin": 68,
+            "textEnd": 69,
+            "granularity": "word"
+          },
+          {
+            "text": "到",
+            "startMs": 12757,
+            "endMs": 13056,
+            "textBegin": 69,
+            "textEnd": 70,
+            "granularity": "word"
+          },
+          {
+            "text": "这",
+            "startMs": 13056,
+            "endMs": 13184,
+            "textBegin": 70,
+            "textEnd": 71,
+            "granularity": "word"
+          },
+          {
+            "text": "种",
+            "startMs": 13184,
+            "endMs": 13269,
+            "textBegin": 71,
+            "textEnd": 72,
+            "granularity": "word"
+          },
+          {
+            "text": "氛",
+            "startMs": 13269,
+            "endMs": 13397,
+            "textBegin": 72,
+            "textEnd": 73,
+            "granularity": "word"
+          },
+          {
+            "text": "围",
+            "startMs": 13397,
+            "endMs": 13568,
+            "textBegin": 73,
+            "textEnd": 74,
+            "granularity": "word"
+          },
+          {
+            "text": "特",
+            "startMs": 13568,
+            "endMs": 13824,
+            "textBegin": 74,
+            "textEnd": 75,
+            "granularity": "word"
+          },
+          {
+            "text": "别",
+            "startMs": 13824,
+            "endMs": 14037,
+            "textBegin": 75,
+            "textEnd": 76,
+            "granularity": "word"
+          },
+          {
+            "text": "亲",
+            "startMs": 14037,
+            "endMs": 14165,
+            "textBegin": 76,
+            "textEnd": 77,
+            "granularity": "word"
+          },
+          {
+            "text": "切",
+            "startMs": 14165,
+            "endMs": 14336,
+            "textBegin": 77,
+            "textEnd": 78,
+            "granularity": "word"
+          },
+          {
+            "text": "。",
+            "startMs": 14336,
+            "endMs": 14549,
+            "textBegin": 78,
+            "textEnd": 79,
+            "granularity": "word"
+          },
+          {
+            "text": "近",
+            "startMs": 15307,
+            "endMs": 15691,
+            "textBegin": 79,
+            "textEnd": 80,
+            "granularity": "word"
+          },
+          {
+            "text": "距",
+            "startMs": 15691,
+            "endMs": 15861,
+            "textBegin": 80,
+            "textEnd": 81,
+            "granularity": "word"
+          },
+          {
+            "text": "离",
+            "startMs": 15861,
+            "endMs": 15989,
+            "textBegin": 81,
+            "textEnd": 82,
+            "granularity": "word"
+          },
+          {
+            "text": "看",
+            "startMs": 15989,
+            "endMs": 16117,
+            "textBegin": 82,
+            "textEnd": 83,
+            "granularity": "word"
+          },
+          {
+            "text": "这",
+            "startMs": 16117,
+            "endMs": 16288,
+            "textBegin": 83,
+            "textEnd": 84,
+            "granularity": "word"
+          },
+          {
+            "text": "台",
+            "startMs": 16288,
+            "endMs": 16416,
+            "textBegin": 84,
+            "textEnd": 85,
+            "granularity": "word"
+          },
+          {
+            "text": "车",
+            "startMs": 16416,
+            "endMs": 16544,
+            "textBegin": 85,
+            "textEnd": 86,
+            "granularity": "word"
+          },
+          {
+            "text": "的",
+            "startMs": 16544,
+            "endMs": 16587,
+            "textBegin": 86,
+            "textEnd": 87,
+            "granularity": "word"
+          },
+          {
+            "text": "车",
+            "startMs": 16587,
+            "endMs": 16800,
+            "textBegin": 87,
+            "textEnd": 88,
+            "granularity": "word"
+          },
+          {
+            "text": "灯",
+            "startMs": 16800,
+            "endMs": 17013,
+            "textBegin": 88,
+            "textEnd": 89,
+            "granularity": "word"
+          },
+          {
+            "text": "和",
+            "startMs": 17013,
+            "endMs": 17184,
+            "textBegin": 89,
+            "textEnd": 90,
+            "granularity": "word"
+          },
+          {
+            "text": "线",
+            "startMs": 17184,
+            "endMs": 17312,
+            "textBegin": 90,
+            "textEnd": 91,
+            "granularity": "word"
+          },
+          {
+            "text": "条",
+            "startMs": 17312,
+            "endMs": 17440,
+            "textBegin": 91,
+            "textEnd": 92,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 17440,
+            "endMs": 17483,
+            "textBegin": 92,
+            "textEnd": 93,
+            "granularity": "word"
+          },
+          {
+            "text": "质",
+            "startMs": 17483,
+            "endMs": 17995,
+            "textBegin": 93,
+            "textEnd": 94,
+            "granularity": "word"
+          },
+          {
+            "text": "感",
+            "startMs": 17995,
+            "endMs": 18251,
+            "textBegin": 94,
+            "textEnd": 95,
+            "granularity": "word"
+          },
+          {
+            "text": "确",
+            "startMs": 18251,
+            "endMs": 18421,
+            "textBegin": 95,
+            "textEnd": 96,
+            "granularity": "word"
+          },
+          {
+            "text": "实",
+            "startMs": 18421,
+            "endMs": 18592,
+            "textBegin": 96,
+            "textEnd": 97,
+            "granularity": "word"
+          },
+          {
+            "text": "比",
+            "startMs": 18592,
+            "endMs": 18720,
+            "textBegin": 97,
+            "textEnd": 98,
+            "granularity": "word"
+          },
+          {
+            "text": "图",
+            "startMs": 18720,
+            "endMs": 18848,
+            "textBegin": 98,
+            "textEnd": 99,
+            "granularity": "word"
+          },
+          {
+            "text": "片",
+            "startMs": 18848,
+            "endMs": 19019,
+            "textBegin": 99,
+            "textEnd": 100,
+            "granularity": "word"
+          },
+          {
+            "text": "更",
+            "startMs": 19019,
+            "endMs": 19189,
+            "textBegin": 100,
+            "textEnd": 101,
+            "granularity": "word"
+          },
+          {
+            "text": "直",
+            "startMs": 19189,
+            "endMs": 19360,
+            "textBegin": 101,
+            "textEnd": 102,
+            "granularity": "word"
+          },
+          {
+            "text": "观",
+            "startMs": 19360,
+            "endMs": 19488,
+            "textBegin": 102,
+            "textEnd": 103,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 19488,
+            "endMs": 19531,
+            "textBegin": 103,
+            "textEnd": 104,
+            "granularity": "word"
+          },
+          {
+            "text": "我",
+            "startMs": 19531,
+            "endMs": 19787,
+            "textBegin": 104,
+            "textEnd": 105,
+            "granularity": "word"
+          },
+          {
+            "text": "们",
+            "startMs": 19787,
+            "endMs": 20853,
+            "textBegin": 105,
+            "textEnd": 106,
+            "granularity": "word"
+          },
+          {
+            "text": "店",
+            "startMs": 20853,
+            "endMs": 20939,
+            "textBegin": 106,
+            "textEnd": 107,
+            "granularity": "word"
+          },
+          {
+            "text": "里",
+            "startMs": 20939,
+            "endMs": 21024,
+            "textBegin": 107,
+            "textEnd": 108,
+            "granularity": "word"
+          },
+          {
+            "text": "的",
+            "startMs": 21024,
+            "endMs": 21067,
+            "textBegin": 108,
+            "textEnd": 109,
+            "granularity": "word"
+          },
+          {
+            "text": "展",
+            "startMs": 21067,
+            "endMs": 21280,
+            "textBegin": 109,
+            "textEnd": 110,
+            "granularity": "word"
+          },
+          {
+            "text": "车",
+            "startMs": 21280,
+            "endMs": 21451,
+            "textBegin": 110,
+            "textEnd": 111,
+            "granularity": "word"
+          },
+          {
+            "text": "也",
+            "startMs": 21451,
+            "endMs": 21664,
+            "textBegin": 111,
+            "textEnd": 112,
+            "granularity": "word"
+          },
+          {
+            "text": "是",
+            "startMs": 21664,
+            "endMs": 21792,
+            "textBegin": 112,
+            "textEnd": 113,
+            "granularity": "word"
+          },
+          {
+            "text": "这",
+            "startMs": 21792,
+            "endMs": 21877,
+            "textBegin": 113,
+            "textEnd": 114,
+            "granularity": "word"
+          },
+          {
+            "text": "个",
+            "startMs": 21877,
+            "endMs": 22005,
+            "textBegin": 114,
+            "textEnd": 115,
+            "granularity": "word"
+          },
+          {
+            "text": "感",
+            "startMs": 22005,
+            "endMs": 22091,
+            "textBegin": 115,
+            "textEnd": 116,
+            "granularity": "word"
+          },
+          {
+            "text": "觉",
+            "startMs": 22091,
+            "endMs": 22261,
+            "textBegin": 116,
+            "textEnd": 117,
+            "granularity": "word"
+          },
+          {
+            "text": "你",
+            "startMs": 22261,
+            "endMs": 22560,
+            "textBegin": 117,
+            "textEnd": 118,
+            "granularity": "word"
+          },
+          {
+            "text": "们",
+            "startMs": 22560,
+            "endMs": 23072,
+            "textBegin": 118,
+            "textEnd": 119,
+            "granularity": "word"
+          },
+          {
+            "text": "最",
+            "startMs": 23072,
+            "endMs": 23157,
+            "textBegin": 119,
+            "textEnd": 120,
+            "granularity": "word"
+          },
+          {
+            "text": "想",
+            "startMs": 23157,
+            "endMs": 23328,
+            "textBegin": 120,
+            "textEnd": 121,
+            "granularity": "word"
+          },
+          {
+            "text": "看",
+            "startMs": 23328,
+            "endMs": 23499,
+            "textBegin": 121,
+            "textEnd": 122,
+            "granularity": "word"
+          },
+          {
+            "text": "哪",
+            "startMs": 23499,
+            "endMs": 23627,
+            "textBegin": 122,
+            "textEnd": 123,
+            "granularity": "word"
+          },
+          {
+            "text": "一",
+            "startMs": 23627,
+            "endMs": 23755,
+            "textBegin": 123,
+            "textEnd": 124,
+            "granularity": "word"
+          },
+          {
+            "text": "台",
+            "startMs": 23755,
+            "endMs": 23840,
+            "textBegin": 124,
+            "textEnd": 125,
+            "granularity": "word"
+          },
+          {
+            "text": "？",
+            "startMs": 23840,
+            "endMs": 23883,
+            "textBegin": 125,
+            "textEnd": 126,
+            "granularity": "word"
+          },
+          {
+            "text": "我",
+            "startMs": 23883,
+            "endMs": 24181,
+            "textBegin": 126,
+            "textEnd": 127,
+            "granularity": "word"
+          },
+          {
+            "text": "回",
+            "startMs": 24181,
+            "endMs": 24693,
+            "textBegin": 127,
+            "textEnd": 128,
+            "granularity": "word"
+          },
+          {
+            "text": "店",
+            "startMs": 24693,
+            "endMs": 24821,
+            "textBegin": 128,
+            "textEnd": 129,
+            "granularity": "word"
+          },
+          {
+            "text": "里",
+            "startMs": 24821,
+            "endMs": 24992,
+            "textBegin": 129,
+            "textEnd": 130,
+            "granularity": "word"
+          },
+          {
+            "text": "可",
+            "startMs": 24992,
+            "endMs": 25248,
+            "textBegin": 130,
+            "textEnd": 131,
+            "granularity": "word"
+          },
+          {
+            "text": "以",
+            "startMs": 25248,
+            "endMs": 25376,
+            "textBegin": 131,
+            "textEnd": 132,
+            "granularity": "word"
+          },
+          {
+            "text": "给",
+            "startMs": 25376,
+            "endMs": 25504,
+            "textBegin": 132,
+            "textEnd": 133,
+            "granularity": "word"
+          },
+          {
+            "text": "你",
+            "startMs": 25504,
+            "endMs": 25589,
+            "textBegin": 133,
+            "textEnd": 134,
+            "granularity": "word"
+          },
+          {
+            "text": "们",
+            "startMs": 25589,
+            "endMs": 25717,
+            "textBegin": 134,
+            "textEnd": 135,
+            "granularity": "word"
+          },
+          {
+            "text": "重",
+            "startMs": 25717,
+            "endMs": 25803,
+            "textBegin": 135,
+            "textEnd": 136,
+            "granularity": "word"
+          },
+          {
+            "text": "点",
+            "startMs": 25803,
+            "endMs": 25973,
+            "textBegin": 136,
+            "textEnd": 137,
+            "granularity": "word"
+          },
+          {
+            "text": "拍",
+            "startMs": 25973,
+            "endMs": 26101,
+            "textBegin": 137,
+            "textEnd": 138,
+            "granularity": "word"
+          },
+          {
+            "text": "，",
+            "startMs": 26101,
+            "endMs": 26144,
+            "textBegin": 138,
+            "textEnd": 139,
+            "granularity": "word"
+          },
+          {
+            "text": "下",
+            "startMs": 26144,
+            "endMs": 26699,
+            "textBegin": 139,
+            "textEnd": 140,
+            "granularity": "word"
+          },
+          {
+            "text": "一",
+            "startMs": 26699,
+            "endMs": 26912,
+            "textBegin": 140,
+            "textEnd": 141,
+            "granularity": "word"
+          },
+          {
+            "text": "条",
+            "startMs": 26912,
+            "endMs": 26997,
+            "textBegin": 141,
+            "textEnd": 142,
+            "granularity": "word"
+          },
+          {
+            "text": "继",
+            "startMs": 26997,
+            "endMs": 27296,
+            "textBegin": 142,
+            "textEnd": 143,
+            "granularity": "word"
+          },
+          {
+            "text": "续",
+            "startMs": 27296,
+            "endMs": 27509,
+            "textBegin": 143,
+            "textEnd": 144,
+            "granularity": "word"
+          },
+          {
+            "text": "分",
+            "startMs": 27509,
+            "endMs": 27680,
+            "textBegin": 144,
+            "textEnd": 145,
+            "granularity": "word"
+          },
+          {
+            "text": "享",
+            "startMs": 27680,
+            "endMs": 27851,
+            "textBegin": 145,
+            "textEnd": 146,
+            "granularity": "word"
+          },
+          {
+            "text": "现",
+            "startMs": 27851,
+            "endMs": 28021,
+            "textBegin": 146,
+            "textEnd": 147,
+            "granularity": "word"
+          },
+          {
+            "text": "场",
+            "startMs": 28021,
+            "endMs": 28192,
+            "textBegin": 147,
+            "textEnd": 148,
+            "granularity": "word"
+          },
+          {
+            "text": "。",
+            "startMs": 28192,
+            "endMs": 28363,
+            "textBegin": 148,
+            "textEnd": 149,
+            "granularity": "word"
+          }
+        ]
+      }
+    ],
+    "subtitles": [
+      {
+        "text": "作",
+        "startMs": 43,
+        "endMs": 384,
+        "textBegin": 0,
+        "textEnd": 1,
+        "granularity": "word"
+      },
+      {
+        "text": "为",
+        "startMs": 384,
+        "endMs": 555,
+        "textBegin": 1,
+        "textEnd": 2,
+        "granularity": "word"
+      },
+      {
+        "text": "红",
+        "startMs": 555,
+        "endMs": 683,
+        "textBegin": 2,
+        "textEnd": 3,
+        "granularity": "word"
+      },
+      {
+        "text": "旗",
+        "startMs": 683,
+        "endMs": 896,
+        "textBegin": 3,
+        "textEnd": 4,
+        "granularity": "word"
+      },
+      {
+        "text": "4",
+        "startMs": 896,
+        "endMs": 1067,
+        "textBegin": 4,
+        "textEnd": 5,
+        "granularity": "word"
+      },
+      {
+        "text": "S",
+        "startMs": 1067,
+        "endMs": 1280,
+        "textBegin": 5,
+        "textEnd": 6,
+        "granularity": "word"
+      },
+      {
+        "text": "店",
+        "startMs": 1280,
+        "endMs": 1451,
+        "textBegin": 6,
+        "textEnd": 7,
+        "granularity": "word"
+      },
+      {
+        "text": "的",
+        "startMs": 1451,
+        "endMs": 1493,
+        "textBegin": 7,
+        "textEnd": 8,
+        "granularity": "word"
+      },
+      {
+        "text": "员",
+        "startMs": 1493,
+        "endMs": 1664,
+        "textBegin": 8,
+        "textEnd": 9,
+        "granularity": "word"
+      },
+      {
+        "text": "工",
+        "startMs": 1664,
+        "endMs": 1792,
+        "textBegin": 9,
+        "textEnd": 10,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 1792,
+        "endMs": 1835,
+        "textBegin": 10,
+        "textEnd": 11,
+        "granularity": "word"
+      },
+      {
+        "text": "今",
+        "startMs": 1835,
+        "endMs": 2304,
+        "textBegin": 11,
+        "textEnd": 12,
+        "granularity": "word"
+      },
+      {
+        "text": "天",
+        "startMs": 2304,
+        "endMs": 2432,
+        "textBegin": 12,
+        "textEnd": 13,
+        "granularity": "word"
+      },
+      {
+        "text": "我",
+        "startMs": 2432,
+        "endMs": 2603,
+        "textBegin": 13,
+        "textEnd": 14,
+        "granularity": "word"
+      },
+      {
+        "text": "来",
+        "startMs": 2603,
+        "endMs": 2688,
+        "textBegin": 14,
+        "textEnd": 15,
+        "granularity": "word"
+      },
+      {
+        "text": "到",
+        "startMs": 2688,
+        "endMs": 2816,
+        "textBegin": 15,
+        "textEnd": 16,
+        "granularity": "word"
+      },
+      {
+        "text": "717",
+        "startMs": 2816,
+        "endMs": 3072,
+        "textBegin": 16,
+        "textEnd": 19,
+        "granularity": "word"
+      },
+      {
+        "text": "717",
+        "startMs": 3072,
+        "endMs": 3243,
+        "textBegin": 16,
+        "textEnd": 19,
+        "granularity": "word"
+      },
+      {
+        "text": "717",
+        "startMs": 3243,
+        "endMs": 3413,
+        "textBegin": 16,
+        "textEnd": 19,
+        "granularity": "word"
+      },
+      {
+        "text": "717",
+        "startMs": 3413,
+        "endMs": 3499,
+        "textBegin": 16,
+        "textEnd": 19,
+        "granularity": "word"
+      },
+      {
+        "text": "717",
+        "startMs": 3499,
+        "endMs": 3627,
+        "textBegin": 16,
+        "textEnd": 19,
+        "granularity": "word"
+      },
+      {
+        "text": "粉",
+        "startMs": 3627,
+        "endMs": 3840,
+        "textBegin": 19,
+        "textEnd": 20,
+        "granularity": "word"
+      },
+      {
+        "text": "丝",
+        "startMs": 3840,
+        "endMs": 4011,
+        "textBegin": 20,
+        "textEnd": 21,
+        "granularity": "word"
+      },
+      {
+        "text": "盛",
+        "startMs": 4011,
+        "endMs": 4139,
+        "textBegin": 21,
+        "textEnd": 22,
+        "granularity": "word"
+      },
+      {
+        "text": "典",
+        "startMs": 4139,
+        "endMs": 4309,
+        "textBegin": 22,
+        "textEnd": 23,
+        "granularity": "word"
+      },
+      {
+        "text": "现",
+        "startMs": 4309,
+        "endMs": 4437,
+        "textBegin": 23,
+        "textEnd": 24,
+        "granularity": "word"
+      },
+      {
+        "text": "场",
+        "startMs": 4437,
+        "endMs": 4565,
+        "textBegin": 24,
+        "textEnd": 25,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 4565,
+        "endMs": 4608,
+        "textBegin": 25,
+        "textEnd": 26,
+        "granularity": "word"
+      },
+      {
+        "text": "真",
+        "startMs": 4608,
+        "endMs": 4907,
+        "textBegin": 26,
+        "textEnd": 27,
+        "granularity": "word"
+      },
+      {
+        "text": "的",
+        "startMs": 4907,
+        "endMs": 5120,
+        "textBegin": 27,
+        "textEnd": 28,
+        "granularity": "word"
+      },
+      {
+        "text": "比",
+        "startMs": 5120,
+        "endMs": 5376,
+        "textBegin": 28,
+        "textEnd": 29,
+        "granularity": "word"
+      },
+      {
+        "text": "我",
+        "startMs": 5376,
+        "endMs": 5547,
+        "textBegin": 29,
+        "textEnd": 30,
+        "granularity": "word"
+      },
+      {
+        "text": "想",
+        "startMs": 5547,
+        "endMs": 5632,
+        "textBegin": 30,
+        "textEnd": 31,
+        "granularity": "word"
+      },
+      {
+        "text": "象",
+        "startMs": 5632,
+        "endMs": 5845,
+        "textBegin": 31,
+        "textEnd": 32,
+        "granularity": "word"
+      },
+      {
+        "text": "中",
+        "startMs": 5845,
+        "endMs": 5973,
+        "textBegin": 32,
+        "textEnd": 33,
+        "granularity": "word"
+      },
+      {
+        "text": "热",
+        "startMs": 5973,
+        "endMs": 6101,
+        "textBegin": 33,
+        "textEnd": 34,
+        "granularity": "word"
+      },
+      {
+        "text": "闹",
+        "startMs": 6101,
+        "endMs": 6315,
+        "textBegin": 34,
+        "textEnd": 35,
+        "granularity": "word"
+      },
+      {
+        "text": "。",
+        "startMs": 6315,
+        "endMs": 6485,
+        "textBegin": 35,
+        "textEnd": 36,
+        "granularity": "word"
+      },
+      {
+        "text": "现",
+        "startMs": 6528,
+        "endMs": 6912,
+        "textBegin": 36,
+        "textEnd": 37,
+        "granularity": "word"
+      },
+      {
+        "text": "场",
+        "startMs": 6912,
+        "endMs": 7125,
+        "textBegin": 37,
+        "textEnd": 38,
+        "granularity": "word"
+      },
+      {
+        "text": "不",
+        "startMs": 7125,
+        "endMs": 7339,
+        "textBegin": 38,
+        "textEnd": 39,
+        "granularity": "word"
+      },
+      {
+        "text": "像",
+        "startMs": 7339,
+        "endMs": 7467,
+        "textBegin": 39,
+        "textEnd": 40,
+        "granularity": "word"
+      },
+      {
+        "text": "官",
+        "startMs": 7467,
+        "endMs": 7595,
+        "textBegin": 40,
+        "textEnd": 41,
+        "granularity": "word"
+      },
+      {
+        "text": "方",
+        "startMs": 7595,
+        "endMs": 7765,
+        "textBegin": 41,
+        "textEnd": 42,
+        "granularity": "word"
+      },
+      {
+        "text": "活",
+        "startMs": 7765,
+        "endMs": 7893,
+        "textBegin": 42,
+        "textEnd": 43,
+        "granularity": "word"
+      },
+      {
+        "text": "动",
+        "startMs": 7893,
+        "endMs": 8064,
+        "textBegin": 43,
+        "textEnd": 44,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 8064,
+        "endMs": 8107,
+        "textBegin": 44,
+        "textEnd": 45,
+        "granularity": "word"
+      },
+      {
+        "text": "更",
+        "startMs": 8107,
+        "endMs": 8576,
+        "textBegin": 45,
+        "textEnd": 46,
+        "granularity": "word"
+      },
+      {
+        "text": "多",
+        "startMs": 8576,
+        "endMs": 8704,
+        "textBegin": 46,
+        "textEnd": 47,
+        "granularity": "word"
+      },
+      {
+        "text": "是",
+        "startMs": 8704,
+        "endMs": 8875,
+        "textBegin": 47,
+        "textEnd": 48,
+        "granularity": "word"
+      },
+      {
+        "text": "大",
+        "startMs": 8875,
+        "endMs": 9003,
+        "textBegin": 48,
+        "textEnd": 49,
+        "granularity": "word"
+      },
+      {
+        "text": "家",
+        "startMs": 9003,
+        "endMs": 9131,
+        "textBegin": 49,
+        "textEnd": 50,
+        "granularity": "word"
+      },
+      {
+        "text": "真",
+        "startMs": 9131,
+        "endMs": 9301,
+        "textBegin": 50,
+        "textEnd": 51,
+        "granularity": "word"
+      },
+      {
+        "text": "的",
+        "startMs": 9301,
+        "endMs": 9344,
+        "textBegin": 51,
+        "textEnd": 52,
+        "granularity": "word"
+      },
+      {
+        "text": "在",
+        "startMs": 9344,
+        "endMs": 9515,
+        "textBegin": 52,
+        "textEnd": 53,
+        "granularity": "word"
+      },
+      {
+        "text": "看",
+        "startMs": 9515,
+        "endMs": 9685,
+        "textBegin": 53,
+        "textEnd": 54,
+        "granularity": "word"
+      },
+      {
+        "text": "车",
+        "startMs": 9685,
+        "endMs": 9856,
+        "textBegin": 54,
+        "textEnd": 55,
+        "granularity": "word"
+      },
+      {
+        "text": "、",
+        "startMs": 9856,
+        "endMs": 9984,
+        "textBegin": 55,
+        "textEnd": 56,
+        "granularity": "word"
+      },
+      {
+        "text": "聊",
+        "startMs": 9984,
+        "endMs": 10325,
+        "textBegin": 56,
+        "textEnd": 57,
+        "granularity": "word"
+      },
+      {
+        "text": "天",
+        "startMs": 10325,
+        "endMs": 10539,
+        "textBegin": 57,
+        "textEnd": 58,
+        "granularity": "word"
+      },
+      {
+        "text": "、",
+        "startMs": 10539,
+        "endMs": 10667,
+        "textBegin": 58,
+        "textEnd": 59,
+        "granularity": "word"
+      },
+      {
+        "text": "拍",
+        "startMs": 10667,
+        "endMs": 10880,
+        "textBegin": 59,
+        "textEnd": 60,
+        "granularity": "word"
+      },
+      {
+        "text": "细",
+        "startMs": 10880,
+        "endMs": 11093,
+        "textBegin": 60,
+        "textEnd": 61,
+        "granularity": "word"
+      },
+      {
+        "text": "节",
+        "startMs": 11093,
+        "endMs": 11221,
+        "textBegin": 61,
+        "textEnd": 62,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 11221,
+        "endMs": 11264,
+        "textBegin": 62,
+        "textEnd": 63,
+        "granularity": "word"
+      },
+      {
+        "text": "我",
+        "startMs": 11264,
+        "endMs": 11648,
+        "textBegin": 63,
+        "textEnd": 64,
+        "granularity": "word"
+      },
+      {
+        "text": "作",
+        "startMs": 11648,
+        "endMs": 12160,
+        "textBegin": 64,
+        "textEnd": 65,
+        "granularity": "word"
+      },
+      {
+        "text": "为",
+        "startMs": 12160,
+        "endMs": 12245,
+        "textBegin": 65,
+        "textEnd": 66,
+        "granularity": "word"
+      },
+      {
+        "text": "员",
+        "startMs": 12245,
+        "endMs": 12373,
+        "textBegin": 66,
+        "textEnd": 67,
+        "granularity": "word"
+      },
+      {
+        "text": "工",
+        "startMs": 12373,
+        "endMs": 12544,
+        "textBegin": 67,
+        "textEnd": 68,
+        "granularity": "word"
+      },
+      {
+        "text": "看",
+        "startMs": 12544,
+        "endMs": 12757,
+        "textBegin": 68,
+        "textEnd": 69,
+        "granularity": "word"
+      },
+      {
+        "text": "到",
+        "startMs": 12757,
+        "endMs": 13056,
+        "textBegin": 69,
+        "textEnd": 70,
+        "granularity": "word"
+      },
+      {
+        "text": "这",
+        "startMs": 13056,
+        "endMs": 13184,
+        "textBegin": 70,
+        "textEnd": 71,
+        "granularity": "word"
+      },
+      {
+        "text": "种",
+        "startMs": 13184,
+        "endMs": 13269,
+        "textBegin": 71,
+        "textEnd": 72,
+        "granularity": "word"
+      },
+      {
+        "text": "氛",
+        "startMs": 13269,
+        "endMs": 13397,
+        "textBegin": 72,
+        "textEnd": 73,
+        "granularity": "word"
+      },
+      {
+        "text": "围",
+        "startMs": 13397,
+        "endMs": 13568,
+        "textBegin": 73,
+        "textEnd": 74,
+        "granularity": "word"
+      },
+      {
+        "text": "特",
+        "startMs": 13568,
+        "endMs": 13824,
+        "textBegin": 74,
+        "textEnd": 75,
+        "granularity": "word"
+      },
+      {
+        "text": "别",
+        "startMs": 13824,
+        "endMs": 14037,
+        "textBegin": 75,
+        "textEnd": 76,
+        "granularity": "word"
+      },
+      {
+        "text": "亲",
+        "startMs": 14037,
+        "endMs": 14165,
+        "textBegin": 76,
+        "textEnd": 77,
+        "granularity": "word"
+      },
+      {
+        "text": "切",
+        "startMs": 14165,
+        "endMs": 14336,
+        "textBegin": 77,
+        "textEnd": 78,
+        "granularity": "word"
+      },
+      {
+        "text": "。",
+        "startMs": 14336,
+        "endMs": 14549,
+        "textBegin": 78,
+        "textEnd": 79,
+        "granularity": "word"
+      },
+      {
+        "text": "近",
+        "startMs": 15307,
+        "endMs": 15691,
+        "textBegin": 79,
+        "textEnd": 80,
+        "granularity": "word"
+      },
+      {
+        "text": "距",
+        "startMs": 15691,
+        "endMs": 15861,
+        "textBegin": 80,
+        "textEnd": 81,
+        "granularity": "word"
+      },
+      {
+        "text": "离",
+        "startMs": 15861,
+        "endMs": 15989,
+        "textBegin": 81,
+        "textEnd": 82,
+        "granularity": "word"
+      },
+      {
+        "text": "看",
+        "startMs": 15989,
+        "endMs": 16117,
+        "textBegin": 82,
+        "textEnd": 83,
+        "granularity": "word"
+      },
+      {
+        "text": "这",
+        "startMs": 16117,
+        "endMs": 16288,
+        "textBegin": 83,
+        "textEnd": 84,
+        "granularity": "word"
+      },
+      {
+        "text": "台",
+        "startMs": 16288,
+        "endMs": 16416,
+        "textBegin": 84,
+        "textEnd": 85,
+        "granularity": "word"
+      },
+      {
+        "text": "车",
+        "startMs": 16416,
+        "endMs": 16544,
+        "textBegin": 85,
+        "textEnd": 86,
+        "granularity": "word"
+      },
+      {
+        "text": "的",
+        "startMs": 16544,
+        "endMs": 16587,
+        "textBegin": 86,
+        "textEnd": 87,
+        "granularity": "word"
+      },
+      {
+        "text": "车",
+        "startMs": 16587,
+        "endMs": 16800,
+        "textBegin": 87,
+        "textEnd": 88,
+        "granularity": "word"
+      },
+      {
+        "text": "灯",
+        "startMs": 16800,
+        "endMs": 17013,
+        "textBegin": 88,
+        "textEnd": 89,
+        "granularity": "word"
+      },
+      {
+        "text": "和",
+        "startMs": 17013,
+        "endMs": 17184,
+        "textBegin": 89,
+        "textEnd": 90,
+        "granularity": "word"
+      },
+      {
+        "text": "线",
+        "startMs": 17184,
+        "endMs": 17312,
+        "textBegin": 90,
+        "textEnd": 91,
+        "granularity": "word"
+      },
+      {
+        "text": "条",
+        "startMs": 17312,
+        "endMs": 17440,
+        "textBegin": 91,
+        "textEnd": 92,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 17440,
+        "endMs": 17483,
+        "textBegin": 92,
+        "textEnd": 93,
+        "granularity": "word"
+      },
+      {
+        "text": "质",
+        "startMs": 17483,
+        "endMs": 17995,
+        "textBegin": 93,
+        "textEnd": 94,
+        "granularity": "word"
+      },
+      {
+        "text": "感",
+        "startMs": 17995,
+        "endMs": 18251,
+        "textBegin": 94,
+        "textEnd": 95,
+        "granularity": "word"
+      },
+      {
+        "text": "确",
+        "startMs": 18251,
+        "endMs": 18421,
+        "textBegin": 95,
+        "textEnd": 96,
+        "granularity": "word"
+      },
+      {
+        "text": "实",
+        "startMs": 18421,
+        "endMs": 18592,
+        "textBegin": 96,
+        "textEnd": 97,
+        "granularity": "word"
+      },
+      {
+        "text": "比",
+        "startMs": 18592,
+        "endMs": 18720,
+        "textBegin": 97,
+        "textEnd": 98,
+        "granularity": "word"
+      },
+      {
+        "text": "图",
+        "startMs": 18720,
+        "endMs": 18848,
+        "textBegin": 98,
+        "textEnd": 99,
+        "granularity": "word"
+      },
+      {
+        "text": "片",
+        "startMs": 18848,
+        "endMs": 19019,
+        "textBegin": 99,
+        "textEnd": 100,
+        "granularity": "word"
+      },
+      {
+        "text": "更",
+        "startMs": 19019,
+        "endMs": 19189,
+        "textBegin": 100,
+        "textEnd": 101,
+        "granularity": "word"
+      },
+      {
+        "text": "直",
+        "startMs": 19189,
+        "endMs": 19360,
+        "textBegin": 101,
+        "textEnd": 102,
+        "granularity": "word"
+      },
+      {
+        "text": "观",
+        "startMs": 19360,
+        "endMs": 19488,
+        "textBegin": 102,
+        "textEnd": 103,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 19488,
+        "endMs": 19531,
+        "textBegin": 103,
+        "textEnd": 104,
+        "granularity": "word"
+      },
+      {
+        "text": "我",
+        "startMs": 19531,
+        "endMs": 19787,
+        "textBegin": 104,
+        "textEnd": 105,
+        "granularity": "word"
+      },
+      {
+        "text": "们",
+        "startMs": 19787,
+        "endMs": 20853,
+        "textBegin": 105,
+        "textEnd": 106,
+        "granularity": "word"
+      },
+      {
+        "text": "店",
+        "startMs": 20853,
+        "endMs": 20939,
+        "textBegin": 106,
+        "textEnd": 107,
+        "granularity": "word"
+      },
+      {
+        "text": "里",
+        "startMs": 20939,
+        "endMs": 21024,
+        "textBegin": 107,
+        "textEnd": 108,
+        "granularity": "word"
+      },
+      {
+        "text": "的",
+        "startMs": 21024,
+        "endMs": 21067,
+        "textBegin": 108,
+        "textEnd": 109,
+        "granularity": "word"
+      },
+      {
+        "text": "展",
+        "startMs": 21067,
+        "endMs": 21280,
+        "textBegin": 109,
+        "textEnd": 110,
+        "granularity": "word"
+      },
+      {
+        "text": "车",
+        "startMs": 21280,
+        "endMs": 21451,
+        "textBegin": 110,
+        "textEnd": 111,
+        "granularity": "word"
+      },
+      {
+        "text": "也",
+        "startMs": 21451,
+        "endMs": 21664,
+        "textBegin": 111,
+        "textEnd": 112,
+        "granularity": "word"
+      },
+      {
+        "text": "是",
+        "startMs": 21664,
+        "endMs": 21792,
+        "textBegin": 112,
+        "textEnd": 113,
+        "granularity": "word"
+      },
+      {
+        "text": "这",
+        "startMs": 21792,
+        "endMs": 21877,
+        "textBegin": 113,
+        "textEnd": 114,
+        "granularity": "word"
+      },
+      {
+        "text": "个",
+        "startMs": 21877,
+        "endMs": 22005,
+        "textBegin": 114,
+        "textEnd": 115,
+        "granularity": "word"
+      },
+      {
+        "text": "感",
+        "startMs": 22005,
+        "endMs": 22091,
+        "textBegin": 115,
+        "textEnd": 116,
+        "granularity": "word"
+      },
+      {
+        "text": "觉",
+        "startMs": 22091,
+        "endMs": 22261,
+        "textBegin": 116,
+        "textEnd": 117,
+        "granularity": "word"
+      },
+      {
+        "text": "你",
+        "startMs": 22261,
+        "endMs": 22560,
+        "textBegin": 117,
+        "textEnd": 118,
+        "granularity": "word"
+      },
+      {
+        "text": "们",
+        "startMs": 22560,
+        "endMs": 23072,
+        "textBegin": 118,
+        "textEnd": 119,
+        "granularity": "word"
+      },
+      {
+        "text": "最",
+        "startMs": 23072,
+        "endMs": 23157,
+        "textBegin": 119,
+        "textEnd": 120,
+        "granularity": "word"
+      },
+      {
+        "text": "想",
+        "startMs": 23157,
+        "endMs": 23328,
+        "textBegin": 120,
+        "textEnd": 121,
+        "granularity": "word"
+      },
+      {
+        "text": "看",
+        "startMs": 23328,
+        "endMs": 23499,
+        "textBegin": 121,
+        "textEnd": 122,
+        "granularity": "word"
+      },
+      {
+        "text": "哪",
+        "startMs": 23499,
+        "endMs": 23627,
+        "textBegin": 122,
+        "textEnd": 123,
+        "granularity": "word"
+      },
+      {
+        "text": "一",
+        "startMs": 23627,
+        "endMs": 23755,
+        "textBegin": 123,
+        "textEnd": 124,
+        "granularity": "word"
+      },
+      {
+        "text": "台",
+        "startMs": 23755,
+        "endMs": 23840,
+        "textBegin": 124,
+        "textEnd": 125,
+        "granularity": "word"
+      },
+      {
+        "text": "？",
+        "startMs": 23840,
+        "endMs": 23883,
+        "textBegin": 125,
+        "textEnd": 126,
+        "granularity": "word"
+      },
+      {
+        "text": "我",
+        "startMs": 23883,
+        "endMs": 24181,
+        "textBegin": 126,
+        "textEnd": 127,
+        "granularity": "word"
+      },
+      {
+        "text": "回",
+        "startMs": 24181,
+        "endMs": 24693,
+        "textBegin": 127,
+        "textEnd": 128,
+        "granularity": "word"
+      },
+      {
+        "text": "店",
+        "startMs": 24693,
+        "endMs": 24821,
+        "textBegin": 128,
+        "textEnd": 129,
+        "granularity": "word"
+      },
+      {
+        "text": "里",
+        "startMs": 24821,
+        "endMs": 24992,
+        "textBegin": 129,
+        "textEnd": 130,
+        "granularity": "word"
+      },
+      {
+        "text": "可",
+        "startMs": 24992,
+        "endMs": 25248,
+        "textBegin": 130,
+        "textEnd": 131,
+        "granularity": "word"
+      },
+      {
+        "text": "以",
+        "startMs": 25248,
+        "endMs": 25376,
+        "textBegin": 131,
+        "textEnd": 132,
+        "granularity": "word"
+      },
+      {
+        "text": "给",
+        "startMs": 25376,
+        "endMs": 25504,
+        "textBegin": 132,
+        "textEnd": 133,
+        "granularity": "word"
+      },
+      {
+        "text": "你",
+        "startMs": 25504,
+        "endMs": 25589,
+        "textBegin": 133,
+        "textEnd": 134,
+        "granularity": "word"
+      },
+      {
+        "text": "们",
+        "startMs": 25589,
+        "endMs": 25717,
+        "textBegin": 134,
+        "textEnd": 135,
+        "granularity": "word"
+      },
+      {
+        "text": "重",
+        "startMs": 25717,
+        "endMs": 25803,
+        "textBegin": 135,
+        "textEnd": 136,
+        "granularity": "word"
+      },
+      {
+        "text": "点",
+        "startMs": 25803,
+        "endMs": 25973,
+        "textBegin": 136,
+        "textEnd": 137,
+        "granularity": "word"
+      },
+      {
+        "text": "拍",
+        "startMs": 25973,
+        "endMs": 26101,
+        "textBegin": 137,
+        "textEnd": 138,
+        "granularity": "word"
+      },
+      {
+        "text": "，",
+        "startMs": 26101,
+        "endMs": 26144,
+        "textBegin": 138,
+        "textEnd": 139,
+        "granularity": "word"
+      },
+      {
+        "text": "下",
+        "startMs": 26144,
+        "endMs": 26699,
+        "textBegin": 139,
+        "textEnd": 140,
+        "granularity": "word"
+      },
+      {
+        "text": "一",
+        "startMs": 26699,
+        "endMs": 26912,
+        "textBegin": 140,
+        "textEnd": 141,
+        "granularity": "word"
+      },
+      {
+        "text": "条",
+        "startMs": 26912,
+        "endMs": 26997,
+        "textBegin": 141,
+        "textEnd": 142,
+        "granularity": "word"
+      },
+      {
+        "text": "继",
+        "startMs": 26997,
+        "endMs": 27296,
+        "textBegin": 142,
+        "textEnd": 143,
+        "granularity": "word"
+      },
+      {
+        "text": "续",
+        "startMs": 27296,
+        "endMs": 27509,
+        "textBegin": 143,
+        "textEnd": 144,
+        "granularity": "word"
+      },
+      {
+        "text": "分",
+        "startMs": 27509,
+        "endMs": 27680,
+        "textBegin": 144,
+        "textEnd": 145,
+        "granularity": "word"
+      },
+      {
+        "text": "享",
+        "startMs": 27680,
+        "endMs": 27851,
+        "textBegin": 145,
+        "textEnd": 146,
+        "granularity": "word"
+      },
+      {
+        "text": "现",
+        "startMs": 27851,
+        "endMs": 28021,
+        "textBegin": 146,
+        "textEnd": 147,
+        "granularity": "word"
+      },
+      {
+        "text": "场",
+        "startMs": 28021,
+        "endMs": 28192,
+        "textBegin": 147,
+        "textEnd": 148,
+        "granularity": "word"
+      },
+      {
+        "text": "。",
+        "startMs": 28192,
+        "endMs": 28363,
+        "textBegin": 148,
+        "textEnd": 149,
+        "granularity": "word"
+      }
+    ],
+    "handoff": {
+      "title": "717 粉丝盛典现场探展",
+      "voiceId": "male-qn-jingying",
+      "generatedAt": "2026-07-20T06:20:42.585Z",
+      "totalDurationMs": 20000,
+      "segments": [
+        {
+          "segment": "开头钩子",
+          "voiceText": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+          "duration": 4.5,
+          "material": "入口人群_01.mp4",
+          "segmentPurpose": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+          "nodes": [
+            {
+              "text": "作为红旗4S店的员工",
+              "role": "活动入口",
+              "assetType": "强绑定",
+              "materials": [
+                "活动入口"
+              ],
+              "visualNeed": "入口这边已经能感觉到人不少，不像只是简单摆个展。"
+            },
+            {
+              "text": "今天我来到717粉丝盛典现场",
+              "role": "品牌主视觉",
+              "assetType": "强绑定",
+              "materials": [
+                "品牌主视觉"
+              ],
+              "visualNeed": "一进来先看到 717 的主视觉，现场氛围一下就明确了。"
+            },
+            {
+              "text": "真的比我想象中热闹",
+              "role": "活动空间",
+              "assetType": "强绑定",
+              "materials": [
+                "活动空间"
+              ],
+              "visualNeed": "整个活动空间比想象中更完整，不是只看一台车那么简单。"
+            }
+          ]
+        },
+        {
+          "segment": "现场观察",
+          "voiceText": "现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。",
+          "duration": 6.2,
+          "material": "现场氛围_02.mp4",
+          "segmentPurpose": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+          "nodes": [
+            {
+              "text": "现场不像官方活动",
+              "role": "车友交流",
+              "assetType": "强绑定",
+              "materials": [
+                "车友交流"
+              ],
+              "visualNeed": "现场不少人是真的在聊车，不是只走马观花看一眼。"
+            },
+            {
+              "text": "更多是大家真的在看车、聊天、拍细节",
+              "role": "观众看车",
+              "assetType": "强绑定",
+              "materials": [
+                "观众看车"
+              ],
+              "visualNeed": "展车旁边一直有人停下来细看，说明大家对实车还是挺感兴趣的。"
+            },
+            {
+              "text": "我作为员工看到这种氛围特别亲切",
+              "role": "拍照记录",
+              "assetType": "强绑定",
+              "materials": [
+                "拍照记录"
+              ],
+              "visualNeed": "很多人会拿手机拍细节，这种现场感比官方图更有说服力。"
+            }
+          ]
+        },
+        {
+          "segment": "细节承接",
+          "voiceText": "近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉",
+          "duration": 5.1,
+          "material": "展车细节_01.mp4",
+          "segmentPurpose": "用展车细节支撑现场值得看的理由，让内容从氛围转向具体观察。",
+          "nodes": [
+            {
+              "text": "近距离看这台车的车灯和线条",
+              "role": "车灯细节",
+              "assetType": "强绑定",
+              "materials": [
+                "车灯细节"
+              ],
+              "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。"
+            },
+            {
+              "text": "质感确实比图片更直观",
+              "role": "内饰中控",
+              "assetType": "强绑定",
+              "materials": [
+                "内饰中控"
+              ],
+              "visualNeed": "内饰和中控近看会更有真实感，细节不是图片里那种平面的感觉。"
+            },
+            {
+              "text": "我们店里的展车也是这个感觉",
+              "role": "车身线条",
+              "assetType": "强绑定",
+              "materials": [
+                "车身线条"
+              ],
+              "visualNeed": "车身线条在现场看会更明显，整体气场比照片更完整。"
+            }
+          ]
+        },
+        {
+          "segment": "互动收尾",
+          "voiceText": "你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+          "duration": 4.2,
+          "material": "车友互动_01.mp4",
+          "segmentPurpose": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+          "nodes": [
+            {
+              "text": "你们最想看哪一台",
+              "role": "结尾氛围",
+              "assetType": "强绑定",
+              "materials": [
+                "结尾氛围"
+              ],
+              "visualNeed": "现场还有很多细节可以慢慢看，整体比我预期更有氛围。"
+            },
+            {
+              "text": "我回店里可以给你们重点拍",
+              "role": "评论引导",
+              "assetType": "强绑定",
+              "materials": [
+                "评论引导"
+              ],
+              "visualNeed": "你们更想看哪一台？我可以下一条重点拍给你们看。"
+            },
+            {
+              "text": "下一条继续分享现场",
+              "role": "回看展车",
+              "assetType": "强绑定",
+              "materials": [
+                "回看展车"
+              ],
+              "visualNeed": "这次先带你们看个现场，下一条我再细拍这台车。"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "slices": [
+    {
+      "name": "开头钩子",
+      "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+      "duration": 4.5,
+      "material": "入口人群_01.mp4"
+    },
+    {
+      "name": "现场观察",
+      "text": "现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。",
+      "duration": 6.2,
+      "material": "现场氛围_02.mp4"
+    },
+    {
+      "name": "细节承接",
+      "text": "近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉",
+      "duration": 5.1,
+      "material": "展车细节_01.mp4"
+    },
+    {
+      "name": "互动收尾",
+      "text": "你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+      "duration": 4.2,
+      "material": "车友互动_01.mp4"
+    }
+  ],
+  "workflowProject": {
+    "seed": {
+      "id": "seed-717-live",
+      "title": "717 粉丝盛典现场探展",
+      "summary": "普通参与者视角，围绕现场氛围、展车细节和车友互动做一条竖屏口播短视频。",
+      "videoUrl": "/seed-a/seed-original.mp4",
+      "recommendedCanvasRatio": "3:4",
+      "hotInsight": "717 粉丝盛典具备现场感、参与感和车友聚集氛围，适合从非官方视角切入。内容重点不是复述活动信息，而是把现场真实观察转化成可传播的普通人表达。",
+      "position": "这条种子内容的价值在于：它不是官方通稿，也不是参数讲解，而是用“我在现场看到什么”建立真实感，再用展车细节给内容一个具体支撑点。"
+    },
+    "request": "我是4S店的员工，我想强调一下我这个身份",
+    "selectedDetails": [
+      "车身线条",
+      "车灯细节"
+    ],
+    "script": [
+      {
+        "name": "开头钩子",
+        "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+        "duration": 4.5,
+        "material": "入口人群_01.mp4"
+      },
+      {
+        "name": "现场观察",
+        "text": "现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。",
+        "duration": 6.2,
+        "material": "现场氛围_02.mp4"
+      },
+      {
+        "name": "细节承接",
+        "text": "近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉",
+        "duration": 5.1,
+        "material": "展车细节_01.mp4"
+      },
+      {
+        "name": "互动收尾",
+        "text": "你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+        "duration": 4.2,
+        "material": "车友互动_01.mp4"
+      }
+    ],
+    "voiceDraft": [
+      {
+        "name": "开头钩子",
+        "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+        "duration": 4.5,
+        "material": "入口人群_01.mp4",
+        "spokenText": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+        "cue": "自然开场，先快后慢"
+      },
+      {
+        "name": "现场观察",
+        "text": "现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。",
+        "duration": 6.2,
+        "material": "现场氛围_02.mp4",
+        "spokenText": "现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。",
+        "cue": "分享感，句中略停"
+      },
+      {
+        "name": "细节承接",
+        "text": "近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉",
+        "duration": 5.1,
+        "material": "展车细节_01.mp4",
+        "spokenText": "近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉",
+        "cue": "强调细节，稍微压低语速"
+      },
+      {
+        "name": "互动收尾",
+        "text": "你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+        "duration": 4.2,
+        "material": "车友互动_01.mp4",
+        "spokenText": "你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+        "cue": "收尾提问，尾句留一点停顿"
+      }
+    ],
+    "voicePackage": {
+      "ok": true,
+      "packageId": "1784528442590-44c263f7",
+      "durationMs": 28728,
+      "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+      "audioName": "full-voice.mp3",
+      "subtitleUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.titles.json",
+      "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+      "timelineUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/voice-timeline.json",
+      "handoffUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/voice-handoff.json",
+      "segments": [
+        {
+          "name": "完整口播",
+          "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+          "durationMs": 28728,
+          "audioName": "full-voice.mp3",
+          "subtitleName": "full-voice.titles.json",
+          "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+          "subtitleUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.titles.json",
+          "extraInfo": {
+            "audio_length": 28728,
+            "audio_sample_rate": 32000,
+            "audio_size": 461364,
+            "bitrate": 128000,
+            "word_count": 149,
+            "invisible_character_ratio": 0,
+            "usage_characters": 280,
+            "audio_format": "mp3",
+            "audio_channel": 1
+          },
+          "startMs": 0,
+          "endMs": 28728,
+          "subtitles": [
+            {
+              "text": "作",
+              "startMs": 43,
+              "endMs": 384,
+              "textBegin": 0,
+              "textEnd": 1,
+              "granularity": "word"
+            },
+            {
+              "text": "为",
+              "startMs": 384,
+              "endMs": 555,
+              "textBegin": 1,
+              "textEnd": 2,
+              "granularity": "word"
+            },
+            {
+              "text": "红",
+              "startMs": 555,
+              "endMs": 683,
+              "textBegin": 2,
+              "textEnd": 3,
+              "granularity": "word"
+            },
+            {
+              "text": "旗",
+              "startMs": 683,
+              "endMs": 896,
+              "textBegin": 3,
+              "textEnd": 4,
+              "granularity": "word"
+            },
+            {
+              "text": "4",
+              "startMs": 896,
+              "endMs": 1067,
+              "textBegin": 4,
+              "textEnd": 5,
+              "granularity": "word"
+            },
+            {
+              "text": "S",
+              "startMs": 1067,
+              "endMs": 1280,
+              "textBegin": 5,
+              "textEnd": 6,
+              "granularity": "word"
+            },
+            {
+              "text": "店",
+              "startMs": 1280,
+              "endMs": 1451,
+              "textBegin": 6,
+              "textEnd": 7,
+              "granularity": "word"
+            },
+            {
+              "text": "的",
+              "startMs": 1451,
+              "endMs": 1493,
+              "textBegin": 7,
+              "textEnd": 8,
+              "granularity": "word"
+            },
+            {
+              "text": "员",
+              "startMs": 1493,
+              "endMs": 1664,
+              "textBegin": 8,
+              "textEnd": 9,
+              "granularity": "word"
+            },
+            {
+              "text": "工",
+              "startMs": 1664,
+              "endMs": 1792,
+              "textBegin": 9,
+              "textEnd": 10,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 1792,
+              "endMs": 1835,
+              "textBegin": 10,
+              "textEnd": 11,
+              "granularity": "word"
+            },
+            {
+              "text": "今",
+              "startMs": 1835,
+              "endMs": 2304,
+              "textBegin": 11,
+              "textEnd": 12,
+              "granularity": "word"
+            },
+            {
+              "text": "天",
+              "startMs": 2304,
+              "endMs": 2432,
+              "textBegin": 12,
+              "textEnd": 13,
+              "granularity": "word"
+            },
+            {
+              "text": "我",
+              "startMs": 2432,
+              "endMs": 2603,
+              "textBegin": 13,
+              "textEnd": 14,
+              "granularity": "word"
+            },
+            {
+              "text": "来",
+              "startMs": 2603,
+              "endMs": 2688,
+              "textBegin": 14,
+              "textEnd": 15,
+              "granularity": "word"
+            },
+            {
+              "text": "到",
+              "startMs": 2688,
+              "endMs": 2816,
+              "textBegin": 15,
+              "textEnd": 16,
+              "granularity": "word"
+            },
+            {
+              "text": "717",
+              "startMs": 2816,
+              "endMs": 3072,
+              "textBegin": 16,
+              "textEnd": 19,
+              "granularity": "word"
+            },
+            {
+              "text": "717",
+              "startMs": 3072,
+              "endMs": 3243,
+              "textBegin": 16,
+              "textEnd": 19,
+              "granularity": "word"
+            },
+            {
+              "text": "717",
+              "startMs": 3243,
+              "endMs": 3413,
+              "textBegin": 16,
+              "textEnd": 19,
+              "granularity": "word"
+            },
+            {
+              "text": "717",
+              "startMs": 3413,
+              "endMs": 3499,
+              "textBegin": 16,
+              "textEnd": 19,
+              "granularity": "word"
+            },
+            {
+              "text": "717",
+              "startMs": 3499,
+              "endMs": 3627,
+              "textBegin": 16,
+              "textEnd": 19,
+              "granularity": "word"
+            },
+            {
+              "text": "粉",
+              "startMs": 3627,
+              "endMs": 3840,
+              "textBegin": 19,
+              "textEnd": 20,
+              "granularity": "word"
+            },
+            {
+              "text": "丝",
+              "startMs": 3840,
+              "endMs": 4011,
+              "textBegin": 20,
+              "textEnd": 21,
+              "granularity": "word"
+            },
+            {
+              "text": "盛",
+              "startMs": 4011,
+              "endMs": 4139,
+              "textBegin": 21,
+              "textEnd": 22,
+              "granularity": "word"
+            },
+            {
+              "text": "典",
+              "startMs": 4139,
+              "endMs": 4309,
+              "textBegin": 22,
+              "textEnd": 23,
+              "granularity": "word"
+            },
+            {
+              "text": "现",
+              "startMs": 4309,
+              "endMs": 4437,
+              "textBegin": 23,
+              "textEnd": 24,
+              "granularity": "word"
+            },
+            {
+              "text": "场",
+              "startMs": 4437,
+              "endMs": 4565,
+              "textBegin": 24,
+              "textEnd": 25,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 4565,
+              "endMs": 4608,
+              "textBegin": 25,
+              "textEnd": 26,
+              "granularity": "word"
+            },
+            {
+              "text": "真",
+              "startMs": 4608,
+              "endMs": 4907,
+              "textBegin": 26,
+              "textEnd": 27,
+              "granularity": "word"
+            },
+            {
+              "text": "的",
+              "startMs": 4907,
+              "endMs": 5120,
+              "textBegin": 27,
+              "textEnd": 28,
+              "granularity": "word"
+            },
+            {
+              "text": "比",
+              "startMs": 5120,
+              "endMs": 5376,
+              "textBegin": 28,
+              "textEnd": 29,
+              "granularity": "word"
+            },
+            {
+              "text": "我",
+              "startMs": 5376,
+              "endMs": 5547,
+              "textBegin": 29,
+              "textEnd": 30,
+              "granularity": "word"
+            },
+            {
+              "text": "想",
+              "startMs": 5547,
+              "endMs": 5632,
+              "textBegin": 30,
+              "textEnd": 31,
+              "granularity": "word"
+            },
+            {
+              "text": "象",
+              "startMs": 5632,
+              "endMs": 5845,
+              "textBegin": 31,
+              "textEnd": 32,
+              "granularity": "word"
+            },
+            {
+              "text": "中",
+              "startMs": 5845,
+              "endMs": 5973,
+              "textBegin": 32,
+              "textEnd": 33,
+              "granularity": "word"
+            },
+            {
+              "text": "热",
+              "startMs": 5973,
+              "endMs": 6101,
+              "textBegin": 33,
+              "textEnd": 34,
+              "granularity": "word"
+            },
+            {
+              "text": "闹",
+              "startMs": 6101,
+              "endMs": 6315,
+              "textBegin": 34,
+              "textEnd": 35,
+              "granularity": "word"
+            },
+            {
+              "text": "。",
+              "startMs": 6315,
+              "endMs": 6485,
+              "textBegin": 35,
+              "textEnd": 36,
+              "granularity": "word"
+            },
+            {
+              "text": "现",
+              "startMs": 6528,
+              "endMs": 6912,
+              "textBegin": 36,
+              "textEnd": 37,
+              "granularity": "word"
+            },
+            {
+              "text": "场",
+              "startMs": 6912,
+              "endMs": 7125,
+              "textBegin": 37,
+              "textEnd": 38,
+              "granularity": "word"
+            },
+            {
+              "text": "不",
+              "startMs": 7125,
+              "endMs": 7339,
+              "textBegin": 38,
+              "textEnd": 39,
+              "granularity": "word"
+            },
+            {
+              "text": "像",
+              "startMs": 7339,
+              "endMs": 7467,
+              "textBegin": 39,
+              "textEnd": 40,
+              "granularity": "word"
+            },
+            {
+              "text": "官",
+              "startMs": 7467,
+              "endMs": 7595,
+              "textBegin": 40,
+              "textEnd": 41,
+              "granularity": "word"
+            },
+            {
+              "text": "方",
+              "startMs": 7595,
+              "endMs": 7765,
+              "textBegin": 41,
+              "textEnd": 42,
+              "granularity": "word"
+            },
+            {
+              "text": "活",
+              "startMs": 7765,
+              "endMs": 7893,
+              "textBegin": 42,
+              "textEnd": 43,
+              "granularity": "word"
+            },
+            {
+              "text": "动",
+              "startMs": 7893,
+              "endMs": 8064,
+              "textBegin": 43,
+              "textEnd": 44,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 8064,
+              "endMs": 8107,
+              "textBegin": 44,
+              "textEnd": 45,
+              "granularity": "word"
+            },
+            {
+              "text": "更",
+              "startMs": 8107,
+              "endMs": 8576,
+              "textBegin": 45,
+              "textEnd": 46,
+              "granularity": "word"
+            },
+            {
+              "text": "多",
+              "startMs": 8576,
+              "endMs": 8704,
+              "textBegin": 46,
+              "textEnd": 47,
+              "granularity": "word"
+            },
+            {
+              "text": "是",
+              "startMs": 8704,
+              "endMs": 8875,
+              "textBegin": 47,
+              "textEnd": 48,
+              "granularity": "word"
+            },
+            {
+              "text": "大",
+              "startMs": 8875,
+              "endMs": 9003,
+              "textBegin": 48,
+              "textEnd": 49,
+              "granularity": "word"
+            },
+            {
+              "text": "家",
+              "startMs": 9003,
+              "endMs": 9131,
+              "textBegin": 49,
+              "textEnd": 50,
+              "granularity": "word"
+            },
+            {
+              "text": "真",
+              "startMs": 9131,
+              "endMs": 9301,
+              "textBegin": 50,
+              "textEnd": 51,
+              "granularity": "word"
+            },
+            {
+              "text": "的",
+              "startMs": 9301,
+              "endMs": 9344,
+              "textBegin": 51,
+              "textEnd": 52,
+              "granularity": "word"
+            },
+            {
+              "text": "在",
+              "startMs": 9344,
+              "endMs": 9515,
+              "textBegin": 52,
+              "textEnd": 53,
+              "granularity": "word"
+            },
+            {
+              "text": "看",
+              "startMs": 9515,
+              "endMs": 9685,
+              "textBegin": 53,
+              "textEnd": 54,
+              "granularity": "word"
+            },
+            {
+              "text": "车",
+              "startMs": 9685,
+              "endMs": 9856,
+              "textBegin": 54,
+              "textEnd": 55,
+              "granularity": "word"
+            },
+            {
+              "text": "、",
+              "startMs": 9856,
+              "endMs": 9984,
+              "textBegin": 55,
+              "textEnd": 56,
+              "granularity": "word"
+            },
+            {
+              "text": "聊",
+              "startMs": 9984,
+              "endMs": 10325,
+              "textBegin": 56,
+              "textEnd": 57,
+              "granularity": "word"
+            },
+            {
+              "text": "天",
+              "startMs": 10325,
+              "endMs": 10539,
+              "textBegin": 57,
+              "textEnd": 58,
+              "granularity": "word"
+            },
+            {
+              "text": "、",
+              "startMs": 10539,
+              "endMs": 10667,
+              "textBegin": 58,
+              "textEnd": 59,
+              "granularity": "word"
+            },
+            {
+              "text": "拍",
+              "startMs": 10667,
+              "endMs": 10880,
+              "textBegin": 59,
+              "textEnd": 60,
+              "granularity": "word"
+            },
+            {
+              "text": "细",
+              "startMs": 10880,
+              "endMs": 11093,
+              "textBegin": 60,
+              "textEnd": 61,
+              "granularity": "word"
+            },
+            {
+              "text": "节",
+              "startMs": 11093,
+              "endMs": 11221,
+              "textBegin": 61,
+              "textEnd": 62,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 11221,
+              "endMs": 11264,
+              "textBegin": 62,
+              "textEnd": 63,
+              "granularity": "word"
+            },
+            {
+              "text": "我",
+              "startMs": 11264,
+              "endMs": 11648,
+              "textBegin": 63,
+              "textEnd": 64,
+              "granularity": "word"
+            },
+            {
+              "text": "作",
+              "startMs": 11648,
+              "endMs": 12160,
+              "textBegin": 64,
+              "textEnd": 65,
+              "granularity": "word"
+            },
+            {
+              "text": "为",
+              "startMs": 12160,
+              "endMs": 12245,
+              "textBegin": 65,
+              "textEnd": 66,
+              "granularity": "word"
+            },
+            {
+              "text": "员",
+              "startMs": 12245,
+              "endMs": 12373,
+              "textBegin": 66,
+              "textEnd": 67,
+              "granularity": "word"
+            },
+            {
+              "text": "工",
+              "startMs": 12373,
+              "endMs": 12544,
+              "textBegin": 67,
+              "textEnd": 68,
+              "granularity": "word"
+            },
+            {
+              "text": "看",
+              "startMs": 12544,
+              "endMs": 12757,
+              "textBegin": 68,
+              "textEnd": 69,
+              "granularity": "word"
+            },
+            {
+              "text": "到",
+              "startMs": 12757,
+              "endMs": 13056,
+              "textBegin": 69,
+              "textEnd": 70,
+              "granularity": "word"
+            },
+            {
+              "text": "这",
+              "startMs": 13056,
+              "endMs": 13184,
+              "textBegin": 70,
+              "textEnd": 71,
+              "granularity": "word"
+            },
+            {
+              "text": "种",
+              "startMs": 13184,
+              "endMs": 13269,
+              "textBegin": 71,
+              "textEnd": 72,
+              "granularity": "word"
+            },
+            {
+              "text": "氛",
+              "startMs": 13269,
+              "endMs": 13397,
+              "textBegin": 72,
+              "textEnd": 73,
+              "granularity": "word"
+            },
+            {
+              "text": "围",
+              "startMs": 13397,
+              "endMs": 13568,
+              "textBegin": 73,
+              "textEnd": 74,
+              "granularity": "word"
+            },
+            {
+              "text": "特",
+              "startMs": 13568,
+              "endMs": 13824,
+              "textBegin": 74,
+              "textEnd": 75,
+              "granularity": "word"
+            },
+            {
+              "text": "别",
+              "startMs": 13824,
+              "endMs": 14037,
+              "textBegin": 75,
+              "textEnd": 76,
+              "granularity": "word"
+            },
+            {
+              "text": "亲",
+              "startMs": 14037,
+              "endMs": 14165,
+              "textBegin": 76,
+              "textEnd": 77,
+              "granularity": "word"
+            },
+            {
+              "text": "切",
+              "startMs": 14165,
+              "endMs": 14336,
+              "textBegin": 77,
+              "textEnd": 78,
+              "granularity": "word"
+            },
+            {
+              "text": "。",
+              "startMs": 14336,
+              "endMs": 14549,
+              "textBegin": 78,
+              "textEnd": 79,
+              "granularity": "word"
+            },
+            {
+              "text": "近",
+              "startMs": 15307,
+              "endMs": 15691,
+              "textBegin": 79,
+              "textEnd": 80,
+              "granularity": "word"
+            },
+            {
+              "text": "距",
+              "startMs": 15691,
+              "endMs": 15861,
+              "textBegin": 80,
+              "textEnd": 81,
+              "granularity": "word"
+            },
+            {
+              "text": "离",
+              "startMs": 15861,
+              "endMs": 15989,
+              "textBegin": 81,
+              "textEnd": 82,
+              "granularity": "word"
+            },
+            {
+              "text": "看",
+              "startMs": 15989,
+              "endMs": 16117,
+              "textBegin": 82,
+              "textEnd": 83,
+              "granularity": "word"
+            },
+            {
+              "text": "这",
+              "startMs": 16117,
+              "endMs": 16288,
+              "textBegin": 83,
+              "textEnd": 84,
+              "granularity": "word"
+            },
+            {
+              "text": "台",
+              "startMs": 16288,
+              "endMs": 16416,
+              "textBegin": 84,
+              "textEnd": 85,
+              "granularity": "word"
+            },
+            {
+              "text": "车",
+              "startMs": 16416,
+              "endMs": 16544,
+              "textBegin": 85,
+              "textEnd": 86,
+              "granularity": "word"
+            },
+            {
+              "text": "的",
+              "startMs": 16544,
+              "endMs": 16587,
+              "textBegin": 86,
+              "textEnd": 87,
+              "granularity": "word"
+            },
+            {
+              "text": "车",
+              "startMs": 16587,
+              "endMs": 16800,
+              "textBegin": 87,
+              "textEnd": 88,
+              "granularity": "word"
+            },
+            {
+              "text": "灯",
+              "startMs": 16800,
+              "endMs": 17013,
+              "textBegin": 88,
+              "textEnd": 89,
+              "granularity": "word"
+            },
+            {
+              "text": "和",
+              "startMs": 17013,
+              "endMs": 17184,
+              "textBegin": 89,
+              "textEnd": 90,
+              "granularity": "word"
+            },
+            {
+              "text": "线",
+              "startMs": 17184,
+              "endMs": 17312,
+              "textBegin": 90,
+              "textEnd": 91,
+              "granularity": "word"
+            },
+            {
+              "text": "条",
+              "startMs": 17312,
+              "endMs": 17440,
+              "textBegin": 91,
+              "textEnd": 92,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 17440,
+              "endMs": 17483,
+              "textBegin": 92,
+              "textEnd": 93,
+              "granularity": "word"
+            },
+            {
+              "text": "质",
+              "startMs": 17483,
+              "endMs": 17995,
+              "textBegin": 93,
+              "textEnd": 94,
+              "granularity": "word"
+            },
+            {
+              "text": "感",
+              "startMs": 17995,
+              "endMs": 18251,
+              "textBegin": 94,
+              "textEnd": 95,
+              "granularity": "word"
+            },
+            {
+              "text": "确",
+              "startMs": 18251,
+              "endMs": 18421,
+              "textBegin": 95,
+              "textEnd": 96,
+              "granularity": "word"
+            },
+            {
+              "text": "实",
+              "startMs": 18421,
+              "endMs": 18592,
+              "textBegin": 96,
+              "textEnd": 97,
+              "granularity": "word"
+            },
+            {
+              "text": "比",
+              "startMs": 18592,
+              "endMs": 18720,
+              "textBegin": 97,
+              "textEnd": 98,
+              "granularity": "word"
+            },
+            {
+              "text": "图",
+              "startMs": 18720,
+              "endMs": 18848,
+              "textBegin": 98,
+              "textEnd": 99,
+              "granularity": "word"
+            },
+            {
+              "text": "片",
+              "startMs": 18848,
+              "endMs": 19019,
+              "textBegin": 99,
+              "textEnd": 100,
+              "granularity": "word"
+            },
+            {
+              "text": "更",
+              "startMs": 19019,
+              "endMs": 19189,
+              "textBegin": 100,
+              "textEnd": 101,
+              "granularity": "word"
+            },
+            {
+              "text": "直",
+              "startMs": 19189,
+              "endMs": 19360,
+              "textBegin": 101,
+              "textEnd": 102,
+              "granularity": "word"
+            },
+            {
+              "text": "观",
+              "startMs": 19360,
+              "endMs": 19488,
+              "textBegin": 102,
+              "textEnd": 103,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 19488,
+              "endMs": 19531,
+              "textBegin": 103,
+              "textEnd": 104,
+              "granularity": "word"
+            },
+            {
+              "text": "我",
+              "startMs": 19531,
+              "endMs": 19787,
+              "textBegin": 104,
+              "textEnd": 105,
+              "granularity": "word"
+            },
+            {
+              "text": "们",
+              "startMs": 19787,
+              "endMs": 20853,
+              "textBegin": 105,
+              "textEnd": 106,
+              "granularity": "word"
+            },
+            {
+              "text": "店",
+              "startMs": 20853,
+              "endMs": 20939,
+              "textBegin": 106,
+              "textEnd": 107,
+              "granularity": "word"
+            },
+            {
+              "text": "里",
+              "startMs": 20939,
+              "endMs": 21024,
+              "textBegin": 107,
+              "textEnd": 108,
+              "granularity": "word"
+            },
+            {
+              "text": "的",
+              "startMs": 21024,
+              "endMs": 21067,
+              "textBegin": 108,
+              "textEnd": 109,
+              "granularity": "word"
+            },
+            {
+              "text": "展",
+              "startMs": 21067,
+              "endMs": 21280,
+              "textBegin": 109,
+              "textEnd": 110,
+              "granularity": "word"
+            },
+            {
+              "text": "车",
+              "startMs": 21280,
+              "endMs": 21451,
+              "textBegin": 110,
+              "textEnd": 111,
+              "granularity": "word"
+            },
+            {
+              "text": "也",
+              "startMs": 21451,
+              "endMs": 21664,
+              "textBegin": 111,
+              "textEnd": 112,
+              "granularity": "word"
+            },
+            {
+              "text": "是",
+              "startMs": 21664,
+              "endMs": 21792,
+              "textBegin": 112,
+              "textEnd": 113,
+              "granularity": "word"
+            },
+            {
+              "text": "这",
+              "startMs": 21792,
+              "endMs": 21877,
+              "textBegin": 113,
+              "textEnd": 114,
+              "granularity": "word"
+            },
+            {
+              "text": "个",
+              "startMs": 21877,
+              "endMs": 22005,
+              "textBegin": 114,
+              "textEnd": 115,
+              "granularity": "word"
+            },
+            {
+              "text": "感",
+              "startMs": 22005,
+              "endMs": 22091,
+              "textBegin": 115,
+              "textEnd": 116,
+              "granularity": "word"
+            },
+            {
+              "text": "觉",
+              "startMs": 22091,
+              "endMs": 22261,
+              "textBegin": 116,
+              "textEnd": 117,
+              "granularity": "word"
+            },
+            {
+              "text": "你",
+              "startMs": 22261,
+              "endMs": 22560,
+              "textBegin": 117,
+              "textEnd": 118,
+              "granularity": "word"
+            },
+            {
+              "text": "们",
+              "startMs": 22560,
+              "endMs": 23072,
+              "textBegin": 118,
+              "textEnd": 119,
+              "granularity": "word"
+            },
+            {
+              "text": "最",
+              "startMs": 23072,
+              "endMs": 23157,
+              "textBegin": 119,
+              "textEnd": 120,
+              "granularity": "word"
+            },
+            {
+              "text": "想",
+              "startMs": 23157,
+              "endMs": 23328,
+              "textBegin": 120,
+              "textEnd": 121,
+              "granularity": "word"
+            },
+            {
+              "text": "看",
+              "startMs": 23328,
+              "endMs": 23499,
+              "textBegin": 121,
+              "textEnd": 122,
+              "granularity": "word"
+            },
+            {
+              "text": "哪",
+              "startMs": 23499,
+              "endMs": 23627,
+              "textBegin": 122,
+              "textEnd": 123,
+              "granularity": "word"
+            },
+            {
+              "text": "一",
+              "startMs": 23627,
+              "endMs": 23755,
+              "textBegin": 123,
+              "textEnd": 124,
+              "granularity": "word"
+            },
+            {
+              "text": "台",
+              "startMs": 23755,
+              "endMs": 23840,
+              "textBegin": 124,
+              "textEnd": 125,
+              "granularity": "word"
+            },
+            {
+              "text": "？",
+              "startMs": 23840,
+              "endMs": 23883,
+              "textBegin": 125,
+              "textEnd": 126,
+              "granularity": "word"
+            },
+            {
+              "text": "我",
+              "startMs": 23883,
+              "endMs": 24181,
+              "textBegin": 126,
+              "textEnd": 127,
+              "granularity": "word"
+            },
+            {
+              "text": "回",
+              "startMs": 24181,
+              "endMs": 24693,
+              "textBegin": 127,
+              "textEnd": 128,
+              "granularity": "word"
+            },
+            {
+              "text": "店",
+              "startMs": 24693,
+              "endMs": 24821,
+              "textBegin": 128,
+              "textEnd": 129,
+              "granularity": "word"
+            },
+            {
+              "text": "里",
+              "startMs": 24821,
+              "endMs": 24992,
+              "textBegin": 129,
+              "textEnd": 130,
+              "granularity": "word"
+            },
+            {
+              "text": "可",
+              "startMs": 24992,
+              "endMs": 25248,
+              "textBegin": 130,
+              "textEnd": 131,
+              "granularity": "word"
+            },
+            {
+              "text": "以",
+              "startMs": 25248,
+              "endMs": 25376,
+              "textBegin": 131,
+              "textEnd": 132,
+              "granularity": "word"
+            },
+            {
+              "text": "给",
+              "startMs": 25376,
+              "endMs": 25504,
+              "textBegin": 132,
+              "textEnd": 133,
+              "granularity": "word"
+            },
+            {
+              "text": "你",
+              "startMs": 25504,
+              "endMs": 25589,
+              "textBegin": 133,
+              "textEnd": 134,
+              "granularity": "word"
+            },
+            {
+              "text": "们",
+              "startMs": 25589,
+              "endMs": 25717,
+              "textBegin": 134,
+              "textEnd": 135,
+              "granularity": "word"
+            },
+            {
+              "text": "重",
+              "startMs": 25717,
+              "endMs": 25803,
+              "textBegin": 135,
+              "textEnd": 136,
+              "granularity": "word"
+            },
+            {
+              "text": "点",
+              "startMs": 25803,
+              "endMs": 25973,
+              "textBegin": 136,
+              "textEnd": 137,
+              "granularity": "word"
+            },
+            {
+              "text": "拍",
+              "startMs": 25973,
+              "endMs": 26101,
+              "textBegin": 137,
+              "textEnd": 138,
+              "granularity": "word"
+            },
+            {
+              "text": "，",
+              "startMs": 26101,
+              "endMs": 26144,
+              "textBegin": 138,
+              "textEnd": 139,
+              "granularity": "word"
+            },
+            {
+              "text": "下",
+              "startMs": 26144,
+              "endMs": 26699,
+              "textBegin": 139,
+              "textEnd": 140,
+              "granularity": "word"
+            },
+            {
+              "text": "一",
+              "startMs": 26699,
+              "endMs": 26912,
+              "textBegin": 140,
+              "textEnd": 141,
+              "granularity": "word"
+            },
+            {
+              "text": "条",
+              "startMs": 26912,
+              "endMs": 26997,
+              "textBegin": 141,
+              "textEnd": 142,
+              "granularity": "word"
+            },
+            {
+              "text": "继",
+              "startMs": 26997,
+              "endMs": 27296,
+              "textBegin": 142,
+              "textEnd": 143,
+              "granularity": "word"
+            },
+            {
+              "text": "续",
+              "startMs": 27296,
+              "endMs": 27509,
+              "textBegin": 143,
+              "textEnd": 144,
+              "granularity": "word"
+            },
+            {
+              "text": "分",
+              "startMs": 27509,
+              "endMs": 27680,
+              "textBegin": 144,
+              "textEnd": 145,
+              "granularity": "word"
+            },
+            {
+              "text": "享",
+              "startMs": 27680,
+              "endMs": 27851,
+              "textBegin": 145,
+              "textEnd": 146,
+              "granularity": "word"
+            },
+            {
+              "text": "现",
+              "startMs": 27851,
+              "endMs": 28021,
+              "textBegin": 146,
+              "textEnd": 147,
+              "granularity": "word"
+            },
+            {
+              "text": "场",
+              "startMs": 28021,
+              "endMs": 28192,
+              "textBegin": 147,
+              "textEnd": 148,
+              "granularity": "word"
+            },
+            {
+              "text": "。",
+              "startMs": 28192,
+              "endMs": 28363,
+              "textBegin": 148,
+              "textEnd": 149,
+              "granularity": "word"
+            }
+          ]
+        }
+      ],
+      "subtitles": [
+        {
+          "text": "作",
+          "startMs": 43,
+          "endMs": 384,
+          "textBegin": 0,
+          "textEnd": 1,
+          "granularity": "word"
+        },
+        {
+          "text": "为",
+          "startMs": 384,
+          "endMs": 555,
+          "textBegin": 1,
+          "textEnd": 2,
+          "granularity": "word"
+        },
+        {
+          "text": "红",
+          "startMs": 555,
+          "endMs": 683,
+          "textBegin": 2,
+          "textEnd": 3,
+          "granularity": "word"
+        },
+        {
+          "text": "旗",
+          "startMs": 683,
+          "endMs": 896,
+          "textBegin": 3,
+          "textEnd": 4,
+          "granularity": "word"
+        },
+        {
+          "text": "4",
+          "startMs": 896,
+          "endMs": 1067,
+          "textBegin": 4,
+          "textEnd": 5,
+          "granularity": "word"
+        },
+        {
+          "text": "S",
+          "startMs": 1067,
+          "endMs": 1280,
+          "textBegin": 5,
+          "textEnd": 6,
+          "granularity": "word"
+        },
+        {
+          "text": "店",
+          "startMs": 1280,
+          "endMs": 1451,
+          "textBegin": 6,
+          "textEnd": 7,
+          "granularity": "word"
+        },
+        {
+          "text": "的",
+          "startMs": 1451,
+          "endMs": 1493,
+          "textBegin": 7,
+          "textEnd": 8,
+          "granularity": "word"
+        },
+        {
+          "text": "员",
+          "startMs": 1493,
+          "endMs": 1664,
+          "textBegin": 8,
+          "textEnd": 9,
+          "granularity": "word"
+        },
+        {
+          "text": "工",
+          "startMs": 1664,
+          "endMs": 1792,
+          "textBegin": 9,
+          "textEnd": 10,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 1792,
+          "endMs": 1835,
+          "textBegin": 10,
+          "textEnd": 11,
+          "granularity": "word"
+        },
+        {
+          "text": "今",
+          "startMs": 1835,
+          "endMs": 2304,
+          "textBegin": 11,
+          "textEnd": 12,
+          "granularity": "word"
+        },
+        {
+          "text": "天",
+          "startMs": 2304,
+          "endMs": 2432,
+          "textBegin": 12,
+          "textEnd": 13,
+          "granularity": "word"
+        },
+        {
+          "text": "我",
+          "startMs": 2432,
+          "endMs": 2603,
+          "textBegin": 13,
+          "textEnd": 14,
+          "granularity": "word"
+        },
+        {
+          "text": "来",
+          "startMs": 2603,
+          "endMs": 2688,
+          "textBegin": 14,
+          "textEnd": 15,
+          "granularity": "word"
+        },
+        {
+          "text": "到",
+          "startMs": 2688,
+          "endMs": 2816,
+          "textBegin": 15,
+          "textEnd": 16,
+          "granularity": "word"
+        },
+        {
+          "text": "717",
+          "startMs": 2816,
+          "endMs": 3072,
+          "textBegin": 16,
+          "textEnd": 19,
+          "granularity": "word"
+        },
+        {
+          "text": "717",
+          "startMs": 3072,
+          "endMs": 3243,
+          "textBegin": 16,
+          "textEnd": 19,
+          "granularity": "word"
+        },
+        {
+          "text": "717",
+          "startMs": 3243,
+          "endMs": 3413,
+          "textBegin": 16,
+          "textEnd": 19,
+          "granularity": "word"
+        },
+        {
+          "text": "717",
+          "startMs": 3413,
+          "endMs": 3499,
+          "textBegin": 16,
+          "textEnd": 19,
+          "granularity": "word"
+        },
+        {
+          "text": "717",
+          "startMs": 3499,
+          "endMs": 3627,
+          "textBegin": 16,
+          "textEnd": 19,
+          "granularity": "word"
+        },
+        {
+          "text": "粉",
+          "startMs": 3627,
+          "endMs": 3840,
+          "textBegin": 19,
+          "textEnd": 20,
+          "granularity": "word"
+        },
+        {
+          "text": "丝",
+          "startMs": 3840,
+          "endMs": 4011,
+          "textBegin": 20,
+          "textEnd": 21,
+          "granularity": "word"
+        },
+        {
+          "text": "盛",
+          "startMs": 4011,
+          "endMs": 4139,
+          "textBegin": 21,
+          "textEnd": 22,
+          "granularity": "word"
+        },
+        {
+          "text": "典",
+          "startMs": 4139,
+          "endMs": 4309,
+          "textBegin": 22,
+          "textEnd": 23,
+          "granularity": "word"
+        },
+        {
+          "text": "现",
+          "startMs": 4309,
+          "endMs": 4437,
+          "textBegin": 23,
+          "textEnd": 24,
+          "granularity": "word"
+        },
+        {
+          "text": "场",
+          "startMs": 4437,
+          "endMs": 4565,
+          "textBegin": 24,
+          "textEnd": 25,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 4565,
+          "endMs": 4608,
+          "textBegin": 25,
+          "textEnd": 26,
+          "granularity": "word"
+        },
+        {
+          "text": "真",
+          "startMs": 4608,
+          "endMs": 4907,
+          "textBegin": 26,
+          "textEnd": 27,
+          "granularity": "word"
+        },
+        {
+          "text": "的",
+          "startMs": 4907,
+          "endMs": 5120,
+          "textBegin": 27,
+          "textEnd": 28,
+          "granularity": "word"
+        },
+        {
+          "text": "比",
+          "startMs": 5120,
+          "endMs": 5376,
+          "textBegin": 28,
+          "textEnd": 29,
+          "granularity": "word"
+        },
+        {
+          "text": "我",
+          "startMs": 5376,
+          "endMs": 5547,
+          "textBegin": 29,
+          "textEnd": 30,
+          "granularity": "word"
+        },
+        {
+          "text": "想",
+          "startMs": 5547,
+          "endMs": 5632,
+          "textBegin": 30,
+          "textEnd": 31,
+          "granularity": "word"
+        },
+        {
+          "text": "象",
+          "startMs": 5632,
+          "endMs": 5845,
+          "textBegin": 31,
+          "textEnd": 32,
+          "granularity": "word"
+        },
+        {
+          "text": "中",
+          "startMs": 5845,
+          "endMs": 5973,
+          "textBegin": 32,
+          "textEnd": 33,
+          "granularity": "word"
+        },
+        {
+          "text": "热",
+          "startMs": 5973,
+          "endMs": 6101,
+          "textBegin": 33,
+          "textEnd": 34,
+          "granularity": "word"
+        },
+        {
+          "text": "闹",
+          "startMs": 6101,
+          "endMs": 6315,
+          "textBegin": 34,
+          "textEnd": 35,
+          "granularity": "word"
+        },
+        {
+          "text": "。",
+          "startMs": 6315,
+          "endMs": 6485,
+          "textBegin": 35,
+          "textEnd": 36,
+          "granularity": "word"
+        },
+        {
+          "text": "现",
+          "startMs": 6528,
+          "endMs": 6912,
+          "textBegin": 36,
+          "textEnd": 37,
+          "granularity": "word"
+        },
+        {
+          "text": "场",
+          "startMs": 6912,
+          "endMs": 7125,
+          "textBegin": 37,
+          "textEnd": 38,
+          "granularity": "word"
+        },
+        {
+          "text": "不",
+          "startMs": 7125,
+          "endMs": 7339,
+          "textBegin": 38,
+          "textEnd": 39,
+          "granularity": "word"
+        },
+        {
+          "text": "像",
+          "startMs": 7339,
+          "endMs": 7467,
+          "textBegin": 39,
+          "textEnd": 40,
+          "granularity": "word"
+        },
+        {
+          "text": "官",
+          "startMs": 7467,
+          "endMs": 7595,
+          "textBegin": 40,
+          "textEnd": 41,
+          "granularity": "word"
+        },
+        {
+          "text": "方",
+          "startMs": 7595,
+          "endMs": 7765,
+          "textBegin": 41,
+          "textEnd": 42,
+          "granularity": "word"
+        },
+        {
+          "text": "活",
+          "startMs": 7765,
+          "endMs": 7893,
+          "textBegin": 42,
+          "textEnd": 43,
+          "granularity": "word"
+        },
+        {
+          "text": "动",
+          "startMs": 7893,
+          "endMs": 8064,
+          "textBegin": 43,
+          "textEnd": 44,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 8064,
+          "endMs": 8107,
+          "textBegin": 44,
+          "textEnd": 45,
+          "granularity": "word"
+        },
+        {
+          "text": "更",
+          "startMs": 8107,
+          "endMs": 8576,
+          "textBegin": 45,
+          "textEnd": 46,
+          "granularity": "word"
+        },
+        {
+          "text": "多",
+          "startMs": 8576,
+          "endMs": 8704,
+          "textBegin": 46,
+          "textEnd": 47,
+          "granularity": "word"
+        },
+        {
+          "text": "是",
+          "startMs": 8704,
+          "endMs": 8875,
+          "textBegin": 47,
+          "textEnd": 48,
+          "granularity": "word"
+        },
+        {
+          "text": "大",
+          "startMs": 8875,
+          "endMs": 9003,
+          "textBegin": 48,
+          "textEnd": 49,
+          "granularity": "word"
+        },
+        {
+          "text": "家",
+          "startMs": 9003,
+          "endMs": 9131,
+          "textBegin": 49,
+          "textEnd": 50,
+          "granularity": "word"
+        },
+        {
+          "text": "真",
+          "startMs": 9131,
+          "endMs": 9301,
+          "textBegin": 50,
+          "textEnd": 51,
+          "granularity": "word"
+        },
+        {
+          "text": "的",
+          "startMs": 9301,
+          "endMs": 9344,
+          "textBegin": 51,
+          "textEnd": 52,
+          "granularity": "word"
+        },
+        {
+          "text": "在",
+          "startMs": 9344,
+          "endMs": 9515,
+          "textBegin": 52,
+          "textEnd": 53,
+          "granularity": "word"
+        },
+        {
+          "text": "看",
+          "startMs": 9515,
+          "endMs": 9685,
+          "textBegin": 53,
+          "textEnd": 54,
+          "granularity": "word"
+        },
+        {
+          "text": "车",
+          "startMs": 9685,
+          "endMs": 9856,
+          "textBegin": 54,
+          "textEnd": 55,
+          "granularity": "word"
+        },
+        {
+          "text": "、",
+          "startMs": 9856,
+          "endMs": 9984,
+          "textBegin": 55,
+          "textEnd": 56,
+          "granularity": "word"
+        },
+        {
+          "text": "聊",
+          "startMs": 9984,
+          "endMs": 10325,
+          "textBegin": 56,
+          "textEnd": 57,
+          "granularity": "word"
+        },
+        {
+          "text": "天",
+          "startMs": 10325,
+          "endMs": 10539,
+          "textBegin": 57,
+          "textEnd": 58,
+          "granularity": "word"
+        },
+        {
+          "text": "、",
+          "startMs": 10539,
+          "endMs": 10667,
+          "textBegin": 58,
+          "textEnd": 59,
+          "granularity": "word"
+        },
+        {
+          "text": "拍",
+          "startMs": 10667,
+          "endMs": 10880,
+          "textBegin": 59,
+          "textEnd": 60,
+          "granularity": "word"
+        },
+        {
+          "text": "细",
+          "startMs": 10880,
+          "endMs": 11093,
+          "textBegin": 60,
+          "textEnd": 61,
+          "granularity": "word"
+        },
+        {
+          "text": "节",
+          "startMs": 11093,
+          "endMs": 11221,
+          "textBegin": 61,
+          "textEnd": 62,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 11221,
+          "endMs": 11264,
+          "textBegin": 62,
+          "textEnd": 63,
+          "granularity": "word"
+        },
+        {
+          "text": "我",
+          "startMs": 11264,
+          "endMs": 11648,
+          "textBegin": 63,
+          "textEnd": 64,
+          "granularity": "word"
+        },
+        {
+          "text": "作",
+          "startMs": 11648,
+          "endMs": 12160,
+          "textBegin": 64,
+          "textEnd": 65,
+          "granularity": "word"
+        },
+        {
+          "text": "为",
+          "startMs": 12160,
+          "endMs": 12245,
+          "textBegin": 65,
+          "textEnd": 66,
+          "granularity": "word"
+        },
+        {
+          "text": "员",
+          "startMs": 12245,
+          "endMs": 12373,
+          "textBegin": 66,
+          "textEnd": 67,
+          "granularity": "word"
+        },
+        {
+          "text": "工",
+          "startMs": 12373,
+          "endMs": 12544,
+          "textBegin": 67,
+          "textEnd": 68,
+          "granularity": "word"
+        },
+        {
+          "text": "看",
+          "startMs": 12544,
+          "endMs": 12757,
+          "textBegin": 68,
+          "textEnd": 69,
+          "granularity": "word"
+        },
+        {
+          "text": "到",
+          "startMs": 12757,
+          "endMs": 13056,
+          "textBegin": 69,
+          "textEnd": 70,
+          "granularity": "word"
+        },
+        {
+          "text": "这",
+          "startMs": 13056,
+          "endMs": 13184,
+          "textBegin": 70,
+          "textEnd": 71,
+          "granularity": "word"
+        },
+        {
+          "text": "种",
+          "startMs": 13184,
+          "endMs": 13269,
+          "textBegin": 71,
+          "textEnd": 72,
+          "granularity": "word"
+        },
+        {
+          "text": "氛",
+          "startMs": 13269,
+          "endMs": 13397,
+          "textBegin": 72,
+          "textEnd": 73,
+          "granularity": "word"
+        },
+        {
+          "text": "围",
+          "startMs": 13397,
+          "endMs": 13568,
+          "textBegin": 73,
+          "textEnd": 74,
+          "granularity": "word"
+        },
+        {
+          "text": "特",
+          "startMs": 13568,
+          "endMs": 13824,
+          "textBegin": 74,
+          "textEnd": 75,
+          "granularity": "word"
+        },
+        {
+          "text": "别",
+          "startMs": 13824,
+          "endMs": 14037,
+          "textBegin": 75,
+          "textEnd": 76,
+          "granularity": "word"
+        },
+        {
+          "text": "亲",
+          "startMs": 14037,
+          "endMs": 14165,
+          "textBegin": 76,
+          "textEnd": 77,
+          "granularity": "word"
+        },
+        {
+          "text": "切",
+          "startMs": 14165,
+          "endMs": 14336,
+          "textBegin": 77,
+          "textEnd": 78,
+          "granularity": "word"
+        },
+        {
+          "text": "。",
+          "startMs": 14336,
+          "endMs": 14549,
+          "textBegin": 78,
+          "textEnd": 79,
+          "granularity": "word"
+        },
+        {
+          "text": "近",
+          "startMs": 15307,
+          "endMs": 15691,
+          "textBegin": 79,
+          "textEnd": 80,
+          "granularity": "word"
+        },
+        {
+          "text": "距",
+          "startMs": 15691,
+          "endMs": 15861,
+          "textBegin": 80,
+          "textEnd": 81,
+          "granularity": "word"
+        },
+        {
+          "text": "离",
+          "startMs": 15861,
+          "endMs": 15989,
+          "textBegin": 81,
+          "textEnd": 82,
+          "granularity": "word"
+        },
+        {
+          "text": "看",
+          "startMs": 15989,
+          "endMs": 16117,
+          "textBegin": 82,
+          "textEnd": 83,
+          "granularity": "word"
+        },
+        {
+          "text": "这",
+          "startMs": 16117,
+          "endMs": 16288,
+          "textBegin": 83,
+          "textEnd": 84,
+          "granularity": "word"
+        },
+        {
+          "text": "台",
+          "startMs": 16288,
+          "endMs": 16416,
+          "textBegin": 84,
+          "textEnd": 85,
+          "granularity": "word"
+        },
+        {
+          "text": "车",
+          "startMs": 16416,
+          "endMs": 16544,
+          "textBegin": 85,
+          "textEnd": 86,
+          "granularity": "word"
+        },
+        {
+          "text": "的",
+          "startMs": 16544,
+          "endMs": 16587,
+          "textBegin": 86,
+          "textEnd": 87,
+          "granularity": "word"
+        },
+        {
+          "text": "车",
+          "startMs": 16587,
+          "endMs": 16800,
+          "textBegin": 87,
+          "textEnd": 88,
+          "granularity": "word"
+        },
+        {
+          "text": "灯",
+          "startMs": 16800,
+          "endMs": 17013,
+          "textBegin": 88,
+          "textEnd": 89,
+          "granularity": "word"
+        },
+        {
+          "text": "和",
+          "startMs": 17013,
+          "endMs": 17184,
+          "textBegin": 89,
+          "textEnd": 90,
+          "granularity": "word"
+        },
+        {
+          "text": "线",
+          "startMs": 17184,
+          "endMs": 17312,
+          "textBegin": 90,
+          "textEnd": 91,
+          "granularity": "word"
+        },
+        {
+          "text": "条",
+          "startMs": 17312,
+          "endMs": 17440,
+          "textBegin": 91,
+          "textEnd": 92,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 17440,
+          "endMs": 17483,
+          "textBegin": 92,
+          "textEnd": 93,
+          "granularity": "word"
+        },
+        {
+          "text": "质",
+          "startMs": 17483,
+          "endMs": 17995,
+          "textBegin": 93,
+          "textEnd": 94,
+          "granularity": "word"
+        },
+        {
+          "text": "感",
+          "startMs": 17995,
+          "endMs": 18251,
+          "textBegin": 94,
+          "textEnd": 95,
+          "granularity": "word"
+        },
+        {
+          "text": "确",
+          "startMs": 18251,
+          "endMs": 18421,
+          "textBegin": 95,
+          "textEnd": 96,
+          "granularity": "word"
+        },
+        {
+          "text": "实",
+          "startMs": 18421,
+          "endMs": 18592,
+          "textBegin": 96,
+          "textEnd": 97,
+          "granularity": "word"
+        },
+        {
+          "text": "比",
+          "startMs": 18592,
+          "endMs": 18720,
+          "textBegin": 97,
+          "textEnd": 98,
+          "granularity": "word"
+        },
+        {
+          "text": "图",
+          "startMs": 18720,
+          "endMs": 18848,
+          "textBegin": 98,
+          "textEnd": 99,
+          "granularity": "word"
+        },
+        {
+          "text": "片",
+          "startMs": 18848,
+          "endMs": 19019,
+          "textBegin": 99,
+          "textEnd": 100,
+          "granularity": "word"
+        },
+        {
+          "text": "更",
+          "startMs": 19019,
+          "endMs": 19189,
+          "textBegin": 100,
+          "textEnd": 101,
+          "granularity": "word"
+        },
+        {
+          "text": "直",
+          "startMs": 19189,
+          "endMs": 19360,
+          "textBegin": 101,
+          "textEnd": 102,
+          "granularity": "word"
+        },
+        {
+          "text": "观",
+          "startMs": 19360,
+          "endMs": 19488,
+          "textBegin": 102,
+          "textEnd": 103,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 19488,
+          "endMs": 19531,
+          "textBegin": 103,
+          "textEnd": 104,
+          "granularity": "word"
+        },
+        {
+          "text": "我",
+          "startMs": 19531,
+          "endMs": 19787,
+          "textBegin": 104,
+          "textEnd": 105,
+          "granularity": "word"
+        },
+        {
+          "text": "们",
+          "startMs": 19787,
+          "endMs": 20853,
+          "textBegin": 105,
+          "textEnd": 106,
+          "granularity": "word"
+        },
+        {
+          "text": "店",
+          "startMs": 20853,
+          "endMs": 20939,
+          "textBegin": 106,
+          "textEnd": 107,
+          "granularity": "word"
+        },
+        {
+          "text": "里",
+          "startMs": 20939,
+          "endMs": 21024,
+          "textBegin": 107,
+          "textEnd": 108,
+          "granularity": "word"
+        },
+        {
+          "text": "的",
+          "startMs": 21024,
+          "endMs": 21067,
+          "textBegin": 108,
+          "textEnd": 109,
+          "granularity": "word"
+        },
+        {
+          "text": "展",
+          "startMs": 21067,
+          "endMs": 21280,
+          "textBegin": 109,
+          "textEnd": 110,
+          "granularity": "word"
+        },
+        {
+          "text": "车",
+          "startMs": 21280,
+          "endMs": 21451,
+          "textBegin": 110,
+          "textEnd": 111,
+          "granularity": "word"
+        },
+        {
+          "text": "也",
+          "startMs": 21451,
+          "endMs": 21664,
+          "textBegin": 111,
+          "textEnd": 112,
+          "granularity": "word"
+        },
+        {
+          "text": "是",
+          "startMs": 21664,
+          "endMs": 21792,
+          "textBegin": 112,
+          "textEnd": 113,
+          "granularity": "word"
+        },
+        {
+          "text": "这",
+          "startMs": 21792,
+          "endMs": 21877,
+          "textBegin": 113,
+          "textEnd": 114,
+          "granularity": "word"
+        },
+        {
+          "text": "个",
+          "startMs": 21877,
+          "endMs": 22005,
+          "textBegin": 114,
+          "textEnd": 115,
+          "granularity": "word"
+        },
+        {
+          "text": "感",
+          "startMs": 22005,
+          "endMs": 22091,
+          "textBegin": 115,
+          "textEnd": 116,
+          "granularity": "word"
+        },
+        {
+          "text": "觉",
+          "startMs": 22091,
+          "endMs": 22261,
+          "textBegin": 116,
+          "textEnd": 117,
+          "granularity": "word"
+        },
+        {
+          "text": "你",
+          "startMs": 22261,
+          "endMs": 22560,
+          "textBegin": 117,
+          "textEnd": 118,
+          "granularity": "word"
+        },
+        {
+          "text": "们",
+          "startMs": 22560,
+          "endMs": 23072,
+          "textBegin": 118,
+          "textEnd": 119,
+          "granularity": "word"
+        },
+        {
+          "text": "最",
+          "startMs": 23072,
+          "endMs": 23157,
+          "textBegin": 119,
+          "textEnd": 120,
+          "granularity": "word"
+        },
+        {
+          "text": "想",
+          "startMs": 23157,
+          "endMs": 23328,
+          "textBegin": 120,
+          "textEnd": 121,
+          "granularity": "word"
+        },
+        {
+          "text": "看",
+          "startMs": 23328,
+          "endMs": 23499,
+          "textBegin": 121,
+          "textEnd": 122,
+          "granularity": "word"
+        },
+        {
+          "text": "哪",
+          "startMs": 23499,
+          "endMs": 23627,
+          "textBegin": 122,
+          "textEnd": 123,
+          "granularity": "word"
+        },
+        {
+          "text": "一",
+          "startMs": 23627,
+          "endMs": 23755,
+          "textBegin": 123,
+          "textEnd": 124,
+          "granularity": "word"
+        },
+        {
+          "text": "台",
+          "startMs": 23755,
+          "endMs": 23840,
+          "textBegin": 124,
+          "textEnd": 125,
+          "granularity": "word"
+        },
+        {
+          "text": "？",
+          "startMs": 23840,
+          "endMs": 23883,
+          "textBegin": 125,
+          "textEnd": 126,
+          "granularity": "word"
+        },
+        {
+          "text": "我",
+          "startMs": 23883,
+          "endMs": 24181,
+          "textBegin": 126,
+          "textEnd": 127,
+          "granularity": "word"
+        },
+        {
+          "text": "回",
+          "startMs": 24181,
+          "endMs": 24693,
+          "textBegin": 127,
+          "textEnd": 128,
+          "granularity": "word"
+        },
+        {
+          "text": "店",
+          "startMs": 24693,
+          "endMs": 24821,
+          "textBegin": 128,
+          "textEnd": 129,
+          "granularity": "word"
+        },
+        {
+          "text": "里",
+          "startMs": 24821,
+          "endMs": 24992,
+          "textBegin": 129,
+          "textEnd": 130,
+          "granularity": "word"
+        },
+        {
+          "text": "可",
+          "startMs": 24992,
+          "endMs": 25248,
+          "textBegin": 130,
+          "textEnd": 131,
+          "granularity": "word"
+        },
+        {
+          "text": "以",
+          "startMs": 25248,
+          "endMs": 25376,
+          "textBegin": 131,
+          "textEnd": 132,
+          "granularity": "word"
+        },
+        {
+          "text": "给",
+          "startMs": 25376,
+          "endMs": 25504,
+          "textBegin": 132,
+          "textEnd": 133,
+          "granularity": "word"
+        },
+        {
+          "text": "你",
+          "startMs": 25504,
+          "endMs": 25589,
+          "textBegin": 133,
+          "textEnd": 134,
+          "granularity": "word"
+        },
+        {
+          "text": "们",
+          "startMs": 25589,
+          "endMs": 25717,
+          "textBegin": 134,
+          "textEnd": 135,
+          "granularity": "word"
+        },
+        {
+          "text": "重",
+          "startMs": 25717,
+          "endMs": 25803,
+          "textBegin": 135,
+          "textEnd": 136,
+          "granularity": "word"
+        },
+        {
+          "text": "点",
+          "startMs": 25803,
+          "endMs": 25973,
+          "textBegin": 136,
+          "textEnd": 137,
+          "granularity": "word"
+        },
+        {
+          "text": "拍",
+          "startMs": 25973,
+          "endMs": 26101,
+          "textBegin": 137,
+          "textEnd": 138,
+          "granularity": "word"
+        },
+        {
+          "text": "，",
+          "startMs": 26101,
+          "endMs": 26144,
+          "textBegin": 138,
+          "textEnd": 139,
+          "granularity": "word"
+        },
+        {
+          "text": "下",
+          "startMs": 26144,
+          "endMs": 26699,
+          "textBegin": 139,
+          "textEnd": 140,
+          "granularity": "word"
+        },
+        {
+          "text": "一",
+          "startMs": 26699,
+          "endMs": 26912,
+          "textBegin": 140,
+          "textEnd": 141,
+          "granularity": "word"
+        },
+        {
+          "text": "条",
+          "startMs": 26912,
+          "endMs": 26997,
+          "textBegin": 141,
+          "textEnd": 142,
+          "granularity": "word"
+        },
+        {
+          "text": "继",
+          "startMs": 26997,
+          "endMs": 27296,
+          "textBegin": 142,
+          "textEnd": 143,
+          "granularity": "word"
+        },
+        {
+          "text": "续",
+          "startMs": 27296,
+          "endMs": 27509,
+          "textBegin": 143,
+          "textEnd": 144,
+          "granularity": "word"
+        },
+        {
+          "text": "分",
+          "startMs": 27509,
+          "endMs": 27680,
+          "textBegin": 144,
+          "textEnd": 145,
+          "granularity": "word"
+        },
+        {
+          "text": "享",
+          "startMs": 27680,
+          "endMs": 27851,
+          "textBegin": 145,
+          "textEnd": 146,
+          "granularity": "word"
+        },
+        {
+          "text": "现",
+          "startMs": 27851,
+          "endMs": 28021,
+          "textBegin": 146,
+          "textEnd": 147,
+          "granularity": "word"
+        },
+        {
+          "text": "场",
+          "startMs": 28021,
+          "endMs": 28192,
+          "textBegin": 147,
+          "textEnd": 148,
+          "granularity": "word"
+        },
+        {
+          "text": "。",
+          "startMs": 28192,
+          "endMs": 28363,
+          "textBegin": 148,
+          "textEnd": 149,
+          "granularity": "word"
+        }
+      ],
+      "handoff": {
+        "title": "717 粉丝盛典现场探展",
+        "voiceId": "male-qn-jingying",
+        "generatedAt": "2026-07-20T06:20:42.585Z",
+        "totalDurationMs": 20000,
+        "segments": [
+          {
+            "segment": "开头钩子",
+            "voiceText": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+            "duration": 4.5,
+            "material": "入口人群_01.mp4",
+            "segmentPurpose": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+            "nodes": [
+              {
+                "text": "作为红旗4S店的员工",
+                "role": "活动入口",
+                "assetType": "强绑定",
+                "materials": [
+                  "活动入口"
+                ],
+                "visualNeed": "入口这边已经能感觉到人不少，不像只是简单摆个展。"
+              },
+              {
+                "text": "今天我来到717粉丝盛典现场",
+                "role": "品牌主视觉",
+                "assetType": "强绑定",
+                "materials": [
+                  "品牌主视觉"
+                ],
+                "visualNeed": "一进来先看到 717 的主视觉，现场氛围一下就明确了。"
+              },
+              {
+                "text": "真的比我想象中热闹",
+                "role": "活动空间",
+                "assetType": "强绑定",
+                "materials": [
+                  "活动空间"
+                ],
+                "visualNeed": "整个活动空间比想象中更完整，不是只看一台车那么简单。"
+              }
+            ]
+          },
+          {
+            "segment": "现场观察",
+            "voiceText": "现场不像官方活动，更多是大家真的在看车、聊天、拍细节，我作为员工看到这种氛围特别亲切。",
+            "duration": 6.2,
+            "material": "现场氛围_02.mp4",
+            "segmentPurpose": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+            "nodes": [
+              {
+                "text": "现场不像官方活动",
+                "role": "车友交流",
+                "assetType": "强绑定",
+                "materials": [
+                  "车友交流"
+                ],
+                "visualNeed": "现场不少人是真的在聊车，不是只走马观花看一眼。"
+              },
+              {
+                "text": "更多是大家真的在看车、聊天、拍细节",
+                "role": "观众看车",
+                "assetType": "强绑定",
+                "materials": [
+                  "观众看车"
+                ],
+                "visualNeed": "展车旁边一直有人停下来细看，说明大家对实车还是挺感兴趣的。"
+              },
+              {
+                "text": "我作为员工看到这种氛围特别亲切",
+                "role": "拍照记录",
+                "assetType": "强绑定",
+                "materials": [
+                  "拍照记录"
+                ],
+                "visualNeed": "很多人会拿手机拍细节，这种现场感比官方图更有说服力。"
+              }
+            ]
+          },
+          {
+            "segment": "细节承接",
+            "voiceText": "近距离看这台车的车灯和线条，质感确实比图片更直观，我们店里的展车也是这个感觉",
+            "duration": 5.1,
+            "material": "展车细节_01.mp4",
+            "segmentPurpose": "用展车细节支撑现场值得看的理由，让内容从氛围转向具体观察。",
+            "nodes": [
+              {
+                "text": "近距离看这台车的车灯和线条",
+                "role": "车灯细节",
+                "assetType": "强绑定",
+                "materials": [
+                  "车灯细节"
+                ],
+                "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。"
+              },
+              {
+                "text": "质感确实比图片更直观",
+                "role": "内饰中控",
+                "assetType": "强绑定",
+                "materials": [
+                  "内饰中控"
+                ],
+                "visualNeed": "内饰和中控近看会更有真实感，细节不是图片里那种平面的感觉。"
+              },
+              {
+                "text": "我们店里的展车也是这个感觉",
+                "role": "车身线条",
+                "assetType": "强绑定",
+                "materials": [
+                  "车身线条"
+                ],
+                "visualNeed": "车身线条在现场看会更明显，整体气场比照片更完整。"
+              }
+            ]
+          },
+          {
+            "segment": "互动收尾",
+            "voiceText": "你们最想看哪一台？我回店里可以给你们重点拍，下一条继续分享现场。",
+            "duration": 4.2,
+            "material": "车友互动_01.mp4",
+            "segmentPurpose": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+            "nodes": [
+              {
+                "text": "你们最想看哪一台",
+                "role": "结尾氛围",
+                "assetType": "强绑定",
+                "materials": [
+                  "结尾氛围"
+                ],
+                "visualNeed": "现场还有很多细节可以慢慢看，整体比我预期更有氛围。"
+              },
+              {
+                "text": "我回店里可以给你们重点拍",
+                "role": "评论引导",
+                "assetType": "强绑定",
+                "materials": [
+                  "评论引导"
+                ],
+                "visualNeed": "你们更想看哪一台？我可以下一条重点拍给你们看。"
+              },
+              {
+                "text": "下一条继续分享现场",
+                "role": "回看展车",
+                "assetType": "强绑定",
+                "materials": [
+                  "回看展车"
+                ],
+                "visualNeed": "这次先带你们看个现场，下一条我再细拍这台车。"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "timelineBeats": [
+      {
+        "id": "0-0",
+        "segmentName": "开头钩子",
+        "text": "作为红旗4S店的员工，",
+        "start": 0.043,
+        "duration": 1.792,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "0-1",
+        "segmentName": "开头钩子",
+        "text": "今天我来到717粉丝盛典现场，",
+        "start": 1.835,
+        "duration": 2.773,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "0-2",
+        "segmentName": "开头钩子",
+        "text": "真的比我想象中热闹。",
+        "start": 4.608,
+        "duration": 1.92,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "快速进入 717 粉丝盛典语境，建立“我已经来到现场”的真实参与感。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "1-0",
+        "segmentName": "现场观察",
+        "text": "现场不像官方活动，",
+        "start": 6.528,
+        "duration": 1.579,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "1-1",
+        "segmentName": "现场观察",
+        "text": "更多是大家真的在看车、聊天、拍细节，",
+        "start": 8.107,
+        "duration": 3.157,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "1-2",
+        "segmentName": "现场观察",
+        "text": "我作为员工看到这种氛围特别亲切。",
+        "start": 11.264,
+        "duration": 4.043,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "2-0",
+        "segmentName": "细节承接",
+        "text": "近距离看这台车的车灯和线条，",
+        "start": 15.307,
+        "duration": 2.176,
+        "materialName": "车灯细节",
+        "materialType": "强绑定素材",
+        "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "2-1",
+        "segmentName": "细节承接",
+        "text": "质感确实比图片更直观，",
+        "start": 17.483,
+        "duration": 2.048,
+        "materialName": "车灯细节",
+        "materialType": "强绑定素材",
+        "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "2-2",
+        "segmentName": "细节承接",
+        "text": "我们店里的展车也是这个感觉",
+        "start": 19.531,
+        "duration": 2.73,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用展车细节支撑现场值得看的理由，让内容从氛围转向具体观察。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "3-0",
+        "segmentName": "互动收尾",
+        "text": "你们最想看哪一台？",
+        "start": 22.261,
+        "duration": 1.622,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "3-1",
+        "segmentName": "互动收尾",
+        "text": "我回店里可以给你们重点拍，",
+        "start": 23.883,
+        "duration": 2.261,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      },
+      {
+        "id": "3-2",
+        "segmentName": "互动收尾",
+        "text": "下一条继续分享现场。",
+        "start": 26.144,
+        "duration": 2.584,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+        "audioUrl": "http://127.0.0.1:8790/outputs/voice-packages/1784528442590-44c263f7/full-voice.mp3",
+        "audioName": "full-voice.mp3",
+        "isRealVoice": true
+      }
+    ],
+    "materialClips": [
+      {
+        "id": "0-0|0-1|0-2",
+        "text": "作为红旗4S店的员工，今天我来到717粉丝盛典现场，真的比我想象中热闹。",
+        "start": 0.043,
+        "duration": 6.484999999999999,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用户手动合并的通用画面段",
+        "locked": false,
+        "isMerged": true,
+        "beatIds": [
+          "0-0",
+          "0-1",
+          "0-2"
+        ],
+        "selectedMaterials": [
+          "活动空间_01.mp4",
+          "展车全景_01.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "活动空间_01.mp4",
+            "name": "活动空间",
+            "sourceDuration": 14,
+            "sourceStart": 2.5524992214768,
+            "sourceEnd": 5.2068173779101325,
+            "renderDuration": 2.654318156433332,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          },
+          {
+            "file": "展车全景_01.mp4",
+            "name": "展车全景",
+            "sourceDuration": 16,
+            "sourceStart": 2.2021256567540473,
+            "sourceEnd": 6.032807500320715,
+            "renderDuration": 3.8306818435666674,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1-0",
+        "text": "现场不像官方活动，",
+        "start": 6.528,
+        "duration": 1.579,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "1-0"
+        ],
+        "selectedMaterials": [
+          "展车全景_01.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "展车全景_01.mp4",
+            "name": "展车全景",
+            "sourceDuration": 16,
+            "sourceStart": 0,
+            "sourceEnd": 1.579,
+            "renderDuration": 1.579,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1-1",
+        "text": "更多是大家真的在看车、聊天、拍细节，",
+        "start": 8.107,
+        "duration": 3.157,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "1-1"
+        ],
+        "selectedMaterials": [
+          "现场氛围_02.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "现场氛围_02.mp4",
+            "name": "现场氛围",
+            "sourceDuration": 18,
+            "sourceStart": 0,
+            "sourceEnd": 3.157,
+            "renderDuration": 3.157,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1-2",
+        "text": "我作为员工看到这种氛围特别亲切。",
+        "start": 11.264,
+        "duration": 4.043,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "表达现场不是单向官方展示，而是有人看车、拍照、交流和自发停留。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "1-2"
+        ],
+        "selectedMaterials": [
+          "车友互动_01.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "车友互动_01.mp4",
+            "name": "车友互动",
+            "sourceDuration": 13,
+            "sourceStart": 0,
+            "sourceEnd": 4.043,
+            "renderDuration": 4.043,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "2-0",
+        "text": "近距离看这台车的车灯和线条，",
+        "start": 15.307,
+        "duration": 2.176,
+        "materialName": "车灯细节",
+        "materialType": "强绑定素材",
+        "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+        "locked": true,
+        "isMerged": false,
+        "beatIds": [
+          "2-0"
+        ],
+        "selectedMaterials": [
+          "车灯细节_01.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "车灯细节_01.mp4",
+            "name": "车灯细节",
+            "sourceDuration": 8,
+            "sourceStart": 0,
+            "sourceEnd": 2.176,
+            "renderDuration": 2.176,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "2-1",
+        "text": "质感确实比图片更直观，",
+        "start": 17.483,
+        "duration": 2.048,
+        "materialName": "车灯细节",
+        "materialType": "强绑定素材",
+        "visualNeed": "车灯近看会更有层次，实车质感比图片更直观。",
+        "locked": true,
+        "isMerged": false,
+        "beatIds": [
+          "2-1"
+        ],
+        "selectedMaterials": [
+          "车灯细节_02.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "车灯细节_02.mp4",
+            "name": "车灯细节",
+            "sourceDuration": 7,
+            "sourceStart": 0,
+            "sourceEnd": 2.048,
+            "renderDuration": 2.048,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "2-2",
+        "text": "我们店里的展车也是这个感觉",
+        "start": 19.531,
+        "duration": 2.73,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用展车细节支撑现场值得看的理由，让内容从氛围转向具体观察。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "2-2"
+        ],
+        "selectedMaterials": [
+          "现场氛围_02.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "现场氛围_02.mp4",
+            "name": "现场氛围",
+            "sourceDuration": 18,
+            "sourceStart": 0,
+            "sourceEnd": 2.73,
+            "renderDuration": 2.73,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "3-0",
+        "text": "你们最想看哪一台？",
+        "start": 22.261,
+        "duration": 1.622,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "3-0"
+        ],
+        "selectedMaterials": [
+          "车友互动_01.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "车友互动_01.mp4",
+            "name": "车友互动",
+            "sourceDuration": 13,
+            "sourceStart": 0,
+            "sourceEnd": 1.622,
+            "renderDuration": 1.622,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      },
+      {
+        "id": "3-1",
+        "text": "我回店里可以给你们重点拍，",
+        "start": 23.883,
+        "duration": 2.261,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "3-1"
+        ],
+        "selectedMaterials": [],
+        "materialPlan": []
+      },
+      {
+        "id": "3-2",
+        "text": "下一条继续分享现场。",
+        "start": 26.144,
+        "duration": 2.584,
+        "materialName": "通用素材",
+        "materialType": "通用素材",
+        "visualNeed": "用自然问题或下一条预告收束，让内容保留普通人分享感。",
+        "locked": false,
+        "isMerged": false,
+        "beatIds": [
+          "3-2"
+        ],
+        "selectedMaterials": [
+          "车友互动_01.mp4"
+        ],
+        "materialPlan": [
+          {
+            "file": "车友互动_01.mp4",
+            "name": "车友互动",
+            "sourceDuration": 13,
+            "sourceStart": 0,
+            "sourceEnd": 2.584,
+            "renderDuration": 2.584,
+            "transform": {
+              "x": 0,
+              "y": 0,
+              "scale": 1,
+              "fit": "contain"
+            }
+          }
+        ]
+      }
+    ],
+    "canvasRatio": "3:4",
+    "packageConfig": {
+      "subtitleStyle": {
+        "type": "social",
+        "position": "bottom",
+        "highlightWords": [
+          "热闹",
+          "车灯",
+          "质感",
+          "现场",
+          "细节"
+        ]
+      },
+      "overlays": [
+        {
+          "type": "cornerBadge",
+          "text": "717 粉丝盛典",
+          "start": 0,
+          "duration": 99
+        },
+        {
+          "type": "sectionLabel",
+          "text": "通用素材",
+          "start": 8.107,
+          "duration": 2.4
+        }
+      ],
+      "transitions": {
+        "type": "cut",
+        "duration": 0
+      },
+      "effects": {
+        "vignette": 0.12,
+        "contrast": 1.03,
+        "saturation": 1.02
+      },
+      "summary": [
+        "保留自然开场",
+        "字幕关键词高亮",
+        "轻量画面增强",
+        "画面段直接切换"
+      ]
+    }
+  }
+}

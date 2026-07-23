@@ -1,0 +1,23 @@
+{
+  "seedId": "seed-005-非遗天青色国雅爆款反拆",
+  "version": "material-description-template-001",
+  "targetDurationSeconds": 35.267,
+  "usage": "放入素材后，把每条素材的画面描述补到 assets 数组里，供 AI 反查脚本支撑度。",
+  "assets": [
+    {
+      "filePath": "素材包/节奏段1_汝瓷质感/汝瓷器物近景/example.mp4",
+      "durationSeconds": 0,
+      "visualSubject": "汝瓷器物",
+      "visualDescription": "画面里实际拍到了什么，例如天青色瓷碗近景，暗背景，能看清碗口和釉色。",
+      "supportsScriptLines": [
+        "九百年前，宋徽宗做了一个梦。",
+        "后来，汝窑把这种颜色烧进了瓷器里。"
+      ],
+      "doesNotSupport": [
+        "不能证明红旗官方灵感来自汝窑。",
+        "不能证明具体车漆工艺。"
+      ],
+      "priority": "P0"
+    }
+  ]
+}

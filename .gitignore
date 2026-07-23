@@ -1,0 +1,10 @@
+.env
+.env.local
+node_modules/
+dist/
+outputs/
+parallel-products/
+deploy-package.tar.gz
+openreel-video.zip
+.DS_Store
+*.log

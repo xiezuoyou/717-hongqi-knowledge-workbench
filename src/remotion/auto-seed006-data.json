@@ -1,0 +1,244 @@
+{
+  "seedId": "seed-006",
+  "title": "717 粉丝盛典现场自动裂变测试",
+  "duration": 24,
+  "canvasRatio": "9:16",
+  "bgm": {
+    "src": "seed006-auto/bgm-source.mp4",
+    "volume": 0.24
+  },
+  "timelineBeats": [
+    {
+      "id": "beat-01",
+      "segmentName": "入口开场",
+      "text": "七一七红旗粉丝盛典，现场已经开场。",
+      "start": 0,
+      "duration": 3.8,
+      "phrases": [
+        {
+          "text": "717红旗粉丝盛典",
+          "highlight": true
+        },
+        {
+          "text": "现场已经开场"
+        }
+      ],
+      "materialName": "红旗盛典拱门",
+      "materialType": "强绑定素材",
+      "visualNeed": "入口开场 / 红旗盛典拱门"
+    },
+    {
+      "id": "beat-02",
+      "segmentName": "位置指引",
+      "text": "先看位置和动线，到了现场不容易迷路。",
+      "start": 3.8,
+      "duration": 4.2,
+      "phrases": [
+        {
+          "text": "先看位置和动线",
+          "highlight": true
+        },
+        {
+          "text": "到了现场不容易迷路"
+        }
+      ],
+      "materialName": "红旗国际汽车公园定位",
+      "materialType": "强绑定素材",
+      "visualNeed": "位置指引 / 红旗国际汽车公园定位"
+    },
+    {
+      "id": "beat-03",
+      "segmentName": "位置指引",
+      "text": "欢迎回家这几个字，氛围一下就有了。",
+      "start": 8,
+      "duration": 3.6,
+      "phrases": [
+        {
+          "text": "欢迎回家",
+          "highlight": true
+        },
+        {
+          "text": "氛围一下就有了"
+        }
+      ],
+      "materialName": "欢迎回家指示牌",
+      "materialType": "强绑定素材",
+      "visualNeed": "位置指引 / 欢迎回家指示牌"
+    },
+    {
+      "id": "beat-04",
+      "segmentName": "节目打卡",
+      "text": "演出、打卡和活动物料，都适合拍成一条路线。",
+      "start": 11.6,
+      "duration": 4.2,
+      "phrases": [
+        {
+          "text": "演出、打卡",
+          "highlight": true
+        },
+        {
+          "text": "都能拍成一条路线"
+        }
+      ],
+      "materialName": "精彩演出区域",
+      "materialType": "强绑定素材",
+      "visualNeed": "节目打卡 / 精彩演出区域"
+    },
+    {
+      "id": "beat-05",
+      "segmentName": "休闲体验",
+      "text": "中间还能切到休闲区，让视频不只是看展。",
+      "start": 15.8,
+      "duration": 3.8,
+      "phrases": [
+        {
+          "text": "露营休闲区",
+          "highlight": true
+        },
+        {
+          "text": "让视频不只是看展"
+        }
+      ],
+      "materialName": "露营休闲区",
+      "materialType": "强绑定素材",
+      "visualNeed": "休闲体验 / 露营休闲区"
+    },
+    {
+      "id": "beat-06",
+      "segmentName": "赛车展示",
+      "text": "最后用超哇赛车收住亮点，下一条继续看现场。",
+      "start": 19.6,
+      "duration": 4.4,
+      "phrases": [
+        {
+          "text": "超哇赛车",
+          "highlight": true
+        },
+        {
+          "text": "下一条继续看现场"
+        }
+      ],
+      "materialName": "超哇赛车展车",
+      "materialType": "强绑定素材",
+      "visualNeed": "赛车展示 / 超哇赛车展车"
+    }
+  ],
+  "voiceClips": [
+    {
+      "id": "voice-01",
+      "src": "seed006-auto/voice-01.m4a",
+      "start": 0,
+      "duration": 3.8,
+      "volume": 1
+    },
+    {
+      "id": "voice-02",
+      "src": "seed006-auto/voice-02.m4a",
+      "start": 3.8,
+      "duration": 4.2,
+      "volume": 1
+    },
+    {
+      "id": "voice-03",
+      "src": "seed006-auto/voice-03.m4a",
+      "start": 8,
+      "duration": 3.6,
+      "volume": 1
+    },
+    {
+      "id": "voice-04",
+      "src": "seed006-auto/voice-04.m4a",
+      "start": 11.6,
+      "duration": 4.2,
+      "volume": 1
+    },
+    {
+      "id": "voice-05",
+      "src": "seed006-auto/voice-05.m4a",
+      "start": 15.8,
+      "duration": 3.8,
+      "volume": 1
+    },
+    {
+      "id": "voice-06",
+      "src": "seed006-auto/voice-06.m4a",
+      "start": 19.6,
+      "duration": 4.4,
+      "volume": 1
+    }
+  ],
+  "materialClips": [
+    {
+      "id": "clip-01-entry",
+      "index": 1,
+      "segment": "入口开场",
+      "detail": "红旗盛典拱门",
+      "src": "seed006-auto/01-entry-arch.mp4",
+      "start": 0,
+      "duration": 3.8,
+      "materialName": "红旗盛典拱门",
+      "materialType": "强绑定素材",
+      "visualNeed": "入口开场 / 红旗盛典拱门"
+    },
+    {
+      "id": "clip-02-location",
+      "index": 2,
+      "segment": "位置指引",
+      "detail": "红旗国际汽车公园定位",
+      "src": "seed006-auto/02-location.mp4",
+      "start": 3.8,
+      "duration": 4.2,
+      "materialName": "红旗国际汽车公园定位",
+      "materialType": "强绑定素材",
+      "visualNeed": "位置指引 / 红旗国际汽车公园定位"
+    },
+    {
+      "id": "clip-03-signage",
+      "index": 3,
+      "segment": "位置指引",
+      "detail": "欢迎回家指示牌",
+      "src": "seed006-auto/03-signage.mp4",
+      "start": 8,
+      "duration": 3.6,
+      "materialName": "欢迎回家指示牌",
+      "materialType": "强绑定素材",
+      "visualNeed": "位置指引 / 欢迎回家指示牌"
+    },
+    {
+      "id": "clip-04-program",
+      "index": 4,
+      "segment": "节目打卡",
+      "detail": "精彩演出区域",
+      "src": "seed006-auto/04-program.mp4",
+      "start": 11.6,
+      "duration": 4.2,
+      "materialName": "精彩演出区域",
+      "materialType": "强绑定素材",
+      "visualNeed": "节目打卡 / 精彩演出区域"
+    },
+    {
+      "id": "clip-05-camping",
+      "index": 5,
+      "segment": "休闲体验",
+      "detail": "露营休闲区",
+      "src": "seed006-auto/05-camping.mp4",
+      "start": 15.8,
+      "duration": 3.8,
+      "materialName": "露营休闲区",
+      "materialType": "强绑定素材",
+      "visualNeed": "休闲体验 / 露营休闲区"
+    },
+    {
+      "id": "clip-06-racing",
+      "index": 6,
+      "segment": "赛车展示",
+      "detail": "超哇赛车展车",
+      "src": "seed006-auto/06-racing.mp4",
+      "start": 19.6,
+      "duration": 4.4,
+      "materialName": "超哇赛车展车",
+      "materialType": "强绑定素材",
+      "visualNeed": "赛车展示 / 超哇赛车展车"
+    }
+  ]
+}
