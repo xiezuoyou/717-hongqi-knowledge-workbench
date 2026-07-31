@@ -1,0 +1,3288 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { gsap } from "gsap";
+import {
+  ArrowLeft,
+  BookOpen,
+  Clapperboard,
+  Database,
+  Download,
+  Package,
+  PenLine,
+  FolderOpen,
+  Home,
+  KeyRound,
+  LogOut,
+  Plus,
+  Sparkles,
+  Send,
+  Tags,
+  Trash2,
+  UserRound,
+  Video,
+  X,
+} from "lucide-react";
+import ColorBends from "./components/react-bits/ColorBends";
+import "./styles.css";
+
+const librarySections = [
+  {
+    id: "product-info",
+    lead: "01",
+    title: "产品信息",
+    note: "所有内容生产和审核都要先对齐的产品基础资料，要求稳定、准确、可引用。",
+    items: [
+      "HS6、H7、G919、天工05/06 产品资料",
+      "产品图片、车型亮点与标准表述",
+      "卖点参数、场景化表达和禁用说法",
+      "后续 AI 回答与内容审核的基础依据",
+    ],
+  },
+  {
+    id: "communication-files",
+    lead: "02",
+    title: "传播文件",
+    note: "围绕 813 项目的策略、规则和风险边界，决定内容能怎么说、哪些不能说。",
+    items: [
+      "813 项目背景与传播策划策略文件",
+      "公关策略文件与对外沟通口径",
+      "平台传播规则与近期传播敏感点",
+      "禁止传播方向和审核注意事项",
+    ],
+  },
+  {
+    id: "asset-library",
+    lead: "03",
+    title: "素材资源",
+    note: "用户做内容、AI 生成素材包和视频交付时，可以直接调用和继续加工的资源。",
+    items: [
+      "产品图片与产品资源素材",
+      "813 公共素材、活动现场图片和视频",
+      "官方 BGC 素材、海报物料和视觉资产",
+      "可用于图文、剪辑、视频生成的素材包",
+    ],
+  },
+  {
+    id: "seed-operation",
+    lead: "04",
+    title: "种子内容",
+    note: "承接运营策略方向，把热点、选题、发布建议和种子内容沉淀成可执行的内容库。",
+    items: [
+      "热点方向与非官方铺设内容",
+      "内容选题、发布建议和平台适配",
+      "种子内容、裂变内容和脚本方向",
+      "专题目标、传播节奏和内容复盘",
+    ],
+  },
+] as const;
+
+type LibrarySectionId = (typeof librarySections)[number]["id"];
+
+const libraryFilters: Record<
+  LibrarySectionId,
+  Array<{ id: string; label: string; subFilters: string[] }>
+> = {
+  "product-info": [
+    { id: "hs6", label: "HS6", subFilters: ["产品资料", "产品图片", "相关视频", "审核依据"] },
+    { id: "h7", label: "H7", subFilters: ["产品资料", "产品图片", "相关视频", "审核依据"] },
+    { id: "g919", label: "G919", subFilters: ["产品资料", "产品图片", "相关视频", "审核依据"] },
+    { id: "tiangong-05", label: "天工05", subFilters: ["产品资料", "产品图片", "相关视频", "审核依据"] },
+    { id: "tiangong-06", label: "天工06", subFilters: ["产品资料", "产品图片", "相关视频", "审核依据"] },
+  ],
+  "communication-files": [
+    { id: "project", label: "项目背景", subFilters: ["全部背景", "813项目", "传播目标", "用户人群"] },
+    { id: "strategy", label: "传播策略", subFilters: ["全部策略", "传播主线", "阶段规划", "内容目标"] },
+    { id: "pr", label: "公关策略", subFilters: ["全部公关", "对外口径", "媒体沟通", "风险回复"] },
+    { id: "platform", label: "平台规则", subFilters: ["全部平台", "小红书", "抖音", "视频号"] },
+    { id: "risk", label: "禁传方向", subFilters: ["全部风险", "敏感点", "禁用标题", "禁用画面"] },
+  ],
+  "asset-library": [
+    { id: "product-assets", label: "产品素材", subFilters: ["全部产品", "产品图片", "产品视频", "卖点物料"] },
+    { id: "public-assets", label: "813公共素材", subFilters: ["全部公共素材", "主视觉", "活动KV", "通用贴片"] },
+    { id: "event-assets", label: "活动现场", subFilters: ["全部现场", "现场图片", "现场视频", "互动片段"] },
+    { id: "bgc-assets", label: "BGC素材", subFilters: ["全部BGC", "官方视频", "视觉资产", "物料包"] },
+  ],
+  "seed-operation": [
+    { id: "hotspot", label: "热点方向", subFilters: ["全部热点", "智能科技", "粉丝共创", "家庭出行"] },
+    { id: "topic", label: "内容选题", subFilters: ["全部选题", "图文选题", "短视频选题", "口播方向"] },
+    { id: "seed-content", label: "种子内容", subFilters: ["全部种子", "图文种子", "视频种子", "裂变种子"] },
+    { id: "publish", label: "发布建议", subFilters: ["全部建议", "小红书", "抖音", "视频号"] },
+  ],
+};
+
+type LibraryEntry = {
+  title: string;
+  tag: string;
+  meta: string;
+  desc: string;
+  image?: string;
+  kind?: "document" | "image";
+  tabs?: Array<{ id: string; label: string; title: string; points: string[] }>;
+};
+
+type LibraryFolder = {
+  id: string;
+  name: string;
+  items: LibraryEntry[];
+};
+
+const hs6LibraryEntries: LibraryEntry[] = [
+  {
+    title: "HS6 PHEV 产品培训课件",
+    tag: "产品资料",
+    meta: "PPT课件 / 117页 / 已处理",
+    desc: "覆盖市场定位、参数梯度、核心卖点、竞品对比和场景化 FAB 话术，是 HS6 内容生产与审核的主资料。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "这份资料适合作为 HS6 的基础母本",
+        points: [
+          "课件由红旗渠道管理部、产品策划及项目管理部、红旗 GTM 部联合出品。",
+          "内容主线包括市场潜力、装备梯度、产品魅点、舒适座舱、空间、混动能耗、安全和智驾。",
+          "适合沉淀为产品问答、销售话术、传播文案和审核依据。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "产品信息优先提取参数和稳定表达",
+        points: [
+          "车型尺寸为 4925*1970*1740mm，轴距 2925mm。",
+          "核心版本包括 145/240/220 四驱智混版，主销版本纯电续航可达 248km，综合续航最高 1650km。",
+          "重点配置包含双 15.6 吋高清屏、8295P 芯片、车载冷暖箱、零重力座椅、记忆泊车和高速领航辅助。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "可拆成舒适、空间、混动、安全、智驾五条内容线",
+        points: [
+          "舒适线强调“冰箱彩电大沙发”、健康环保座舱和智能硬件。",
+          "空间线强调 84.2% 得房率、503L 后备箱、31 处储物空间和灵动布局。",
+          "混动线强调 45.21% 热效率、快充 15 分钟、低温性能和低能耗。",
+          "安全线强调 9H4M 车身、电池安全、国密级信息防护和功能安全。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "审核时优先锁定参数、竞品对比和极限表述",
+        points: [
+          "涉及“同级领先”“行业第一”“全系标配”等表达需要回看原始页证据。",
+          "竞品对比涉及理想 L6、比亚迪唐、途观 L Pro 等，需要保持原资料口径。",
+          "参数类内容优先使用课件原文，不自行扩写绝对化结论。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 上市后用户调研报告",
+    tag: "用户调研",
+    meta: "PPT报告 / 26页 / 已处理 4m48s",
+    desc: "围绕 HS6 上市后的用户画像、购车动机、战胜战败因素、使用场景和满意抱怨点进行归纳，适合作为传播策略与产品迭代判断依据。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "这份资料适合作为 HS6 上市后反馈入口",
+        points: [
+          "报告时间为 2026 年 6 月 26 日，研究目标覆盖产品诊断、定位验证、营销策略和改款方向验证。",
+          "样本包含本品用户、战败用户、潜在用户、经销商访谈等，覆盖济南、成都、郑州、杭州、深圳、长沙等城市。",
+          "资料更适合回答“谁在买、为什么买、为什么放弃、哪里满意、哪里抱怨”。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "核心用户与战胜战败结论",
+        points: [
+          "HS6 用户被拆成有闲乐享派、圆规中产、进阶青年三类，其中圆规中产占比 40%，进阶青年占比 29%，有闲乐享派占比 31%。",
+          "战胜因素集中在乘坐舒适性、内部空间、性价比、外观内饰和安全性。",
+          "战败因素主要来自外观内饰、乘坐舒适性，尤其是减震，以及价格和门店优惠力度。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "传播应放大到店体验、家庭场景和越级空间",
+        points: [
+          "报告指出用户常因“喜欢的车型出现在眼前”产生购买念头，因此传播上应增加偶遇、到店、试驾和场景露出的机会。",
+          "“越级空间”“大五座”“得房率”被很好传达，是目标受众最容易感知的内容抓手。",
+          "舒适、安全、照顾家人是最强情感动机，内容上应减少纯参数堆叠，增加家庭陪伴、通勤、回老家、自驾旅行场景。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "调研结论适合做策略参考，不适合当参数依据",
+        points: [
+          "用户观点、访谈原话和战胜战败原因可以作为传播方向参考，但不能替代产品参数或官方配置表。",
+          "涉及竞品对比时，需要区分定量数据、定性访谈和策略判断，避免把用户主观反馈写成官方结论。",
+          "负面反馈如辅助驾驶、减震、价格优惠等可用于内部优化，不宜在对外内容中直接展开。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 FAB 场景化话术",
+    tag: "话术",
+    meta: "演示占位 / 可替换",
+    desc: "模拟从产品资料中整理出的销售话术入口，后续可替换为正式 FAB 话术文件或 AI 自动拆解结果。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "FAB 是这份资料里最适合 AI 加工的部分",
+        points: [
+          "每个卖点都给出功能、对比优势和用户利益点。",
+          "适合直接转成小红书笔记、销售直播口播和短视频分镜。",
+          "可以作为 AI 生成脚本时的标准结构输入。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "可复用的典型话术方向",
+        points: [
+          "车载冷暖箱：带娃热奶、老人温水、夏天冰饮，上车即享。",
+          "舒适制动：跟车更轻松，刹停不点头，更平稳舒适。",
+          "泊车辅助：狭窄车位、跨层停车场等场景降低泊车焦虑。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "话术可以按用户身份拆分",
+        points: [
+          "家庭用户：空间、舒适、健康座舱、儿童遗忘提醒。",
+          "通勤用户：能耗、补能、智驾、舒适制动。",
+          "新手用户：泊车、城市领航、安全预警。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "FAB 可改写，但不能改参数",
+        points: [
+          "生活化表达可以扩写，参数和竞品对比不做二次夸张。",
+          "涉及安全效果时避免承诺式表达。",
+          "AI 输出脚本时建议保留原始 FAB 对应关系。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 参数与装备梯度",
+    tag: "审核依据",
+    meta: "演示占位 / 可替换",
+    desc: "模拟参数和版本配置的审核入口，后续可替换为正式配置表、价格表或版本差异文件。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "这张卡用于查版本、参数和配置边界",
+        points: [
+          "课件中包含 145、240、220 四驱智混版的参数与装备梯度。",
+          "覆盖基础功能、座舱配置、智驾配置、四驱和 CDC 可调悬挂等信息。",
+          "适合做内容审核、脚本校验和销售答疑。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "高频查验参数",
+        points: [
+          "CLTC 纯电续航：145 / 248 / 228km。",
+          "CLTC 综合续航：1580 / 1650 / 1460km。",
+          "四驱版百公里加速 4.8s，最高车速 205km/h。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "参数适合转成对比型内容",
+        points: [
+          "用“城市通勤不用油、长途出行少焦虑”承接续航。",
+          "用“服务区喝杯咖啡的时间补能”承接快充。",
+          "用“坐满人拉满货，高速超车依然轻松”承接动力。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "版本配置不要跨版本混用",
+        points: [
+          "主销、全系、选装包、四驱专属配置要明确区分。",
+          "价格和配置如后续有新版本，应以最新确认版为准。",
+          "参数表内容优先作为“强审核依据”。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 舒适座舱卖点拆解",
+    tag: "卖点",
+    meta: "课件拆分 / 演示占位",
+    desc: "从产品课件中拆出的舒适座舱内容包，适合做家庭出行、乘坐体验、车内配置和生活化场景表达。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "这张卡聚焦用户一坐进车里能感知的部分",
+        points: [
+          "围绕座椅、屏幕、冷暖箱、音响、空气管理和车内便利配置做内容拆分。",
+          "适合转化为“带家人出门更舒服”“孩子老人都照顾到”的生活化表达。",
+          "后续可接入图片、短视频片段和车内功能演示素材。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "舒适配置要先讲体验，再补参数",
+        points: [
+          "双 15.6 吋高清屏和 8295P 芯片适合承接智能座舱体验。",
+          "车载冷暖箱、座椅舒适配置和车内储物更适合放进真实家庭场景。",
+          "健康环保座舱、空气管理等内容适合和孩子、老人、长途乘坐绑定。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "内容角度可以从“全家都舒服”切进去",
+        points: [
+          "图文方向：一天用车里哪些配置会被家人真正用到。",
+          "短视频方向：上车、坐下、放饮料、孩子看屏、老人休息，连成一个轻剧情。",
+          "口播方向：不要堆配置名，讲“这些功能为什么会让你少操心”。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "舒适体验可放大感受，功能边界要准确",
+        points: [
+          "功能名称、配置是否标配、具体版本差异需要回到配置表确认。",
+          "健康、安全、空气质量类表达避免绝对承诺。",
+          "体验表达可以生活化，但不能把主观感受写成官方测试结论。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 越级空间表达包",
+    tag: "卖点",
+    meta: "课件拆分 / 演示占位",
+    desc: "拆解 HS6 的大五座、后备箱、储物空间和得房率表达，适合做家庭装载、露营、自驾和多人出行内容。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "空间是 HS6 最容易被用户现场感知的抓手",
+        points: [
+          "这张卡用于整理车身尺寸、轴距、座舱空间、后备箱和储物能力。",
+          "适合支撑看车、试驾、到店探车、亲子出行和自驾旅行内容。",
+          "可配合现场素材做“一眼看得懂”的空间展示。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "空间表达要把数字翻译成画面",
+        points: [
+          "车型尺寸和轴距可作为基础参数入口，但对外内容应重点讲乘坐和装载。",
+          "后备箱、储物格、二排乘坐和家庭行李场景适合组合展示。",
+          "“越级空间”“大五座”“得房率”可以作为主标题方向，但要注意审核口径。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "空间内容可以做成强画面感对比",
+        points: [
+          "图文方向：一家三口周末出门，行李、婴儿车、露营装备怎么放。",
+          "短视频方向：用固定镜头展示人坐进去、物放进去、座椅调整后的变化。",
+          "直播方向：让用户现场提问“能不能放下这个”，用即时演示增强真实感。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "空间类内容尤其注意测量口径",
+        points: [
+          "车身尺寸、轴距、后备箱容积等参数以正式资料为准。",
+          "涉及“同级最大”“远超竞品”等表达必须有明确依据。",
+          "真人演示可增强可信度，但不要用夸张镜头制造不真实空间感。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 混动续航与补能卡",
+    tag: "产品资料",
+    meta: "课件拆分 / 演示占位",
+    desc: "将混动效率、纯电续航、综合续航、快充和低温用车拆成可传播的信息卡，方便内容生产时快速取用。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "这张卡回答用户最关心的用车成本和里程焦虑",
+        points: [
+          "内容覆盖城市通勤、长途自驾、补能效率和冬季用车稳定性。",
+          "适合沉淀为问答、对比图、口播脚本和短视频场景演示。",
+          "后续可接入续航测试、补能实拍和车主使用反馈。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "混动信息要按场景分层说明",
+        points: [
+          "城市通勤可强调纯电覆盖日常使用，长途出行再强调综合续航。",
+          "快充能力适合转化为“短暂停留即可补能”的场景表达。",
+          "能耗、热效率和续航数字属于强参数，必须跟版本对应。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "传播上少讲技术名词，多讲使用收益",
+        points: [
+          "小红书：一周通勤不用油、周末出城不焦虑的账本式内容。",
+          "抖音：快充、出发、抵达三段式剪辑，突出补能节奏。",
+          "销售口播：先问用户每天通勤距离，再解释哪个续航版本更合适。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "续航类表达要避免绝对化和泛化",
+        points: [
+          "CLTC、综合续航、纯电续航不能混用。",
+          "不同版本、不同环境、不同驾驶习惯会影响实际表现，需要保留条件。",
+          "“不用充电”“永远不焦虑”等表达不建议使用。",
+        ],
+      },
+    ],
+  },
+  {
+    title: "HS6 安全与智能驾驶要点",
+    tag: "审核依据",
+    meta: "课件拆分 / 演示占位",
+    desc: "整理车身安全、电池安全、信息安全、辅助驾驶和泊车辅助等内容，适合做审核校验与信任感传播。",
+    tabs: [
+      {
+        id: "overview",
+        label: "资料概览",
+        title: "这张卡用于把安全感讲清楚，而不是讲玄",
+        points: [
+          "内容覆盖被动安全、电池安全、智能辅助驾驶、泊车辅助和信息安全。",
+          "适合支持家庭用户、长途用户和新手用户的决策表达。",
+          "可作为对外文案审核时的高优先级参考卡。",
+        ],
+      },
+      {
+        id: "key-info",
+        label: "关键信息",
+        title: "安全与智驾要区分“保护”和“辅助”",
+        points: [
+          "车身结构、电池安全和信息安全更适合承接信任感。",
+          "高速领航、记忆泊车、泊车辅助等属于使用便利和驾驶辅助能力。",
+          "面向新手用户时，可以把泊车、预警、跟车和长途辅助拆开讲。",
+        ],
+      },
+      {
+        id: "content-angle",
+        label: "传播分析",
+        title: "安全内容适合做“看不见但很重要”的解释型内容",
+        points: [
+          "图文方向：买家庭车时安全到底要看哪些地方。",
+          "短视频方向：用场景复现讲新手泊车、长途跟车和雨天出行。",
+          "口播方向：先讲用户担心什么，再把对应能力解释清楚。",
+        ],
+      },
+      {
+        id: "review",
+        label: "审核提示",
+        title: "智驾类内容必须避免替代驾驶承诺",
+        points: [
+          "辅助驾驶不能表达为自动驾驶，也不能暗示用户可以脱离注意力。",
+          "安全类表达避免“绝对安全”“零风险”等承诺。",
+          "所有功能以实际车型版本、开放城市和软件状态为准。",
+        ],
+      },
+    ],
+  },
+];
+
+const makeProductImageEntries = (
+  product: string,
+  folder: string,
+  files: string[],
+): LibraryEntry[] =>
+  files.map((file, index) => ({
+    title: `${product} 产品图片 ${String(index + 1).padStart(2, "0")}`,
+    tag: "产品图片",
+    meta: "图片",
+    image: `/assets/${folder}/${file}`,
+    desc: "",
+    kind: "image",
+  }));
+
+const hs6ImageEntries = makeProductImageEntries("HS6", "hs6-demo", [
+  "hs6-09.jpg",
+  "hs6-10.jpg",
+  "hs6-11.jpg",
+  "hs6-12.jpg",
+  "hs6-13.jpg",
+  "hs6-14.jpg",
+  "hs6-15.jpg",
+  "hs6-16.jpg",
+  "hs6-17.jpg",
+  "hs6-18.jpg",
+  "hs6-19.jpg",
+  "hs6-20.jpg",
+  "hs6-21.jpg",
+  "hs6-22.jpg",
+  "hs6-23.jpg",
+  "hs6-24.jpg",
+]);
+
+const h7ImageEntries = makeProductImageEntries("H7", "h7-demo", [
+  "h7-01.jpeg",
+  "h7-02.jpeg",
+  "h7-03.jpeg",
+  "h7-04.jpeg",
+  "h7-05.jpeg",
+  "h7-06.jpeg",
+  "h7-07.jpeg",
+  "h7-08.jpeg",
+  "h7-09.jpeg",
+]);
+
+const libraryEntries: Record<LibrarySectionId, LibraryEntry[]> = {
+  "product-info": [
+    { title: "HS6 产品核心信息卡", tag: "HS6", meta: "产品资料 / 已校准", desc: "整理车型定位、核心卖点、场景话术和不可误用的参数口径。" },
+    { title: "H7 豪华舒适表达库", tag: "H7", meta: "产品资料 / 待审核", desc: "补充舒适、安全、家庭出行和商务场景下的内容表达模板。" },
+    { title: "G919 旗舰传播要点", tag: "G919", meta: "产品资料 / 已校准", desc: "用于高端旗舰内容生产的品牌语气、技术亮点和视觉关键词。" },
+    { title: "天工05/06 场景化问答", tag: "天工", meta: "AI问答 / 草稿", desc: "模拟用户可能追问的问题，沉淀标准回复和审核依据。" },
+  ],
+  "communication-files": [
+    { title: "813 项目传播背景", tag: "项目背景", meta: "策略文件 / 确定版", desc: "说明项目目标、传播周期、核心人群和阶段性内容重点。" },
+    { title: "813 公关传播口径", tag: "公关口径", meta: "公关文件 / 待复核", desc: "整理对外表述、媒体沟通边界和容易误解的表达方式。" },
+    { title: "平台传播规则速查", tag: "平台规则", meta: "规则文件 / 已归档", desc: "面向小红书、抖音、视频号的审核敏感点和推荐表达方式。" },
+    { title: "近期禁传方向清单", tag: "禁传方向", meta: "审核规则 / 高优先级", desc: "沉淀不可触碰的话题、画面、标题方向和评论区风险提示。" },
+  ],
+  "asset-library": [
+    { title: "产品图片精选包", tag: "产品图片", meta: "图片素材 / 36张", desc: "包含车型外观、内饰、细节和可用于封面的标准素材。" },
+    { title: "813 活动现场图库", tag: "活动图片", meta: "现场素材 / 58张", desc: "沉淀现场氛围、用户互动、舞台高光和传播可用画面。" },
+    { title: "BGC 官方视频素材", tag: "BGC", meta: "视频素材 / 12条", desc: "适合剪辑包装、混剪和视频生成的官方素材片段。" },
+    { title: "海报物料与视觉资产", tag: "海报物料", meta: "设计物料 / 18组", desc: "包含主视觉、KV延展、贴纸元素和活动传播模板。" },
+  ],
+  "seed-operation": [
+    { title: "智能科技体验热点包", tag: "热点方向", meta: "种子方向 / 今日推荐", desc: "围绕技术体验、现场互动和真实感知生成内容角度。" },
+    { title: "非官方铺设内容选题", tag: "内容选题", meta: "选题库 / 24条", desc: "适合达人、用户视角和平台原生内容的选题储备。" },
+    { title: "平台发布建议清单", tag: "发布建议", meta: "发布策略 / 可复用", desc: "按小红书、抖音、视频号拆解标题、封面和发布时间建议。" },
+    { title: "种子裂变内容复盘", tag: "内容复盘", meta: "复盘文档 / 草稿", desc: "记录不同内容方向的表现、反馈和后续可继续放大的切口。" },
+  ],
+};
+
+const majorTabs = [
+  {
+    id: "seed",
+    label: "专题种子库",
+    subTabs: [
+      { id: "topic-board", label: "专题看板" },
+      { id: "hotspots", label: "热点方向" },
+      { id: "seed-content", label: "种子内容" },
+    ],
+  },
+  {
+    id: "library",
+    label: "知识库",
+    subTabs: [
+      { id: "product-info", label: "产品信息" },
+      { id: "communication-files", label: "传播文件" },
+      { id: "asset-library", label: "素材资源" },
+      { id: "seed-operation", label: "种子内容" },
+    ],
+  },
+  {
+    id: "tools",
+    label: "AI智库",
+    subTabs: [
+      { id: "assistant", label: "AI助手" },
+      { id: "workflow", label: "自由工作流" },
+      { id: "review", label: "内容审核" },
+    ],
+  },
+];
+
+const hotTopics = [
+  {
+    id: "tech-experience",
+    label: "智能科技体验",
+    tag: "热点方向",
+    topics: ["#智能科技", "#现场体验", "#真实感知"],
+    desc: "把技术点转成用户能听懂、能感知的体验表达，重点放在现场感、交互感和看得见的变化，让参数变成能被拍摄、转述和讨论的体验证据。",
+  },
+  {
+    id: "fan-cocreation",
+    label: "粉丝共创现场",
+    tag: "热点方向",
+    topics: ["#粉丝共创", "#现场互动", "#社群氛围"],
+    desc: "围绕签到、互动、合影和现场反馈沉淀真实片段，让内容更像现场正在发生的事，强调参与者视角和自传播动机。",
+  },
+  {
+    id: "family-travel",
+    label: "家庭出行场景",
+    tag: "热点方向",
+    topics: ["#家庭出行", "#舒适安全", "#陪伴场景"],
+    desc: "面向家庭用户，讲清舒适、安全和陪伴，把产品价值放进具体场景里，用具体人物关系承接产品卖点。",
+  },
+  {
+    id: "brand-memory",
+    label: "品牌记忆共鸣",
+    tag: "热点方向",
+    topics: ["#品牌记忆", "#情绪共鸣", "#经典焕新"],
+    desc: "把品牌积累转成可被年轻用户理解的情绪表达，串联经典符号、用户故事和当下体验。",
+  },
+] as const;
+
+type TopicId = (typeof hotTopics)[number]["id"];
+type SeedAiAction = "script" | "package" | "video";
+type SeedScope = "current" | "all";
+type SeedAiResult = {
+  action: SeedAiAction;
+  title: string;
+  intro: string;
+  sections: Array<{ label: string; content: string }>;
+  scriptRows?: Array<{ time: string; voice: string; visual: string }>;
+  materials?: Array<{ name: string; type: string; note: string }>;
+  video?: {
+    src: string;
+    title: string;
+    copy: string;
+    tags: string[];
+  };
+};
+
+const seedAiActionMeta: Record<
+  SeedAiAction,
+  { label: string; placeholder: string }
+> = {
+  script: {
+    label: "输出脚本",
+    placeholder: "例如：我是小红书用户，想从真实体验角度输出一篇口播脚本",
+  },
+  package: {
+    label: "素材包生成",
+    placeholder: "例如：我具备视频剪辑能力，请按现场感和互动感生成素材包",
+  },
+  video: {
+    label: "视频生成",
+    placeholder: "例如：请根据活动现场和粉丝互动，直接生成一支可发布的种子裂变视频",
+  },
+};
+
+const seedCards = [
+  {
+    title: "717粉丝盛典｜晚会舞台种子",
+    topicId: "tech-experience",
+    source: "717粉丝盛典",
+    mediaType: "图文",
+    image: "/assets/717-demo/stage-01.jpg",
+    desc: "围绕 717 粉丝盛典晚会现场整理，可用于检索舞台大屏、灯光氛围、嘉宾互动、粉丝情绪和品牌共创场景。适合后续生成活动回顾、短视频口播、海报文案与传播标题。",
+    topics: ["种子内容", "可检索", "待沉淀"],
+    count: "12 张图片",
+  },
+  {
+    title: "717粉丝盛典｜开场氛围线索",
+    topicId: "brand-memory",
+    source: "717粉丝盛典",
+    mediaType: "视频",
+    image: "/assets/717-demo/stage-02.jpg",
+    desc: "记录活动开场阶段的视觉情绪：红色主视觉、舞台纵深、灯光节奏和观众期待感。后续可作为“盛典开场”“高燃入场”“品牌仪式感”类内容的底稿。",
+    topics: ["种子内容", "可检索", "待沉淀"],
+    count: "6 条线索",
+  },
+  {
+    title: "717粉丝盛典｜粉丝互动线索",
+    topicId: "fan-cocreation",
+    source: "717粉丝盛典",
+    mediaType: "视频",
+    image: "/assets/717-demo/stage-03.jpg",
+    desc: "聚焦粉丝签到、互动区、合影墙、应援动作和现场反馈，沉淀能够表现“红旗与用户同行”的真实片段，适合裂变成图文笔记和短视频脚本。",
+    topics: ["种子内容", "可检索", "待沉淀"],
+    count: "9 条线索",
+  },
+  {
+    title: "717粉丝盛典｜产品露出线索",
+    topicId: "family-travel",
+    source: "717粉丝盛典",
+    mediaType: "图文",
+    image: "/assets/717-demo/stage-04.jpg",
+    desc: "整理活动中车辆、展台、品牌符号和产品亮点的露出位置。后续可帮助 AI 判断哪些图片适合做封面，哪些适合做传播配图。",
+    topics: ["种子内容", "可检索", "待沉淀"],
+    count: "5 条素材",
+  },
+];
+
+type SeedCard = (typeof seedCards)[number];
+
+const expandedSeedCards = [
+  ...seedCards,
+  {
+    ...seedCards[0],
+    title: "智能座舱体验｜现场互动种子",
+    topicId: "tech-experience",
+    image: "/assets/717-demo/stage-02.jpg",
+    mediaType: "视频",
+    desc: "适合把智能体验拆成用户能感受到的现场变化，强调交互、反馈和真实体验，不堆参数。",
+    count: "8 条线索",
+  },
+  {
+    ...seedCards[0],
+    title: "科技体验日｜用户视角种子",
+    topicId: "tech-experience",
+    image: "/assets/717-demo/stage-03.jpg",
+    desc: "从参与者第一视角记录体验路径，适合生成短视频开头、体验口播和小红书种草标题。",
+    count: "10 张图片",
+  },
+  {
+    ...seedCards[2],
+    title: "粉丝合影墙｜打卡裂变种子",
+    topicId: "fan-cocreation",
+    image: "/assets/717-demo/stage-04.jpg",
+    mediaType: "图文",
+    desc: "围绕合影、签到、应援动作沉淀可转发内容，适合做朋友圈裂变和视频号现场切片。",
+    count: "14 张图片",
+  },
+  {
+    ...seedCards[2],
+    title: "粉丝留言｜真实反馈种子",
+    topicId: "fan-cocreation",
+    image: "/assets/717-demo/stage-01.jpg",
+    desc: "保留用户现场反馈和互动情绪，可用于活动复盘、用户证言和社群传播素材。",
+    count: "7 条线索",
+  },
+  {
+    ...seedCards[3],
+    title: "家庭出行｜舒适体验种子",
+    topicId: "family-travel",
+    image: "/assets/717-demo/stage-02.jpg",
+    desc: "用家庭关系和出行场景承接产品卖点，把舒适、安全、陪伴讲成具体画面。",
+    count: "9 条素材",
+  },
+  {
+    ...seedCards[3],
+    title: "亲子陪伴｜周末出行种子",
+    topicId: "family-travel",
+    image: "/assets/717-demo/stage-03.jpg",
+    mediaType: "视频",
+    desc: "适合做亲子场景脚本，突出孩子、父母、长途舒适和轻松到达的故事线。",
+    count: "6 条视频",
+  },
+  {
+    ...seedCards[1],
+    title: "品牌符号｜经典焕新种子",
+    topicId: "brand-memory",
+    image: "/assets/717-demo/stage-04.jpg",
+    desc: "串联品牌标识、现场装置和用户记忆点，把经典感转成更年轻的情绪表达。",
+    count: "11 张图片",
+  },
+  {
+    ...seedCards[1],
+    title: "老友新声｜品牌记忆种子",
+    topicId: "brand-memory",
+    image: "/assets/717-demo/stage-01.jpg",
+    mediaType: "图文",
+    desc: "适合做品牌故事短片和用户回忆征集，用一个符号、一个故事、一个当下体验组织内容。",
+    count: "5 组文案",
+  },
+] satisfies SeedCard[];
+
+const seedDetailPanels = [
+  {
+    title: "内容方向",
+    copy: "这组种子不适合只当“晚会照片”使用，更适合拆成三条传播主线：第一条是盛典现场的仪式感，用舞台、大屏、灯光和开场节奏建立品牌声量；第二条是粉丝与品牌的双向奔赴，用互动、欢呼、合影和情绪瞬间建立真实感；第三条是产品与品牌符号的自然露出，把红旗的产品气质放进活动记忆里。",
+    featured: true,
+  },
+  {
+    title: "舞台氛围",
+    copy: "适合做开场镜头、封面背景和活动回顾主视觉，关键词可标注为“晚会、舞台、灯光、盛典、开场”。",
+  },
+  {
+    title: "粉丝情绪",
+    copy: "重点捕捉观众、互动、应援和现场热度，用来支撑“用户共创”“热爱同行”类表达。",
+  },
+  {
+    title: "品牌信息",
+    copy: "保留红旗、717粉丝盛典、产品露出、主视觉元素等识别信息，便于后续检索和审核。",
+  },
+  {
+    title: "内容风险",
+    copy: "发布前需要检查人物肖像、现场屏幕文字、品牌称谓和车型露出是否准确，避免误读活动主题。",
+  },
+];
+
+const seedKeywords = [
+  "717粉丝盛典",
+  "晚会现场",
+  "舞台大屏",
+  "灯光氛围",
+  "粉丝互动",
+  "品牌共创",
+  "活动回顾",
+  "短视频脚本",
+  "图文标题",
+  "发布审核",
+];
+
+const seedScripts = [
+  {
+    title: "结构一｜高燃开场",
+    copy: "从舞台灯光和大屏画面切入，用一句“717粉丝盛典现场，把红旗和热爱放在同一个舞台上”建立情绪，再接现场人群、主视觉和品牌露出的快速蒙太奇。",
+  },
+  {
+    title: "结构二｜粉丝同行",
+    copy: "先给观众和互动镜头，再落到“这不是一次单向发布，而是品牌和用户一起完成的盛典”。适合做更温暖、更真实的活动回顾。",
+  },
+  {
+    title: "结构三｜品牌记忆",
+    copy: "以红旗符号、舞台主视觉和产品露出为线索，把现场素材整理成“看见热爱、看见用户、看见红旗下一步”的传播短片。",
+  },
+];
+
+const seedVisuals = [
+  { label: "主视觉", image: "/assets/717-demo/stage-01.jpg" },
+  { label: "互动瞬间", image: "/assets/717-demo/stage-03.jpg" },
+  { label: "传播画面", image: "/assets/717-demo/stage-02.jpg" },
+];
+
+const topicAnalysis: Record<TopicId, { explain: string; direction: string }> = {
+  "tech-experience": {
+    explain: "当前适合从体验感切入，少讲参数，多讲现场可感知的智能细节。比如智能座舱、交互反馈、现场试乘感受，都可以转成用户第一视角的观察。重点不是证明技术多强，而是让用户看到这些技术在现场如何被用到、如何被感受到。",
+    direction: "适合做短视频开头、小红书图文种草和现场看点合集。内容重点放在“我看到了什么、我感受到什么、它解决了什么小麻烦”。可以用一条内容讲一个细节，避免把所有卖点堆在一起。",
+  },
+  "fan-cocreation": {
+    explain: "把粉丝参与过程做成内容主线，让用户看到真实互动和社群氛围。签到、合影、互动、留言这些片段，本身就是现场热度的证据。这里更适合强调“我参与了”“我在现场”“我和品牌发生了连接”。",
+    direction: "适合做朋友圈裂变素材、视频号现场切片和活动复盘短视频。内容要弱化官方口吻，多保留参与者的动作、表情和即时反馈。可以把用户的一句话、一张合影、一次互动拆成多个轻量内容点。",
+  },
+  "family-travel": {
+    explain: "用家庭场景承接产品价值，重点表达舒适、安全、陪伴。把抽象卖点放进出行、等待、休息和照顾家人的具体时刻里。用户更容易被“家人坐得舒服”“孩子不闹”“长途更安心”这类具体画面打动。",
+    direction: "适合做亲子场景脚本、图文种草和产品细节说明。建议围绕人物关系组织内容，比如父母、孩子、长途出行和周末短途。表达上少讲配置清单，多讲一个家庭为什么会需要它。",
+  },
+  "brand-memory": {
+    explain: "从品牌符号和用户记忆切入，把经典感转成更年轻的情绪连接。不要只讲历史，而是讲这些符号今天为什么仍然能被看见、被讨论。现场如果有装置、车型、标识或老用户故事，都可以成为情绪入口。",
+    direction: "适合做品牌故事短片、用户回忆征集和经典元素解读。内容可以串联老用户记忆、新用户体验和现场装置打卡。建议用“一个符号 + 一个故事 + 一个当下体验”的结构，避免做成品牌年表。",
+  },
+};
+
+const publishTimeline = [
+  {
+    day: "08/09",
+    status: "active",
+    seeds: [
+      { title: "No.1 智能科技体验", status: "已发布" },
+      { title: "粉丝共创现场", status: "准备中" },
+      { title: "现场打卡裂变包", status: "待发布" },
+    ],
+  },
+  {
+    day: "08/10",
+    status: "next",
+    seeds: [
+      { title: "家庭出行场景", status: "待发布" },
+      { title: "粉丝视角口播", status: "准备中" },
+    ],
+  },
+  {
+    day: "08/11",
+    status: "next",
+    seeds: [
+      { title: "用户真实反馈", status: "待发布" },
+      { title: "产品细节种草", status: "已失效" },
+    ],
+  },
+];
+
+type KnowledgeAiModuleId = "qa" | "review" | "analysis" | "copy" | "material";
+
+const knowledgeAiModules: Array<{
+  id: KnowledgeAiModuleId;
+  label: string;
+  tag: string;
+  note: string;
+  examples: string[];
+}> = [
+  {
+    id: "qa",
+    label: "知识库问答",
+    tag: "检索 / 确认口径",
+    note: "适合从 813 专项资料库里找答案、查资料、确认产品和项目口径。",
+    examples: [
+      "查询813项目的核心背景信息，并整理成简洁说明。",
+      "查找目前知识库中关于813活动规则的资料，并列出重点。",
+      "查询某个产品的核心卖点、适用人群和推荐表达。",
+      "查找813相关公关口径中，关于用户疑问回复的内容。",
+    ],
+  },
+  {
+    id: "review",
+    label: "内容审核",
+    tag: "事实 / 风险 / 口径",
+    note: "适合粘贴文案、脚本、评论回复或种子内容，让 AI 基于知识库审核。",
+    examples: [
+      "请审核以下文案是否符合813项目的传播口径。",
+      "请检查这段内容中是否存在夸大宣传、事实错误或敏感表达。",
+      "请判断这段短视频脚本是否和知识库中的产品信息一致。",
+      "请审核这段评论区回复是否存在公关风险。",
+    ],
+  },
+  {
+    id: "analysis",
+    label: "内容分析",
+    tag: "归纳 / 对比 / 提炼",
+    note: "适合选中一个或多个知识库内容后，做归纳、对比和传播信息提炼。",
+    examples: [
+      "请分析我选择的这些资料，提炼出3个最适合传播的核心卖点。",
+      "请对比这些资料中的表达差异，并整理出统一口径。",
+      "请从这些资料里提炼适合短视频开头使用的信息。",
+      "请分析这些内容适合哪些平台发布。",
+    ],
+  },
+  {
+    id: "copy",
+    label: "文案加工",
+    tag: "脚本 / 标题 / 改写",
+    note: "适合基于选中的知识库资料，生成可用图文、短视频脚本和平台标题。",
+    examples: [
+      "请基于我选择的资料，生成一篇小红书风格的种草文案。",
+      "请把这些产品信息改写成30秒短视频口播脚本。",
+      "请根据这些资料，生成3个适合抖音发布的视频标题。",
+      "请把这段官方资料改写成更适合普通用户理解的表达。",
+    ],
+  },
+  {
+    id: "material",
+    label: "素材匹配",
+    tag: "图片 / 视频 / 封面",
+    note: "适合根据脚本、选中资料或传播目标，推荐可搭配的图片和视频素材。",
+    examples: [
+      "请根据这个短视频脚本，推荐可搭配的视频素材。",
+      "请找出适合813专题页使用的核心视觉素材。",
+      "请判断这些素材是否适合对外传播。",
+      "请根据选中内容，推荐封面图方向和标题文案。",
+    ],
+  },
+];
+
+const knowledgeAiEntryCards: Array<{
+  moduleId: KnowledgeAiModuleId;
+  lead: string;
+  title: string;
+  defaultPrompt: string;
+  description: string;
+}> = [
+  {
+    moduleId: "qa",
+    lead: "01",
+    title: "知识库信息搜索",
+    defaultPrompt: "我想搜索一下关于红旗HS6的一些信息",
+    description: "帮你从知识库里快速找到资料和答案，并标清信息来自哪里。",
+  },
+  {
+    moduleId: "copy",
+    lead: "02",
+    title: "AI内容制作",
+    defaultPrompt: "围绕红旗新车卖点，写3条短视频开场",
+    description: "把已有资料改写成脚本、标题、发布文案等可以直接使用的内容。",
+  },
+  {
+    moduleId: "review",
+    lead: "03",
+    title: "内容信息审核",
+    defaultPrompt: "这段话有没有夸大或不准确的地方",
+    description: "检查文案有没有不准确、太夸张或不适合公开发布的地方。",
+  },
+];
+
+const knowledgeAiSearchResults = [
+  {
+    title: "HS6 PHEV 产品培训课件",
+    tag: "产品资料",
+    score: "96%",
+    note: "包含车型定位、核心卖点、空间、混动、安全和智驾信息。",
+  },
+  {
+    title: "HS6 上市后用户调研报告",
+    tag: "用户调研",
+    score: "91%",
+    note: "包含用户画像、购买动机、战胜战败因素和传播机会点。",
+  },
+  {
+    title: "813 项目传播背景",
+    tag: "项目背景",
+    score: "86%",
+    note: "用于确认项目阶段、传播目标和基础背景口径。",
+  },
+  {
+    title: "平台传播规则速查",
+    tag: "平台规则",
+    score: "78%",
+    note: "用于校验小红书、抖音、视频号的表达边界。",
+  },
+  {
+    title: "产品图片棚拍素材",
+    tag: "素材资源",
+    score: "72%",
+    note: "可用于封面、图文配图和产品视觉素材匹配。",
+  },
+];
+
+function LandingPage({
+  isLaunching,
+  onStart,
+  authMode,
+  authMessage,
+  onAuthModeChange,
+  onLogin,
+  onRegister,
+  onInvitationApply,
+}: {
+  isLaunching: boolean;
+  onStart: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  authMode: "intro" | "login" | "register" | "invite";
+  authMessage: string;
+  onAuthModeChange: (mode: "login" | "register" | "invite") => void;
+  onLogin: (accountName: string, password: string) => void;
+  onRegister: (data: { accountName: string; password: string; inviteCode: string }) => void;
+  onInvitationApply: (data: {
+    realName: string;
+    identity: string;
+    email: string;
+    usage: string;
+  }) => void;
+}) {
+  const [pointer, setPointer] = React.useState({ x: 0, y: 0 });
+  const [loginAccount, setLoginAccount] = React.useState("");
+  const [loginPassword, setLoginPassword] = React.useState("");
+  const [registerAccount, setRegisterAccount] = React.useState("");
+  const [registerPassword, setRegisterPassword] = React.useState("");
+  const [inviteCode, setInviteCode] = React.useState("");
+  const [realName, setRealName] = React.useState("");
+  const [identity, setIdentity] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [usage, setUsage] = React.useState("");
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 36;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 24;
+    setPointer({ x, y });
+  };
+
+  const handlePointerLeave = () => {
+    setPointer({ x: 0, y: 0 });
+  };
+
+  return (
+    <main className="hero-page">
+      <section
+        className={`poster-frame ${isLaunching ? "is-launching" : ""}`}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+        style={
+          {
+            "--mx": `${pointer.x}px`,
+            "--my": `${pointer.y}px`,
+            "--bg-x": `${pointer.x * 0.35}px`,
+            "--bg-y": `${pointer.y * 0.35}px`,
+            "--left-x": `${pointer.x * -0.08}px`,
+            "--left-y": `${pointer.y * -0.05}px`,
+            "--right-x": `${pointer.x * 0.08}px`,
+            "--right-y": `${pointer.y * 0.05}px`,
+            "--soft-x": `${pointer.x * 0.02}px`,
+            "--soft-y": `${pointer.y * 0.02}px`,
+            "--footer-x": `${pointer.x * 0.015}px`,
+            "--footer-y": `${pointer.y * 0.015}px`,
+          } as React.CSSProperties
+        }
+      >
+        <div className="hero-color-bends-bg" aria-hidden="true">
+          <ColorBends
+            colors={[
+              "#fcfcfa",
+              "#eeeeec",
+              "#dedfdd",
+              "#ced0cf",
+              "#babdbd",
+              "#a8acad",
+              "#969b9e",
+            ]}
+            rotation={90}
+            autoRotate={0}
+            speed={0.2}
+            scale={1}
+            frequency={1}
+            warpStrength={1}
+            mouseInfluence={1}
+            parallax={0.5}
+            noise={0.15}
+            iterations={1}
+            intensity={1.5}
+            bandWidth={6}
+            transparent={false}
+          />
+        </div>
+
+        <header className="poster-nav">
+          <button className="menu-button" aria-label="打开菜单">
+            <span />
+            <span />
+          </button>
+          <nav aria-label="主导航">
+            <a href="#ai">AI</a>
+            <a href="#library">KNOWLEDGE</a>
+            <a href="#seed">SEED 813</a>
+          </nav>
+        </header>
+
+        <div className="hero-grid">
+          <aside className="left-mark">
+            <strong>08&apos;13</strong>
+            <span>PROJECT DATA SHOW</span>
+          </aside>
+
+          <section className={authMode === "intro" ? "right-copy" : "right-copy auth-copy"}>
+            {authMode === "intro" ? (
+              <>
+                <p className="event-kicker">
+                  红旗粉丝「家」年华暨智能科技体验日
+                </p>
+                <h1>专项知识库</h1>
+                <div className="copy-line" />
+                <span>
+                  登记制准入 / 知识库增强 / 模板化AI
+                  <br />
+                  让资料、审核与种子裂变沿一条清晰路径运转
+                </span>
+              </>
+            ) : (
+              <div className="auth-panel">
+                <header>
+                  <span>INVITATION ACCESS</span>
+                  <strong>
+                    {authMode === "login"
+                      ? "账号登录"
+                      : authMode === "register"
+                        ? "注册账号"
+                        : "申请邀请码"}
+                  </strong>
+                  <p>
+                    {authMode === "login"
+                      ? "请先登录后进入 813 专项知识库工作台。"
+                      : authMode === "register"
+                        ? "注册采用邀约制，请填写账号信息和邀请码。"
+                        : "没有邀请码时，请提交真实信息，确认后邀请码会发送至邮箱。"}
+                  </p>
+                </header>
+
+                {authMode === "login" ? (
+                  <form
+                    className="auth-form"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      onLogin(loginAccount, loginPassword);
+                    }}
+                  >
+                    <label>
+                      <span>账号名</span>
+                      <input
+                        value={loginAccount}
+                        onChange={(event) => setLoginAccount(event.currentTarget.value)}
+                        placeholder="请输入账号名"
+                      />
+                    </label>
+                    <label>
+                      <span>密码</span>
+                      <input
+                        type="password"
+                        value={loginPassword}
+                        onChange={(event) => setLoginPassword(event.currentTarget.value)}
+                        placeholder="请输入密码"
+                      />
+                    </label>
+                    {authMessage ? <p className="auth-message">{authMessage}</p> : null}
+                    <button type="submit">登录并进入</button>
+                    <button type="button" onClick={() => onAuthModeChange("register")}>
+                      注册账号
+                    </button>
+                  </form>
+                ) : null}
+
+                {authMode === "register" ? (
+                  <form
+                    className="auth-form"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      onRegister({
+                        accountName: registerAccount,
+                        password: registerPassword,
+                        inviteCode,
+                      });
+                    }}
+                  >
+                    <label>
+                      <span>账号名</span>
+                      <input
+                        value={registerAccount}
+                        onChange={(event) => setRegisterAccount(event.currentTarget.value)}
+                        placeholder="支持中文账号名"
+                      />
+                    </label>
+                    <label>
+                      <span>密码</span>
+                      <input
+                        type="password"
+                        value={registerPassword}
+                        onChange={(event) => setRegisterPassword(event.currentTarget.value)}
+                        placeholder="设置登录密码"
+                      />
+                    </label>
+                    <label>
+                      <span>邀请码</span>
+                      <input
+                        value={inviteCode}
+                        onChange={(event) => setInviteCode(event.currentTarget.value)}
+                        placeholder="请输入邀请码"
+                      />
+                    </label>
+                    {authMessage ? <p className="auth-message">{authMessage}</p> : null}
+                    <button type="submit">提交注册</button>
+                    <button type="button" onClick={() => onAuthModeChange("invite")}>
+                      没有邀请码，申请一个
+                    </button>
+                    <button type="button" onClick={() => onAuthModeChange("login")}>
+                      返回登录
+                    </button>
+                  </form>
+                ) : null}
+
+                {authMode === "invite" ? (
+                  <form
+                    className="auth-form"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      onInvitationApply({ realName, identity, email, usage });
+                    }}
+                  >
+                    <label>
+                      <span>真实姓名</span>
+                      <input
+                        value={realName}
+                        onChange={(event) => setRealName(event.currentTarget.value)}
+                        placeholder="请输入真实姓名"
+                      />
+                    </label>
+                    <label>
+                      <span>身份</span>
+                      <input
+                        value={identity}
+                        onChange={(event) => setIdentity(event.currentTarget.value)}
+                        placeholder="如：项目成员 / 代理商 / 内容团队"
+                      />
+                    </label>
+                    <label>
+                      <span>邮箱</span>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.currentTarget.value)}
+                        placeholder="用于接收邀请码"
+                      />
+                    </label>
+                    <label>
+                      <span>使用需求说明</span>
+                      <textarea
+                        value={usage}
+                        onChange={(event) => setUsage(event.currentTarget.value)}
+                        placeholder="请简要说明你希望使用知识库完成什么工作"
+                      />
+                    </label>
+                    {authMessage ? <p className="auth-message">{authMessage}</p> : null}
+                    <button type="submit">提交申请</button>
+                    <button type="button" onClick={() => onAuthModeChange("register")}>
+                      返回注册
+                    </button>
+                  </form>
+                ) : null}
+              </div>
+            )}
+          </section>
+        </div>
+
+        {authMode === "intro" ? (
+          <a className="start-cue" href="#ai" aria-label="开始使用" onClick={onStart}>
+            <span className="start-cue-line" />
+            <span className="start-cue-text">开始使用</span>
+            <span className="start-cue-arrow" />
+          </a>
+        ) : null}
+
+        <footer className="poster-footer">
+          <span>S W I G E&nbsp;&nbsp; V I S U A L&nbsp;&nbsp; D E S I G N</span>
+          <span>资料沉淀 — AI处理 — 种子裂变</span>
+        </footer>
+      </section>
+    </main>
+  );
+}
+
+function WorkbenchPage({
+  isEntering,
+  accountName,
+  onAccountUpdate,
+  onPasswordUpdate,
+  onLogout,
+}: {
+  isEntering: boolean;
+  accountName: string;
+  onAccountUpdate: (nextAccountName: string) => void;
+  onPasswordUpdate: (currentPassword: string, nextPassword: string) => boolean;
+  onLogout: () => void;
+}) {
+  const [activeTab, setActiveTab] = React.useState("seed");
+  const [activeSubTab, setActiveSubTab] = React.useState("topic-board");
+  const [activeTopicId, setActiveTopicId] = React.useState<TopicId>(hotTopics[0].id);
+  const [seedScope, setSeedScope] = React.useState<SeedScope>("current");
+  const topicDetailRef = React.useRef<HTMLElement | null>(null);
+  const topicChangeTweenRef = React.useRef<gsap.core.Tween | null>(null);
+  const topicDetailMountedRef = React.useRef(false);
+  const topicSelectionTokenRef = React.useRef(0);
+  const [displayTab, setDisplayTab] = React.useState("seed");
+  const [isContentVisible, setIsContentVisible] = React.useState(true);
+  const [selectedSeed, setSelectedSeed] = React.useState<SeedCard | null>(null);
+  const [isSeedAiOpen, setIsSeedAiOpen] = React.useState(false);
+  const [activeSeedAiAction, setActiveSeedAiAction] = React.useState<SeedAiAction | null>(null);
+  const [isSeedAiReturning, setIsSeedAiReturning] = React.useState(false);
+  const [isSeedAiGenerating, setIsSeedAiGenerating] = React.useState(false);
+  const [seedAiResult, setSeedAiResult] = React.useState<SeedAiResult | null>(null);
+  const [seedAiPrompt, setSeedAiPrompt] = React.useState("");
+  const [selectedLibraryEntry, setSelectedLibraryEntry] = React.useState<LibraryEntry | null>(null);
+  const [activeLibraryAnalysisTab, setActiveLibraryAnalysisTab] = React.useState("overview");
+  const [libraryFolders, setLibraryFolders] = React.useState<LibraryFolder[]>([
+    { id: "default", name: "默认收集夹", items: [] },
+  ]);
+  const [activeLibraryFolderId, setActiveLibraryFolderId] = React.useState("default");
+  const [isLibraryDrawerOpen, setIsLibraryDrawerOpen] = React.useState(false);
+  const [renamingLibraryFolderId, setRenamingLibraryFolderId] = React.useState<string | null>(null);
+  const [activeKnowledgeAiModule, setActiveKnowledgeAiModule] =
+    React.useState<KnowledgeAiModuleId>("qa");
+  const [knowledgeAiPrompt, setKnowledgeAiPrompt] = React.useState("");
+  const [selectedKnowledgeAiMenu, setSelectedKnowledgeAiMenu] =
+    React.useState<KnowledgeAiModuleId | null>(null);
+  const [isKnowledgeAiAttachOpen, setIsKnowledgeAiAttachOpen] = React.useState(false);
+  const [selectedKnowledgeAiAttachments, setSelectedKnowledgeAiAttachments] = React.useState<
+    string[]
+  >([]);
+  const [selectedKnowledgeSources, setSelectedKnowledgeSources] = React.useState<string[]>([
+    knowledgeAiSearchResults[0].title,
+    knowledgeAiSearchResults[1].title,
+  ]);
+  const [hasKnowledgeAiResult, setHasKnowledgeAiResult] = React.useState(false);
+  const seedAiReturnTimerRef = React.useRef<number | null>(null);
+  const seedAiGenerateTimerRef = React.useRef<number | null>(null);
+  const minorNavRef = React.useRef<HTMLElement | null>(null);
+  const minorLabelRefs = React.useRef<Record<string, HTMLSpanElement | null>>({});
+  const sectionRefs = React.useRef<Record<string, HTMLElement | null>>({});
+  const contentScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const hasMountedContentRef = React.useRef(false);
+  const [minorIndicator, setMinorIndicator] = React.useState({ left: 0, width: 0 });
+  const [scrollProgress, setScrollProgress] = React.useState(0);
+  const [libraryFilterBySection, setLibraryFilterBySection] = React.useState<
+    Record<LibrarySectionId, string>
+  >({
+    "product-info": libraryFilters["product-info"][0].id,
+    "communication-files": libraryFilters["communication-files"][0].id,
+    "asset-library": libraryFilters["asset-library"][0].id,
+    "seed-operation": libraryFilters["seed-operation"][0].id,
+  });
+  const [librarySubFilterBySection, setLibrarySubFilterBySection] = React.useState<
+    Record<LibrarySectionId, string>
+  >({
+    "product-info": libraryFilters["product-info"][0].subFilters[0],
+    "communication-files": libraryFilters["communication-files"][0].subFilters[0],
+    "asset-library": libraryFilters["asset-library"][0].subFilters[0],
+    "seed-operation": libraryFilters["seed-operation"][0].subFilters[0],
+  });
+  const workspaceMainRef = React.useRef<HTMLElement | null>(null);
+  const [profileAccountName, setProfileAccountName] = React.useState(accountName);
+  const [profileCurrentPassword, setProfileCurrentPassword] = React.useState("");
+  const [profileNewPassword, setProfileNewPassword] = React.useState("");
+  const [profileMessage, setProfileMessage] = React.useState("");
+
+  const active = React.useMemo(
+    () => majorTabs.find((item) => item.id === activeTab) || majorTabs[0],
+    [activeTab],
+  );
+  const isProfileTab = activeTab === "profile";
+  const activeSubTabs = isProfileTab ? [] : active.subTabs || [];
+  const activeLibrarySection = React.useMemo(
+    () =>
+      librarySections.find((section) => section.id === activeSubTab) || librarySections[0],
+    [activeSubTab],
+  );
+  const activeLibraryFilterId = libraryFilterBySection[activeLibrarySection.id];
+  const activeLibraryFilters = libraryFilters[activeLibrarySection.id];
+  const activeLibraryFilter =
+    activeLibraryFilters.find((filter) => filter.id === activeLibraryFilterId) ||
+    activeLibraryFilters[0];
+  const activeLibrarySubFilter =
+    librarySubFilterBySection[activeLibrarySection.id] || activeLibraryFilter.subFilters[0];
+  const baseLibraryEntries =
+    activeLibrarySection.id === "product-info" && activeLibraryFilter.id === "hs6"
+      ? [...hs6LibraryEntries, ...hs6ImageEntries]
+      : activeLibrarySection.id === "product-info" && activeLibraryFilter.id === "h7"
+        ? h7ImageEntries
+      : libraryEntries[activeLibrarySection.id];
+  const activeLibraryEntries =
+    activeLibrarySection.id === "product-info" && activeLibrarySubFilter === "产品资料"
+      ? baseLibraryEntries.filter(
+          (entry) => entry.kind !== "image" && entry.tag !== "审核依据" && !entry.meta.includes("视频"),
+        )
+      : activeLibrarySubFilter.startsWith("全部")
+        ? baseLibraryEntries
+        : baseLibraryEntries.filter(
+            (entry) =>
+              entry.tag === activeLibrarySubFilter ||
+              entry.meta.includes(activeLibrarySubFilter) ||
+              entry.title.includes(activeLibrarySubFilter),
+          );
+  const isLibraryImageGallery =
+    activeLibrarySection.id === "product-info" &&
+    (activeLibrarySubFilter === "产品图片" ||
+      activeLibraryEntries.every((entry) => entry.kind === "image")) &&
+    activeLibraryEntries.some((entry) => entry.kind === "image");
+  const activeLibraryFolder =
+    libraryFolders.find((folder) => folder.id === activeLibraryFolderId) || libraryFolders[0];
+  const libraryCollectionCount = libraryFolders.reduce(
+    (total, folder) => total + folder.items.length,
+    0,
+  );
+  const activeKnowledgeAiConfig =
+    knowledgeAiModules.find((module) => module.id === activeKnowledgeAiModule) ||
+    knowledgeAiModules[0];
+  const selectedKnowledgeAiSources = knowledgeAiSearchResults.filter((result) =>
+    selectedKnowledgeSources.includes(result.title),
+  );
+  const visibleSeedCards = React.useMemo(
+    () =>
+      seedScope === "current"
+        ? expandedSeedCards.filter((seed) => seed.topicId === activeTopicId)
+        : expandedSeedCards,
+    [activeTopicId, seedScope],
+  );
+
+  React.useEffect(() => {
+    if (!activeSubTabs.some((item) => item.id === activeSubTab)) {
+      setActiveSubTab(activeSubTabs[0]?.id || "");
+    }
+  }, [activeSubTab, activeSubTabs]);
+
+  React.useEffect(() => {
+    setProfileAccountName(accountName);
+  }, [accountName]);
+
+  React.useEffect(() => {
+    if (!hasMountedContentRef.current) {
+      hasMountedContentRef.current = true;
+      return;
+    }
+
+    setIsContentVisible(false);
+    const timeout = window.setTimeout(() => {
+      setDisplayTab(activeTab);
+      setIsContentVisible(true);
+    }, 160);
+    return () => window.clearTimeout(timeout);
+  }, [activeTab]);
+
+  React.useEffect(() => {
+    const navNode = minorNavRef.current;
+    const labelNode = minorLabelRefs.current[activeSubTab];
+    if (!navNode || !labelNode) return;
+    const navRect = navNode.getBoundingClientRect();
+    const labelRect = labelNode.getBoundingClientRect();
+    setMinorIndicator({
+      left: labelRect.left - navRect.left,
+      width: labelRect.width,
+    });
+  }, [activeTab, activeSubTab, displayTab]);
+
+  const updateScrollProgress = React.useCallback(() => {
+    const node = contentScrollRef.current;
+    if (!node) return;
+    const maxScroll = node.scrollHeight - node.clientHeight;
+    setScrollProgress(maxScroll > 0 ? node.scrollTop / maxScroll : 0);
+
+    if (activeTab !== "seed" || displayTab !== "seed") return;
+    const anchorLine = node.getBoundingClientRect().top + 92;
+    let currentSection = "topic-board";
+    for (const sectionId of ["topic-board", "hotspots", "seed-content"]) {
+      const section = sectionRefs.current[sectionId];
+      if (section && section.getBoundingClientRect().top <= anchorLine) {
+        currentSection = sectionId;
+      }
+    }
+    setActiveSubTab((current) => (current === currentSection ? current : currentSection));
+  }, [activeTab, displayTab]);
+
+  React.useEffect(() => {
+    const node = contentScrollRef.current;
+    if (!node) return;
+    updateScrollProgress();
+    node.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+    return () => {
+      node.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
+    };
+  }, [displayTab, updateScrollProgress]);
+
+  const handleMinorSelect = (sectionId: string) => {
+    setActiveSubTab(sectionId);
+    if (activeTab === "library") {
+      contentScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if (activeTab !== "seed") return;
+    const node = contentScrollRef.current;
+    const section = sectionRefs.current[sectionId];
+    if (!node || !section) return;
+    const nodeRect = node.getBoundingClientRect();
+    const sectionRect = section.getBoundingClientRect();
+    node.scrollTo({
+      top: node.scrollTop + sectionRect.top - nodeRect.top - 18,
+      behavior: "smooth",
+    });
+  };
+
+  const handleLibraryFilterSelect = (sectionId: LibrarySectionId, filterId: string) => {
+    setLibraryFilterBySection((current) => ({
+      ...current,
+      [sectionId]: filterId,
+    }));
+    const nextFilter = libraryFilters[sectionId].find((filter) => filter.id === filterId);
+    setLibrarySubFilterBySection((current) => ({
+      ...current,
+      [sectionId]: nextFilter?.subFilters[0] || current[sectionId],
+    }));
+  };
+
+  const handleAddLibraryEntry = (entry: LibraryEntry) => {
+    setLibraryFolders((current) =>
+      current.map((folder) => {
+        if (folder.id !== activeLibraryFolderId) return folder;
+        if (folder.items.some((item) => item.title === entry.title)) return folder;
+        return { ...folder, items: [...folder.items, entry] };
+      }),
+    );
+    setIsLibraryDrawerOpen(true);
+  };
+
+  const handleCreateLibraryFolder = () => {
+    const nextId = `folder-${Date.now()}`;
+    setLibraryFolders((current) => [
+      ...current,
+      { id: nextId, name: `新建文件夹 ${current.length}`, items: [] },
+    ]);
+    setActiveLibraryFolderId(nextId);
+    setRenamingLibraryFolderId(nextId);
+    setIsLibraryDrawerOpen(true);
+  };
+
+  const handleRenameLibraryFolder = (folderId: string, name: string) => {
+    const nextName = name.trim() || "未命名文件夹";
+    setLibraryFolders((current) =>
+      current.map((folder) => (folder.id === folderId ? { ...folder, name: nextName } : folder)),
+    );
+  };
+
+  const handleDeleteLibraryFolder = (folderId: string) => {
+    setLibraryFolders((current) => {
+      if (current.length === 1) {
+        return [{ ...current[0], items: [] }];
+      }
+      const nextFolders = current.filter((folder) => folder.id !== folderId);
+      if (activeLibraryFolderId === folderId) {
+        setActiveLibraryFolderId(nextFolders[0].id);
+      }
+      return nextFolders;
+    });
+  };
+
+  const handleRemoveLibraryEntry = (folderId: string, title: string) => {
+    setLibraryFolders((current) =>
+      current.map((folder) =>
+        folder.id === folderId
+          ? { ...folder, items: folder.items.filter((item) => item.title !== title) }
+          : folder,
+      ),
+    );
+  };
+
+  const handleDownloadLibraryFolder = () => {
+    if (!activeLibraryFolder.items.length) return;
+
+    const packageText = [
+      `${activeLibraryFolder.name} / 文件收集空间批量导出`,
+      `共 ${activeLibraryFolder.items.length} 个文件`,
+      "",
+      ...activeLibraryFolder.items.map((item, index) =>
+        [
+          `${index + 1}. ${item.title}`,
+          `类型：${item.kind === "image" ? "图片" : "文档"}`,
+          `分类：${item.tag}`,
+          `信息：${item.kind === "image" ? "图片素材" : item.meta}`,
+          `说明：${item.desc}`,
+        ].join("\n"),
+      ),
+    ].join("\n\n");
+    const blob = new Blob([packageText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${activeLibraryFolder.name}-批量下载清单.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleKnowledgeAiSubmit = () => {
+    setHasKnowledgeAiResult(true);
+    if (selectedKnowledgeSources.length === 0) {
+      setSelectedKnowledgeSources([
+        knowledgeAiSearchResults[0].title,
+        knowledgeAiSearchResults[1].title,
+      ]);
+    }
+  };
+
+  const handleKnowledgeAiEntrySelect = (card: (typeof knowledgeAiEntryCards)[number]) => {
+    setActiveKnowledgeAiModule(card.moduleId);
+    setKnowledgeAiPrompt("");
+    setHasKnowledgeAiResult(false);
+    setSelectedKnowledgeAiMenu(card.moduleId);
+  };
+
+  const handleKnowledgeAiPromptSelect = (prompt: string) => {
+    setKnowledgeAiPrompt(prompt);
+    setHasKnowledgeAiResult(false);
+  };
+
+  const handleKnowledgeAiAttachmentToggle = (attachmentId: string) => {
+    setSelectedKnowledgeAiAttachments((current) =>
+      current.includes(attachmentId)
+        ? current.filter((id) => id !== attachmentId)
+        : [...current, attachmentId],
+    );
+  };
+
+  React.useEffect(() => {
+    if (seedAiReturnTimerRef.current) {
+      window.clearTimeout(seedAiReturnTimerRef.current);
+      seedAiReturnTimerRef.current = null;
+    }
+    setIsSeedAiOpen(false);
+    setActiveSeedAiAction(null);
+    setIsSeedAiReturning(false);
+    setIsSeedAiGenerating(false);
+    setSeedAiResult(null);
+    setSeedAiPrompt("");
+    if (!selectedSeed) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedSeed(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedSeed]);
+
+  React.useEffect(() => {
+    setActiveLibraryAnalysisTab("overview");
+    if (!selectedLibraryEntry) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedLibraryEntry(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedLibraryEntry]);
+
+  React.useEffect(() => {
+    return () => {
+      if (seedAiReturnTimerRef.current) {
+        window.clearTimeout(seedAiReturnTimerRef.current);
+      }
+      if (seedAiGenerateTimerRef.current) {
+        window.clearTimeout(seedAiGenerateTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleSeedAiBack = () => {
+    if (!activeSeedAiAction || isSeedAiReturning || isSeedAiGenerating) return;
+    setIsSeedAiReturning(true);
+    if (seedAiReturnTimerRef.current) {
+      window.clearTimeout(seedAiReturnTimerRef.current);
+    }
+    seedAiReturnTimerRef.current = window.setTimeout(() => {
+      setActiveSeedAiAction(null);
+      setSeedAiPrompt("");
+      setSeedAiResult(null);
+      setIsSeedAiReturning(false);
+      seedAiReturnTimerRef.current = null;
+    }, 190);
+  };
+
+  const handleSeedAiSubmit = () => {
+    if (!activeSeedAiAction || isSeedAiGenerating) return;
+    const submittedPrompt = seedAiPrompt;
+    setIsSeedAiGenerating(true);
+    if (!seedAiResult) {
+      setSeedAiResult(null);
+    }
+    if (seedAiGenerateTimerRef.current) {
+      window.clearTimeout(seedAiGenerateTimerRef.current);
+    }
+    seedAiGenerateTimerRef.current = window.setTimeout(() => {
+      const seedTitle = selectedSeed?.title || "717粉丝盛典｜晚会舞台种子";
+      if (activeSeedAiAction === "package") {
+        setSeedAiResult({
+          action: "package",
+          title: "素材包生成结果",
+          intro: submittedPrompt
+            ? `已根据你的剪辑需求整理素材包：${submittedPrompt}`
+            : "基于当前种子内容，整理可直接交给剪辑使用的画面、文案和节奏素材。",
+          sections: [
+            {
+              label: "素材包说明",
+              content: `这组素材围绕 ${seedTitle} 生成，重点保留舞台氛围、粉丝互动、品牌露出和可做封面的高光瞬间。适合具备视频剪辑能力的用户继续拆条、混剪或做短视频模板。`,
+            },
+            {
+              label: "剪辑建议",
+              content: "建议先用现场大景建立氛围，再切粉丝互动和舞台高光，最后用品牌符号和人群情绪收束。整体节奏控制在 20-35 秒，适合小红书、视频号、抖音同步改版。",
+            },
+          ],
+          materials: [
+            {
+              name: "舞台氛围精选图",
+              type: "图片 12 张",
+              note: "用于封面、开头氛围和活动回顾配图。",
+            },
+            {
+              name: "粉丝互动切片",
+              type: "视频线索 9 条",
+              note: "用于转场、情绪铺垫和现场真实感表达。",
+            },
+            {
+              name: "发布标题与字幕底稿",
+              type: "文案 6 组",
+              note: "用于短视频字幕、封面标题和朋友圈转发文案。",
+            },
+            {
+              name: "剪辑节奏建议",
+              type: "结构说明 1 份",
+              note: "用于指导开头、中段、收尾的画面组合。",
+            },
+          ],
+        });
+      } else if (activeSeedAiAction === "video") {
+        setSeedAiResult({
+          action: "video",
+          title: "视频生成结果",
+          intro: submittedPrompt
+            ? `已根据你的要求生成视频交付：${submittedPrompt}`
+            : "基于当前种子内容生成一支可发布的种子裂变视频，并同步整理发布信息。",
+          sections: [
+            {
+              label: "发布标题",
+              content: "717粉丝盛典现场高光｜这一晚，把热爱拍成了记忆",
+            },
+            {
+              label: "发布文案",
+              content: "从舞台灯光到粉丝互动，从现场欢呼到品牌共创，这支视频适合用作活动后第一波裂变传播。建议搭配“我在现场”的口吻发布，突出真实到场感和高光瞬间。",
+            },
+            {
+              label: "发布话题标签",
+              content: "#717粉丝盛典 #红旗粉丝家年华 #现场高光 #品牌共创 #活动回顾",
+            },
+          ],
+          video: {
+            src: "/assets/717-demo/seed-delivery-demo.mp4",
+            title: "717粉丝盛典裂变视频",
+            copy: "建议发布在抖音 / 视频号 / 小红书，首帧选择舞台大景，前 3 秒保留人群与灯光高光。",
+            tags: ["#717粉丝盛典", "#现场高光", "#品牌共创", "#活动回顾"],
+          },
+        });
+      } else {
+      setSeedAiResult({
+        action: "script",
+        title: "脚本生成结果",
+        intro: submittedPrompt
+          ? `已根据你的要求调整：${submittedPrompt}`
+          : "基于当前种子内容，默认从现场氛围、粉丝情绪和品牌记忆点生成发布脚本。",
+        sections: [
+          {
+            label: "发布标题",
+            content: `717粉丝盛典现场直击：把热爱、舞台和品牌记忆装进这一晚`,
+          },
+          {
+            label: "发布文案",
+            content: `这组 ${seedTitle} 适合用“我在现场看到什么”作为开头，把舞台灯光、粉丝互动、嘉宾出场和品牌共创串成一条现场体验线。内容不用讲得太官方，重点保留真实感、到场感和情绪高点，让用户觉得这不是一场单向发布，而是一群人一起参与的盛典记忆。`,
+          },
+        ],
+        scriptRows: [
+          {
+            time: "0-3s",
+            voice: "717粉丝盛典的现场，第一眼就是被舞台和人群的热情拉进去。",
+            visual: "舞台大屏、灯光扫过观众席、现场欢呼近景。",
+          },
+          {
+            time: "4-12s",
+            voice: "这不是单向看一场表演，而是粉丝、品牌和现场一起完成的一次共创。",
+            visual: "粉丝互动、合影墙、嘉宾登台、品牌符号穿插。",
+          },
+          {
+            time: "13-20s",
+            voice: "当热爱被记录下来，它就变成了每个人都愿意分享的盛典记忆。",
+            visual: "高光合影、舞台全景、红旗标识与人群情绪收尾。",
+          },
+        ],
+      });
+      }
+      setIsSeedAiGenerating(false);
+      setSeedAiPrompt("");
+      seedAiGenerateTimerRef.current = null;
+    }, 2000);
+  };
+
+  const handleDownloadMaterialPackage = () => {
+    if (!seedAiResult?.materials?.length) return;
+    const packageText = [
+      selectedSeed?.title || "717粉丝盛典素材包",
+      "",
+      seedAiResult.intro,
+      "",
+      ...seedAiResult.materials.map(
+        (material, index) =>
+          `${index + 1}. ${material.name}\n类型：${material.type}\n说明：${material.note}`,
+      ),
+    ].join("\n\n");
+    const blob = new Blob([packageText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "717-seed-material-package.txt";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  React.useLayoutEffect(() => {
+    if (!isEntering || !workspaceMainRef.current) return undefined;
+    const workspaceMain = workspaceMainRef.current;
+    const majorButtons = workspaceMain.querySelectorAll(".workbench-major-nav button");
+    const minorButtons = workspaceMain.querySelectorAll(".workbench-minor-nav button");
+    const greeting = workspaceMain.querySelector(".daily-greeting");
+    const contentSections = workspaceMain.querySelectorAll(
+      ".workspace-stage.is-visible > section:not(.daily-greeting)",
+    );
+    if (!majorButtons.length || !minorButtons.length || !greeting || !contentSections.length) {
+      return undefined;
+    }
+
+    const context = gsap.context(() => {
+      gsap.set([majorButtons, minorButtons, greeting, contentSections], {
+        opacity: 0,
+        y: 28,
+      });
+
+      const timeline = gsap.timeline({
+        defaults: {
+          ease: "power3.out",
+          overwrite: "auto",
+        },
+      });
+
+      timeline
+        .to(majorButtons, {
+          opacity: 1,
+          y: 0,
+          duration: 0.24,
+          stagger: 0.035,
+        })
+        .to(
+          minorButtons,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.24,
+            stagger: 0.035,
+          },
+          "-=0.12",
+        )
+        .to(
+          greeting,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.32,
+          },
+          "-=0.06",
+        )
+        .to(
+          contentSections,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.34,
+            stagger: 0.07,
+          },
+          "-=0.08",
+        );
+    }, workspaceMain);
+
+    return () => context.revert();
+  }, []);
+
+  React.useLayoutEffect(() => {
+    const detail = topicDetailRef.current;
+    if (!detail) return;
+    if (!topicDetailMountedRef.current) {
+      topicDetailMountedRef.current = true;
+      return;
+    }
+    topicChangeTweenRef.current = gsap.fromTo(
+      detail,
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" },
+    );
+  }, [activeTopicId]);
+
+  React.useEffect(() => {
+    return () => {
+      topicChangeTweenRef.current?.kill();
+    };
+  }, []);
+
+  const handleTopicSelect = (topicId: TopicId) => {
+    if (topicId === activeTopicId) return;
+    const detail = topicDetailRef.current;
+    const selectionToken = topicSelectionTokenRef.current + 1;
+    topicSelectionTokenRef.current = selectionToken;
+    topicChangeTweenRef.current?.kill();
+    if (!detail) {
+      setActiveTopicId(topicId);
+      return;
+    }
+    topicChangeTweenRef.current = gsap.to(detail, {
+      opacity: 0,
+      y: 10,
+      duration: 0.16,
+      ease: "power2.in",
+      onComplete: () => {
+        if (topicSelectionTokenRef.current === selectionToken) {
+          setActiveTopicId(topicId);
+        }
+      },
+    });
+  };
+
+  const selectedLibraryTab =
+    selectedLibraryEntry?.tabs?.find((tab) => tab.id === activeLibraryAnalysisTab) ||
+    selectedLibraryEntry?.tabs?.[0];
+
+  const renderPanel = () => {
+    if (displayTab === "profile") {
+      return (
+        <section className="profile-home">
+          <div className="profile-panel">
+            <header>
+              <span>PERSONAL CENTER</span>
+              <h1>个人中心</h1>
+              <p>管理当前账号信息、登录密码和工作台访问状态。</p>
+            </header>
+
+            <div className="profile-card-grid">
+              <form
+                className="profile-card"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const cleanName = profileAccountName.trim();
+                  if (!cleanName) {
+                    setProfileMessage("账号名不能为空。");
+                    return;
+                  }
+                  onAccountUpdate(cleanName);
+                  setProfileMessage("账号名已更新。");
+                }}
+              >
+                <div className="profile-card-title">
+                  <UserRound size={18} />
+                  <strong>账号信息</strong>
+                </div>
+                <label>
+                  <span>账号名</span>
+                  <input
+                    value={profileAccountName}
+                    onChange={(event) => setProfileAccountName(event.currentTarget.value)}
+                    placeholder="请输入账号名"
+                  />
+                </label>
+                <button type="submit">保存账号名</button>
+              </form>
+
+              <form
+                className="profile-card"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (!profileNewPassword.trim()) {
+                    setProfileMessage("请填写新密码。");
+                    return;
+                  }
+                  const isUpdated = onPasswordUpdate(profileCurrentPassword, profileNewPassword);
+                  setProfileMessage(isUpdated ? "密码已更新。" : "当前密码不正确。");
+                  if (isUpdated) {
+                    setProfileCurrentPassword("");
+                    setProfileNewPassword("");
+                  }
+                }}
+              >
+                <div className="profile-card-title">
+                  <KeyRound size={18} />
+                  <strong>修改密码</strong>
+                </div>
+                <label>
+                  <span>当前密码</span>
+                  <input
+                    type="password"
+                    value={profileCurrentPassword}
+                    onChange={(event) => setProfileCurrentPassword(event.currentTarget.value)}
+                    placeholder="请输入当前密码"
+                  />
+                </label>
+                <label>
+                  <span>新密码</span>
+                  <input
+                    type="password"
+                    value={profileNewPassword}
+                    onChange={(event) => setProfileNewPassword(event.currentTarget.value)}
+                    placeholder="请输入新密码"
+                  />
+                </label>
+                <button type="submit">更新密码</button>
+              </form>
+            </div>
+
+            <footer>
+              <p>{profileMessage || `当前登录账号：${accountName}`}</p>
+              <button type="button" onClick={onLogout}>
+                <LogOut size={16} />
+                退出登录
+              </button>
+            </footer>
+          </div>
+        </section>
+      );
+    }
+
+    if (displayTab === "tools") {
+      return (
+        <section
+          className="knowledge-ai-home"
+          onClick={(event) => {
+            const target = event.target;
+
+            if (!(target instanceof HTMLElement) || (!selectedKnowledgeAiMenu && !isKnowledgeAiAttachOpen)) {
+              return;
+            }
+
+            const isInsideKnowledgeAiControl = target.closest(
+              ".knowledge-ai-heading, .knowledge-ai-entry-grid, .knowledge-ai-prompt-stack, .knowledge-ai-composer-shell, .knowledge-ai-result",
+            );
+
+            if (!isInsideKnowledgeAiControl) {
+              if (selectedKnowledgeAiMenu) {
+                setSelectedKnowledgeAiMenu(null);
+                setKnowledgeAiPrompt("");
+              }
+              setIsKnowledgeAiAttachOpen(false);
+              setHasKnowledgeAiResult(false);
+            }
+          }}
+        >
+          <div className="knowledge-ai-heading">
+            <h1>智旗灵思，知行有方</h1>
+            <p>
+              围绕红旗知识库完成资料搜索、内容制作与信息审核，让用户用一句自然语言就能调用资料、整理表达、校验口径，把复杂的内容生产流程收束到一个 AI 工作入口。
+            </p>
+          </div>
+
+          {!selectedKnowledgeAiMenu ? (
+            <div className="knowledge-ai-entry-grid">
+              {knowledgeAiEntryCards.map((card) => (
+                <article key={card.title} className="knowledge-ai-entry-card">
+                  <span>{card.lead}</span>
+                  <strong>{card.title}</strong>
+                  <em>{card.description}</em>
+                  <button type="button" onClick={() => handleKnowledgeAiEntrySelect(card)}>
+                    <Plus size={15} />
+                    选择
+                  </button>
+                </article>
+              ))}
+            </div>
+          ) : null}
+
+          {hasKnowledgeAiResult ? (
+            <div className="knowledge-ai-result">
+              <div className="knowledge-ai-section-title">
+                <span>{activeKnowledgeAiConfig.tag}</span>
+                <strong>{activeKnowledgeAiConfig.label}</strong>
+                <p>当前 demo 先模拟知识库检索后的处理结果，后续接入模型时会带入资料全文、选中来源和追问上下文。</p>
+              </div>
+              <div className="knowledge-ai-result-card">
+                <article>
+                  <span>处理结论</span>
+                  <p>
+                    已基于 {selectedKnowledgeAiSources.length || 2} 条知识库资料完成处理。建议优先使用 HS6 产品课件、用户调研报告和 813 传播背景里的稳定表达，再继续生成发布内容。
+                  </p>
+                </article>
+                <article>
+                  <span>引用依据</span>
+                  <div>
+                    {(selectedKnowledgeAiSources.length
+                      ? selectedKnowledgeAiSources
+                      : knowledgeAiSearchResults.slice(0, 2)
+                    ).map((source) => (
+                      <em key={source.title}>{source.title}</em>
+                    ))}
+                  </div>
+                </article>
+                <article>
+                  <span>资料边界</span>
+                  <p>
+                    当前仅基于知识库内容回答；如果资料无法支撑，会提示“当前知识库资料不足，回答内容信息可能不完整”。
+                  </p>
+                </article>
+              </div>
+            </div>
+          ) : null}
+
+          {selectedKnowledgeAiMenu ? (
+            <div className="knowledge-ai-prompt-stack" aria-label={`${activeKnowledgeAiConfig.label}提示词`}>
+              {activeKnowledgeAiConfig.examples.map((prompt, index) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  className="knowledge-ai-prompt-pill"
+                  style={{ animationDelay: `${index * 42}ms` }}
+                  onClick={() => handleKnowledgeAiPromptSelect(prompt)}
+                >
+                  <em>“{prompt}”</em>
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="knowledge-ai-composer-shell">
+            {isKnowledgeAiAttachOpen ? (
+              <div className="knowledge-ai-attach-popover">
+                <header>
+                  <strong>选择提问资料</strong>
+                  <span>从文件收集空间中挂载文件或文件夹</span>
+                </header>
+                <div className="knowledge-ai-attach-list">
+                  {libraryFolders.some((folder) => folder.items.length > 0) ? (
+                    libraryFolders.map((folder) => (
+                      <section key={folder.id}>
+                        <button
+                          type="button"
+                          className={
+                            selectedKnowledgeAiAttachments.includes(`folder:${folder.id}`)
+                              ? "active"
+                              : ""
+                          }
+                          onClick={() => handleKnowledgeAiAttachmentToggle(`folder:${folder.id}`)}
+                        >
+                          <FolderOpen size={15} />
+                          <span>{folder.name}</span>
+                          <em>{folder.items.length} 个文件</em>
+                        </button>
+                        {folder.items.map((item) => (
+                          <button
+                            key={`${folder.id}:${item.title}`}
+                            type="button"
+                            className={
+                              selectedKnowledgeAiAttachments.includes(
+                                `file:${folder.id}:${item.title}`,
+                              )
+                                ? "active"
+                                : ""
+                            }
+                            onClick={() =>
+                              handleKnowledgeAiAttachmentToggle(`file:${folder.id}:${item.title}`)
+                            }
+                          >
+                            {item.image ? <img src={item.image} alt="" /> : <Database size={15} />}
+                            <span>{item.title}</span>
+                            <em>{item.kind === "image" ? "图片" : item.meta}</em>
+                          </button>
+                        ))}
+                      </section>
+                    ))
+                  ) : (
+                    <p>文件收集空间暂时没有内容，可以先在知识库资料卡片右上角点击加号收集。</p>
+                  )}
+                </div>
+              </div>
+            ) : null}
+
+            <form
+              className="knowledge-ai-composer"
+              onSubmit={(event) => {
+                event.preventDefault();
+                setIsKnowledgeAiAttachOpen(false);
+                handleKnowledgeAiSubmit();
+              }}
+            >
+              <button
+                type="button"
+                className={
+                  selectedKnowledgeAiAttachments.length > 0
+                    ? "knowledge-ai-attach-button has-selection"
+                    : "knowledge-ai-attach-button"
+                }
+                aria-label="选择文件或文件夹"
+                onClick={() => setIsKnowledgeAiAttachOpen((current) => !current)}
+              >
+                <Plus size={19} />
+                {selectedKnowledgeAiAttachments.length > 0 ? (
+                  <span>{selectedKnowledgeAiAttachments.length}</span>
+                ) : null}
+              </button>
+              <input
+                value={knowledgeAiPrompt}
+                onChange={(event) => setKnowledgeAiPrompt(event.currentTarget.value)}
+                placeholder="你可以参考上边提示词完成需求，或直接点击后修改提示词"
+              />
+              <button type="submit" aria-label="发送">
+                <Send size={26} />
+              </button>
+            </form>
+          </div>
+        </section>
+      );
+    }
+
+    if (displayTab === "library") {
+      return (
+        <section className="library-home">
+          <div className="library-filter-shell">
+            <div className="library-filter-row library-filter-row--primary">
+              {activeLibraryFilters.map((filter) => (
+                <button
+                  key={filter.id}
+                  type="button"
+                  className={filter.id === activeLibraryFilter.id ? "active" : ""}
+                  onClick={() => handleLibraryFilterSelect(activeLibrarySection.id, filter.id)}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
+            <div className="library-filter-row library-filter-row--secondary">
+              {activeLibraryFilter.subFilters.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  className={filter === activeLibrarySubFilter ? "active" : ""}
+                  onClick={() =>
+                    setLibrarySubFilterBySection((current) => ({
+                      ...current,
+                      [activeLibrarySection.id]: filter,
+                    }))
+                  }
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div
+            className={
+              isLibraryImageGallery
+                ? "library-entry-grid library-entry-grid--masonry"
+                : "library-entry-grid"
+            }
+          >
+            {activeLibraryEntries.map((entry, index) => (
+              <article
+                key={entry.title}
+                className={
+                  entry.kind === "image"
+                    ? "library-entry-card library-entry-card--image"
+                    : "library-entry-card"
+                }
+                style={{ animationDelay: `${index * 36}ms` }}
+                onClick={() => setSelectedLibraryEntry(entry)}
+              >
+                <button
+                  type="button"
+                  className="library-collect-button"
+                  aria-label={`收集 ${entry.title}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleAddLibraryEntry(entry);
+                  }}
+                >
+                  <Plus size={16} />
+                </button>
+                {entry.image ? (
+                  <img className="library-entry-cover" src={entry.image} alt={entry.title} />
+                ) : null}
+                {entry.kind === "image" ? (
+                  null
+                ) : (
+                  <>
+                    <span>{entry.tag}</span>
+                    <strong>{entry.title}</strong>
+                    <em>{entry.meta}</em>
+                    <p>{entry.desc}</p>
+                    <button type="button">打开文件</button>
+                  </>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <>
+        <section className="daily-greeting" aria-label="今日热点提示">
+          <strong>HI! {accountName}</strong>
+          <span>今天你可以关注这些相关热点</span>
+        </section>
+
+        <section
+          className="publish-board"
+          ref={(node) => {
+            sectionRefs.current["topic-board"] = node;
+          }}
+        >
+          <div className="publish-board-head">
+            <div>
+              <span>SEED STATUS</span>
+              <h1>种子发布状态</h1>
+            </div>
+            <button type="button">日视图</button>
+          </div>
+          <div className="publish-timeline">
+            {publishTimeline.map((item) => (
+              <div className={`publish-day is-${item.status}`} key={item.day}>
+                <span>{item.day}</span>
+                <i />
+                <div className="publish-seed-stack">
+                  {item.seeds.map((seed) => (
+                    <button type="button" className="publish-day-card" key={seed.title}>
+                      <strong>{seed.title}</strong>
+                      <em data-status={seed.status}>{seed.status}</em>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div className="publish-marker">
+              <em>TIMELINE</em>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="hot-topic-shell"
+          aria-label="热点方向"
+          ref={(node) => {
+            sectionRefs.current.hotspots = node;
+          }}
+        >
+          <div className="publish-board-head">
+            <div>
+              <span>HOTSPOT</span>
+              <h1>热点方向</h1>
+            </div>
+          </div>
+          <section className="hot-topic-menu">
+            {hotTopics.map((topic) => (
+              <button
+                className={topic.id === activeTopicId ? "active" : ""}
+                key={topic.id}
+                type="button"
+                onClick={() => handleTopicSelect(topic.id)}
+              >
+                <div>
+                  <div className="topic-pill-row">
+                    {topic.topics.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                  <strong>
+                    {topic.label}
+                  </strong>
+                  <p>{topic.desc}</p>
+                </div>
+              </button>
+            ))}
+          </section>
+          <section
+            className="hot-topic-detail"
+            ref={(node) => {
+              topicDetailRef.current = node;
+            }}
+          >
+            <div className="hot-topic-detail-body">
+              <article>
+                <span>热点解读</span>
+                <p>{topicAnalysis[activeTopicId].explain}</p>
+              </article>
+              <article>
+                <span>内容方向推荐</span>
+                <p>{topicAnalysis[activeTopicId].direction}</p>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section
+          className="topic-content"
+          ref={(node) => {
+            sectionRefs.current["seed-content"] = node;
+          }}
+        >
+          <div className="publish-board-head seed-content-heading">
+            <div>
+              <span>SEED CONTENT</span>
+              <h1>种子内容</h1>
+            </div>
+            <div className="seed-scope-toggle" aria-label="种子内容范围">
+              <button
+                className={seedScope === "current" ? "active" : ""}
+                type="button"
+                onClick={() => setSeedScope("current")}
+              >
+                当前热点方向种子
+              </button>
+              <button
+                className={seedScope === "all" ? "active" : ""}
+                type="button"
+                onClick={() => setSeedScope("all")}
+              >
+                全部种子内容
+              </button>
+            </div>
+          </div>
+          <div className="seed-card-list">
+            {visibleSeedCards.map((seed, index) => (
+              <article
+                className="seed-content-card"
+                key={`${seed.title}-${index}`}
+                style={{ animationDelay: `${Math.min(index, 11) * 28}ms` }}
+              >
+                <div className="adaptive-media">
+                  <span className="seed-media-type">{seed.mediaType}</span>
+                  <img src={seed.image} alt="" />
+                </div>
+                <div className="seed-content-copy">
+                  <span className="seed-source">
+                    <BookOpen size={15} />
+                    {seed.source}
+                  </span>
+                  <strong>{seed.title}</strong>
+                  <p>{seed.desc}</p>
+                  <div className="seed-topic-block">
+                    <span>相关话题</span>
+                    <div>
+                      {seed.topics.map((topic) => (
+                        <em key={topic}>
+                          <Tags size={13} />
+                          {topic}
+                        </em>
+                      ))}
+                    </div>
+                  </div>
+                  <footer>
+                    <span>{seed.count}</span>
+                    <button type="button" onClick={() => setSelectedSeed(seed)}>查看种子</button>
+                  </footer>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      </>
+    );
+  };
+
+  return (
+    <main
+      className={`workbench-page ${isEntering ? "is-entering" : ""} ${
+        activeTab === "library" && isLibraryDrawerOpen ? "has-library-drawer" : ""
+      }`}
+      id="ai"
+    >
+      <aside className="workbench-rail" aria-label="工作台导航">
+        <a className="rail-logo" href="#" aria-label="返回首页">
+          <Home size={18} />
+        </a>
+        <nav>
+          <button
+            className={activeTab === "seed" ? "active" : ""}
+            type="button"
+            aria-label="种子专题页"
+            onClick={() => setActiveTab("seed")}
+          >
+            <Video size={18} />
+          </button>
+          <button
+            className={activeTab === "library" ? "active" : ""}
+            type="button"
+            aria-label="知识库"
+            onClick={() => setActiveTab("library")}
+          >
+            <Database size={18} />
+          </button>
+          <button
+            className={activeTab === "tools" ? "active" : ""}
+            type="button"
+            aria-label="AI模板入口"
+            onClick={() => setActiveTab("tools")}
+          >
+            <Sparkles size={18} />
+          </button>
+          <button
+            className={activeTab === "profile" ? "active" : ""}
+            type="button"
+            aria-label="个人中心"
+            onClick={() => setActiveTab("profile")}
+          >
+            <UserRound size={18} />
+          </button>
+        </nav>
+      </aside>
+
+      <section
+        className={isProfileTab ? "workspace-main workspace-main--profile" : "workspace-main"}
+        ref={workspaceMainRef}
+      >
+        {!isProfileTab ? (
+          <section className="workbench-tab-band">
+            <nav className="workbench-major-nav" aria-label="主功能">
+              {majorTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={tab.id === activeTab ? "active" : ""}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+
+            <nav className="workbench-minor-nav" aria-label="子功能" ref={minorNavRef}>
+              {activeSubTabs.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={item.id === activeSubTab ? "active" : ""}
+                  onClick={() => handleMinorSelect(item.id)}
+                >
+                  <span
+                    ref={(node) => {
+                      minorLabelRefs.current[item.id] = node;
+                    }}
+                    className="workbench-minor-label"
+                  >
+                    {item.label}
+                  </span>
+                </button>
+              ))}
+              <span
+                className="workbench-minor-indicator"
+                style={{
+                  transform: `translateX(${minorIndicator.left}px)`,
+                  width: minorIndicator.width,
+                }}
+              />
+            </nav>
+          </section>
+        ) : null}
+
+        <div className="workspace-scroll" ref={contentScrollRef}>
+          <div
+            className={`workspace-stage workspace-stage--${displayTab} ${
+              isContentVisible ? "is-visible" : ""
+            }`}
+          >
+            {renderPanel()}
+          </div>
+          <div className="workspace-progress" aria-hidden="true">
+            <span style={{ transform: `scaleY(${Math.max(scrollProgress, 0.08)})` }} />
+          </div>
+        </div>
+      </section>
+
+      {activeTab === "library" ? (
+        <button
+          type="button"
+          className={`library-folder-fab ${isLibraryDrawerOpen ? "is-open" : ""}`}
+          aria-label="打开文件收集空间"
+          onClick={() => setIsLibraryDrawerOpen((open) => !open)}
+        >
+          <FolderOpen size={20} />
+          {libraryCollectionCount > 0 ? <span>{libraryCollectionCount}</span> : null}
+        </button>
+      ) : null}
+
+      {activeTab === "library" ? (
+        <aside className={`library-folder-drawer ${isLibraryDrawerOpen ? "is-open" : ""}`}>
+          <header className="library-folder-head">
+            <div>
+              <span>COLLECTION</span>
+              <strong>文件收集空间</strong>
+            </div>
+            <button type="button" onClick={() => setIsLibraryDrawerOpen(false)}>
+              <X size={18} />
+            </button>
+          </header>
+
+          <div className="library-folder-layout">
+            <nav className="library-folder-list" aria-label="文件夹列表">
+              {libraryFolders.map((folder) => (
+                <button
+                  key={folder.id}
+                  type="button"
+                  className={folder.id === activeLibraryFolderId ? "active" : ""}
+                  onClick={() => setActiveLibraryFolderId(folder.id)}
+                >
+                  <FolderOpen size={15} />
+                  <span>{folder.name}</span>
+                  <em>{folder.items.length}</em>
+                </button>
+              ))}
+              <button
+                type="button"
+                className="library-folder-create"
+                onClick={handleCreateLibraryFolder}
+              >
+                <Plus size={15} />
+                新建文件夹
+              </button>
+            </nav>
+
+            <section className="library-folder-content">
+              <div className="library-folder-titlebar">
+                {renamingLibraryFolderId === activeLibraryFolder.id ? (
+                  <input
+                    autoFocus
+                    defaultValue={activeLibraryFolder.name}
+                    onBlur={(event) => {
+                      handleRenameLibraryFolder(activeLibraryFolder.id, event.currentTarget.value);
+                      setRenamingLibraryFolderId(null);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleRenameLibraryFolder(activeLibraryFolder.id, event.currentTarget.value);
+                        setRenamingLibraryFolderId(null);
+                      }
+                    }}
+                  />
+                ) : (
+                  <strong>{activeLibraryFolder.name}</strong>
+                )}
+                <div>
+                  <button
+                    type="button"
+                    disabled={activeLibraryFolder.items.length === 0}
+                    onClick={handleDownloadLibraryFolder}
+                  >
+                    <Download size={15} />
+                    批量下载
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRenamingLibraryFolderId(activeLibraryFolder.id)}
+                  >
+                    重命名
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteLibraryFolder(activeLibraryFolder.id)}
+                  >
+                    <Trash2 size={15} />
+                    删除
+                  </button>
+                </div>
+              </div>
+
+              <div className="library-folder-items">
+                {activeLibraryFolder.items.length > 0 ? (
+                  activeLibraryFolder.items.map((item) => (
+                    <article key={item.title}>
+                      {item.image ? <img src={item.image} alt="" /> : <Database size={18} />}
+                      <div>
+                        <strong>{item.title}</strong>
+                        <span>{item.kind === "image" ? "图片" : item.meta}</span>
+                      </div>
+                      <button
+                        type="button"
+                        aria-label={`移除 ${item.title}`}
+                        onClick={() => handleRemoveLibraryEntry(activeLibraryFolder.id, item.title)}
+                      >
+                        <X size={15} />
+                      </button>
+                    </article>
+                  ))
+                ) : (
+                  <p>点击资料或图片右上角的加号，先把需要的内容收进来。</p>
+                )}
+              </div>
+            </section>
+          </div>
+        </aside>
+      ) : null}
+
+      {selectedLibraryEntry ? (
+        <div
+          className="library-modal-backdrop"
+          role="presentation"
+          onClick={() => setSelectedLibraryEntry(null)}
+        >
+          <section
+            className={
+              selectedLibraryEntry.kind === "image"
+                ? "library-modal library-modal--image"
+                : "library-modal"
+            }
+            role="dialog"
+            aria-modal="true"
+            aria-label="知识库资料分析"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header className="library-modal-topbar">
+              <span>
+                <Database size={17} />
+                {selectedLibraryEntry.meta}
+              </span>
+              <div className="library-modal-actions">
+                <button type="button" onClick={() => setSelectedLibraryEntry(null)}>
+                  <X size={18} />
+                  返回列表
+                </button>
+                <button type="button">
+                  <Download size={17} />
+                  下载原文件
+                </button>
+              </div>
+            </header>
+
+            {selectedLibraryEntry.kind === "image" ? (
+              <div className="library-image-preview">
+                <img
+                  className="library-modal-cover"
+                  src={selectedLibraryEntry.image || ""}
+                  alt={selectedLibraryEntry.title}
+                />
+              </div>
+            ) : null}
+            {selectedLibraryEntry.kind !== "image" ? (
+              <>
+                <div className="library-modal-hero">
+                  {selectedLibraryEntry.image ? (
+                    <img
+                      className="library-modal-cover"
+                      src={selectedLibraryEntry.image}
+                      alt={selectedLibraryEntry.title}
+                    />
+                  ) : null}
+                  <span>{selectedLibraryEntry.tag}</span>
+                  <h1>{selectedLibraryEntry.title}</h1>
+                  <p>{selectedLibraryEntry.desc}</p>
+                </div>
+
+                <nav className="library-analysis-tabs" aria-label="资料分析菜单">
+                  {selectedLibraryEntry.tabs?.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      className={tab.id === selectedLibraryTab?.id ? "active" : ""}
+                      onClick={() => setActiveLibraryAnalysisTab(tab.id)}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </nav>
+
+                {selectedLibraryTab ? (
+                  <section className="library-analysis-panel">
+                    <strong>{selectedLibraryTab.title}</strong>
+                    <div>
+                      {selectedLibraryTab.points.map((point) => (
+                        <p key={point}>{point}</p>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+              </>
+            ) : null}
+          </section>
+        </div>
+      ) : null}
+
+      {selectedSeed ? (
+        <div className="seed-modal-backdrop" role="presentation" onClick={() => setSelectedSeed(null)}>
+          <div className="seed-modal-stack" onClick={(event) => event.stopPropagation()}>
+            <section
+              className="seed-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label="种子内容分析"
+            >
+              <header className="seed-modal-topbar">
+                <span className="seed-modal-source">
+                  <BookOpen size={18} />
+                  {selectedSeed.source}
+                </span>
+                <button type="button" onClick={() => setSelectedSeed(null)}>
+                  <X size={18} />
+                  返回列表
+                </button>
+              </header>
+
+              <div className="seed-modal-hero">
+                <span>种子内容分析</span>
+                <h1>{selectedSeed.title}</h1>
+                <p>
+                  这组素材适合作为活动传播的第一批内容底稿，重点承接舞台氛围、粉丝情绪、品牌共创和盛典记忆点，后续可被 AI 用来生成短视频脚本、图文标题、复盘摘要与素材检索依据。
+                </p>
+              </div>
+
+              <div className="seed-detail-grid">
+                {seedDetailPanels.map((panel) => (
+                  <article className={panel.featured ? "is-featured" : ""} key={panel.title}>
+                    <strong>{panel.title}</strong>
+                    <p>{panel.copy}</p>
+                  </article>
+                ))}
+              </div>
+
+              <section className="seed-keyword-panel">
+                <h2>关键信息</h2>
+                <div>
+                  {seedKeywords.map((keyword) => (
+                    <span key={keyword}>{keyword}</span>
+                  ))}
+                </div>
+              </section>
+
+              <section className="seed-script-panel">
+                <span>脚本拆解</span>
+                <h2>可以把这组素材拆成三个短视频结构。</h2>
+                <div className="seed-script-list">
+                  {seedScripts.map((script) => (
+                    <article key={script.title}>
+                      <strong>{script.title}</strong>
+                      <p>{script.copy}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <div className="seed-visual-row">
+                {seedVisuals.map((visual) => (
+                  <div className="seed-visual-card" key={visual.label}>
+                    <img src={visual.image} alt={visual.label} />
+                    <figcaption>{visual.label}</figcaption>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className={`seed-modal-ai-fab ${isSeedAiOpen ? "is-open" : ""} ${
+                  activeSeedAiAction ? "is-input-mode" : ""
+                } ${isSeedAiReturning ? "is-returning" : ""} ${
+                  isSeedAiGenerating ? "is-generating" : ""
+                } ${seedAiResult ? "is-result-mode" : ""}`}
+                aria-label="AI 功能入口"
+              >
+                {activeSeedAiAction ? (
+                  <form
+                    className="seed-modal-ai-composer"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      handleSeedAiSubmit();
+                    }}
+                  >
+                    <button
+                      className="seed-modal-ai-back"
+                      type="button"
+                      aria-label="返回 AI 功能列表"
+                      onClick={handleSeedAiBack}
+                    >
+                      <ArrowLeft size={17} />
+                    </button>
+                    <input
+                      aria-label={seedAiActionMeta[activeSeedAiAction].label}
+                      value={seedAiPrompt}
+                      placeholder={
+                        seedAiResult
+                          ? seedAiResult.action === "package"
+                            ? "你可以继续问这个素材包，比如补充封面、分镜或剪辑节奏"
+                            : seedAiResult.action === "video"
+                              ? "你可以继续问这个视频，比如改标题、换发布角度或补充话题标签"
+                            : "你可以继续问这个脚本，比如帮我扩写、换角度、改成更口语化"
+                          : seedAiActionMeta[activeSeedAiAction].placeholder
+                      }
+                      onChange={(event) => setSeedAiPrompt(event.target.value)}
+                    />
+                    <button className="seed-modal-ai-main" type="submit" aria-label="发送">
+                      {isSeedAiGenerating ? <span className="seed-ai-spinner" /> : <Send size={17} />}
+                    </button>
+                    {seedAiResult ? (
+                      <section
+                        className={`seed-ai-result-panel ${
+                          seedAiResult.action === "video" ? "is-video-result" : ""
+                        }`}
+                        aria-label="AI 生成结果"
+                      >
+                        <header className="seed-ai-result-head">
+                          <div>
+                            <span>{seedAiResult.title}</span>
+                            <p>{seedAiResult.intro}</p>
+                          </div>
+                          {seedAiResult.action === "package" ? (
+                            <button type="button" onClick={handleDownloadMaterialPackage}>
+                              <Download size={15} />
+                              下载素材包
+                            </button>
+                          ) : null}
+                        </header>
+                        <div className={seedAiResult.action === "video" ? "seed-ai-video-result" : ""}>
+                          {seedAiResult.action === "video" && seedAiResult.video ? (
+                            <div className="seed-ai-video-preview">
+                              <video
+                                src={seedAiResult.video.src}
+                                controls
+                                playsInline
+                                preload="metadata"
+                              />
+                              <span>{seedAiResult.video.title}</span>
+                            </div>
+                          ) : null}
+                          <div className={seedAiResult.action === "video" ? "seed-ai-video-copy" : ""}>
+                          {seedAiResult.sections.map((section) => (
+                            <article key={section.label}>
+                              <strong>{section.label}</strong>
+                              <p>{section.content}</p>
+                            </article>
+                          ))}
+                          {seedAiResult.action === "script" ? (
+                            <article className="seed-ai-script-table-card">
+                              <strong>发布脚本</strong>
+                              <div className="seed-ai-script-table">
+                                <span>时间</span>
+                                <span>口播文案</span>
+                                <span>素材画面建议</span>
+                                {seedAiResult.scriptRows?.map((row) => (
+                                  <React.Fragment key={row.time}>
+                                    <em>{row.time}</em>
+                                    <p>{row.voice}</p>
+                                    <p>{row.visual}</p>
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            </article>
+                          ) : null}
+                          {seedAiResult.action === "package" ? (
+                            <article className="seed-ai-material-card">
+                              <strong>素材包内容</strong>
+                              <div className="seed-ai-material-list">
+                                {seedAiResult.materials?.map((material) => (
+                                  <section key={material.name}>
+                                    <span>{material.type}</span>
+                                    <b>{material.name}</b>
+                                    <p>{material.note}</p>
+                                  </section>
+                                ))}
+                              </div>
+                            </article>
+                          ) : null}
+                          {seedAiResult.action === "video" && seedAiResult.video ? (
+                            <article className="seed-ai-video-tags">
+                              <strong>推荐标签</strong>
+                              <div>
+                                {seedAiResult.video.tags.map((tag) => (
+                                  <span key={tag}>{tag}</span>
+                                ))}
+                              </div>
+                              <p>{seedAiResult.video.copy}</p>
+                            </article>
+                          ) : null}
+                          </div>
+                        </div>
+                      </section>
+                    ) : null}
+                  </form>
+                ) : (
+                  <>
+                    <button
+                      className="seed-modal-ai-main"
+                      type="button"
+                      aria-label={isSeedAiOpen ? "收起 AI 功能" : "打开 AI 功能"}
+                      aria-expanded={isSeedAiOpen}
+                      onClick={() => setIsSeedAiOpen((current) => !current)}
+                    >
+                      <Sparkles size={18} />
+                    </button>
+                    <div className="seed-modal-ai-actions" aria-label="AI 功能列表">
+                      <button type="button" onClick={() => setActiveSeedAiAction("script")}>
+                        <PenLine size={15} />
+                        输出脚本
+                        <small>适合已有素材、想自行剪辑的用户</small>
+                      </button>
+                      <button type="button" onClick={() => setActiveSeedAiAction("package")}>
+                        <Package size={15} />
+                        素材包生成
+                        <small>适合具备视频剪辑能力、需要素材包支持的用户</small>
+                      </button>
+                      <button type="button" onClick={() => setActiveSeedAiAction("video")}>
+                        <Clapperboard size={15} />
+                        视频生成
+                        <small>根据需求自动生成种子裂变视频</small>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </section>
+
+          </div>
+        </div>
+      ) : null}
+    </main>
+  );
+}
+
+const authUsersStorageKey = "hongqi-auth-users";
+const authAccountStorageKey = "hongqi-auth-account";
+
+const readAuthUsers = () => {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(authUsersStorageKey) || "{}");
+    return typeof parsed === "object" && parsed !== null
+      ? ({ Admin: "Admin", ...(parsed as Record<string, string>) } as Record<string, string>)
+      : { Admin: "Admin" };
+  } catch {
+    return { Admin: "Admin" };
+  }
+};
+
+const writeAuthUsers = (users: Record<string, string>) => {
+  window.localStorage.setItem(authUsersStorageKey, JSON.stringify({ Admin: "Admin", ...users }));
+};
+
+function App() {
+  const [hash, setHash] = React.useState(() => window.location.hash);
+  const [isLaunching, setIsLaunching] = React.useState(false);
+  const [isWorkbenchEntering, setIsWorkbenchEntering] = React.useState(false);
+  const [isTransitioning, setIsTransitioning] = React.useState(false);
+  const [accountName, setAccountName] = React.useState(
+    () => window.localStorage.getItem(authAccountStorageKey) || "",
+  );
+  const [authMode, setAuthMode] = React.useState<"intro" | "login" | "register" | "invite">(
+    "intro",
+  );
+  const [authMessage, setAuthMessage] = React.useState("");
+  const isAuthenticated = Boolean(accountName);
+
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      const nextHash = window.location.hash;
+      setHash(nextHash);
+      if (nextHash && isAuthenticated) {
+        setIsTransitioning(true);
+        setIsWorkbenchEntering(true);
+        window.setTimeout(() => {
+          setIsLaunching(false);
+          setIsWorkbenchEntering(false);
+          setIsTransitioning(false);
+        }, 780);
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [isAuthenticated]);
+
+  const handleStart = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (!isAuthenticated) {
+      setAuthMode("login");
+      setAuthMessage("");
+      return;
+    }
+    if (isLaunching) return;
+    setIsLaunching(true);
+    setIsTransitioning(true);
+    window.setTimeout(() => {
+      window.location.hash = "ai";
+    }, 820);
+  };
+
+  const enterWorkbench = (nextAccountName: string) => {
+    setAuthMessage("");
+    setAuthMode("intro");
+    setIsLaunching(true);
+    setIsTransitioning(true);
+    setIsWorkbenchEntering(true);
+    window.setTimeout(() => {
+      setAccountName(nextAccountName);
+      window.localStorage.setItem(authAccountStorageKey, nextAccountName);
+      setHash("#ai");
+      window.location.hash = "ai";
+      window.setTimeout(() => {
+        setIsLaunching(false);
+        setIsWorkbenchEntering(false);
+        setIsTransitioning(false);
+      }, 780);
+    }, 520);
+  };
+
+  const handleLogin = (nextAccountName: string, password: string) => {
+    const cleanAccount = nextAccountName.trim();
+    const users = readAuthUsers();
+    if (users[cleanAccount] && users[cleanAccount] === password) {
+      enterWorkbench(cleanAccount);
+      return;
+    }
+    setAuthMessage("账号或密码不正确，请确认后再登录。");
+  };
+
+  const handleRegister = (data: {
+    accountName: string;
+    password: string;
+    inviteCode: string;
+  }) => {
+    const cleanAccount = data.accountName.trim();
+    if (!cleanAccount || !data.password || !data.inviteCode.trim()) {
+      setAuthMessage("请填写账号名、密码和邀请码。");
+      return;
+    }
+    if (data.inviteCode.trim().toUpperCase() !== "ADMIN") {
+      setAuthMessage("邀请码暂未通过，请确认邀请码或先提交申请。");
+      return;
+    }
+    const users = readAuthUsers();
+    writeAuthUsers({ ...users, [cleanAccount]: data.password });
+    enterWorkbench(cleanAccount);
+  };
+
+  const handleInvitationApply = (data: {
+    realName: string;
+    identity: string;
+    email: string;
+    usage: string;
+  }) => {
+    if (!data.realName.trim() || !data.identity.trim() || !data.email.trim() || !data.usage.trim()) {
+      setAuthMessage("请完整填写真实姓名、身份、邮箱和使用需求说明。");
+      return;
+    }
+    setAuthMessage("申请已提交，请关注邮箱，信息确认后会发送邀请码。");
+  };
+
+  const handleAccountUpdate = (nextAccountName: string) => {
+    const cleanAccount = nextAccountName.trim();
+    if (!cleanAccount || cleanAccount === accountName) return;
+    const users = readAuthUsers();
+    const currentPassword = users[accountName] || users.Admin;
+    const { [accountName]: _oldPassword, ...restUsers } = users;
+    writeAuthUsers({ ...restUsers, [cleanAccount]: currentPassword });
+    setAccountName(cleanAccount);
+    window.localStorage.setItem(authAccountStorageKey, cleanAccount);
+  };
+
+  const handlePasswordUpdate = (currentPassword: string, nextPassword: string) => {
+    const users = readAuthUsers();
+    const storedPassword = users[accountName] || "";
+    if (!storedPassword || storedPassword !== currentPassword) {
+      return false;
+    }
+    writeAuthUsers({ ...users, [accountName]: nextPassword });
+    return true;
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem(authAccountStorageKey);
+    setAccountName("");
+    setHash("");
+    setAuthMode("intro");
+    setAuthMessage("");
+    setIsLaunching(false);
+    setIsWorkbenchEntering(false);
+    setIsTransitioning(false);
+    if (window.location.hash) {
+      window.location.hash = "";
+    }
+  };
+
+  return (
+    <div className={`transition-stage ${isTransitioning ? "is-transitioning" : ""}`}>
+      {!hash || !isAuthenticated ? (
+        <LandingPage
+          isLaunching={isLaunching}
+          onStart={handleStart}
+          authMode={authMode}
+          authMessage={authMessage}
+          onAuthModeChange={(mode) => {
+            setAuthMode(mode);
+            setAuthMessage("");
+          }}
+          onLogin={handleLogin}
+          onRegister={handleRegister}
+          onInvitationApply={handleInvitationApply}
+        />
+      ) : (
+        <WorkbenchPage
+          isEntering={isWorkbenchEntering}
+          accountName={accountName}
+          onAccountUpdate={handleAccountUpdate}
+          onPasswordUpdate={handlePasswordUpdate}
+          onLogout={handleLogout}
+        />
+      )}
+      <section className="pc-only-overlay" aria-label="PC 端访问提示">
+        <div>
+          <span>PC ONLY</span>
+          <strong>请使用 PC 端访问</strong>
+          <p>当前工作台为桌面端设计，手机比例下暂不开放使用。</p>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+createRoot(document.getElementById("root")!).render(
+  <App />,
+);

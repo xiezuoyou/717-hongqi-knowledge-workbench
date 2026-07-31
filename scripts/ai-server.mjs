@@ -1,12 +1,13 @@
 import { createServer } from 'node:http';
 import { createHash, randomUUID } from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, writeFile as writeFileAsync } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import COS from 'cos-nodejs-sdk-v5';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -15,6 +16,7 @@ const execFileAsync = promisify(execFile);
 async function loadEnv() {
   const envPaths = [
     path.join(root, '.env'),
+    path.join(root, '.env.local'),
     path.join(process.env.HOME || '', '.codex', 'imagegen.env'),
   ].filter(Boolean);
   for (const envPath of envPaths) {
@@ -47,9 +49,18 @@ const MINIMAX_BASE_URL = process.env.MINIMAX_BASE_URL || 'https://api.minimaxi.c
 const MINIMAX_TTS_MODEL = process.env.MINIMAX_TTS_MODEL || 'speech-2.8-hd';
 const GRSAI_BASE_URL = process.env.GRSAI_BASE_URL || 'https://grsai.dakka.com.cn';
 const GRSAI_API_KEY = process.env.GRSAI_API_KEY || process.env.OPENAI_API_KEY;
+const COS_SECRET_ID = process.env.COS_SECRET_ID || '';
+const COS_SECRET_KEY = process.env.COS_SECRET_KEY || '';
+const COS_SESSION_TOKEN = process.env.COS_SESSION_TOKEN || '';
+const COS_BUCKET = process.env.COS_BUCKET || '';
+const COS_REGION = process.env.COS_REGION || 'ap-beijing';
+const COS_SEED_CONTENT_PREFIX = String(process.env.COS_SEED_CONTENT_PREFIX || '素材库/种子内容/').replace(/^\/+/, '').replace(/\/?$/, '/');
+const COS_MATERIAL_PREFIX = String(process.env.COS_MATERIAL_PREFIX || '素材库/').replace(/^\/+/, '').replace(/\/?$/, '/');
 const MATERIAL_ROOT = path.join(root, '素材库');
 const MATERIAL_TAG_DIR = path.join(MATERIAL_ROOT, '标签MD');
+const SEED_CONTENT_ROOT = path.join(MATERIAL_ROOT, '种子内容');
 const MAX_VIDEO_DOWNLOAD_BYTES = Number(process.env.MAX_VIDEO_DOWNLOAD_BYTES || 50 * 1024 * 1024);
+let cosClient = null;
 
 function publicUrl(pathname) {
   return `${PUBLIC_AI_BASE_URL}${pathname.startsWith('/') ? pathname : `/${pathname}`}`;
@@ -320,14 +331,22 @@ function contentTypeForFile(filePath) {
   if (ext === '.css') return 'text/css; charset=utf-8';
   if (ext === '.json') return 'application/json; charset=utf-8';
   if (ext === '.png') return 'image/png';
+  if (ext === '.jpg' || ext === '.jpeg') return 'image/jpeg';
   if (ext === '.webp') return 'image/webp';
   if (ext === '.gif') return 'image/gif';
+  if (ext === '.mp4') return 'video/mp4';
+  if (ext === '.mov') return 'video/quicktime';
+  if (ext === '.m4v') return 'video/x-m4v';
+  if (ext === '.webm') return 'video/webm';
+  if (ext === '.mkv') return 'video/x-matroska';
+  if (ext === '.avi') return 'video/x-msvideo';
+  if (ext === '.mpg' || ext === '.mpeg') return 'video/mpeg';
   if (ext === '.docx') return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
   if (ext === '.txt') return 'text/plain; charset=utf-8';
   if (ext === '.md') return 'text/markdown; charset=utf-8';
   if (ext === '.pdf') return 'application/pdf';
   if (ext === '.zip') return 'application/zip';
-  return 'image/jpeg';
+  return 'application/octet-stream';
 }
 
 function grsaiGenerateUrl() {
@@ -367,6 +386,212 @@ function extractMdSection(content, heading) {
   return lines.join('\n').trim();
 }
 
+function isVideoFileName(fileName) {
+  return /\.(mp4|mov|m4v|webm|mkv|avi|mpg|mpeg)$/i.test(String(fileName || ''));
+}
+
+function normalizeRelativePath(filePath) {
+  return path.relative(root, filePath).split(path.sep).join('/');
+}
+
+async function loadSeedLibrary() {
+  if (!hasCosCredentials()) {
+    throw new Error('COS 未配置完整，请补充 COS_SECRET_ID、COS_SECRET_KEY、COS_BUCKET、COS_REGION');
+  }
+  const prefixCandidates = Array.from(new Set([
+    COS_SEED_CONTENT_PREFIX,
+    '素材库/种子内容/',
+    '种子内容/',
+    '',
+  ].map((item) => String(item || '').replace(/^\/+/, '').replace(/\/?$/, '/'))));
+  const seeds = [];
+  const seenPrefixes = new Set();
+  for (const rootPrefix of prefixCandidates) {
+    const rootListing = await cosListBucket({
+      Bucket: COS_BUCKET,
+      Region: COS_REGION,
+      Prefix: rootPrefix || undefined,
+      Delimiter: '/',
+      MaxKeys: 1000,
+    });
+    const seedPrefixes = (Array.isArray(rootListing?.CommonPrefixes) ? rootListing.CommonPrefixes : [])
+      .map((item) => String(item?.Prefix || '').replace(/\/?$/, '/'))
+      .filter(Boolean)
+      .filter((prefix) => !seenPrefixes.has(prefix))
+      .filter((prefix) => {
+        const folderName = cosObjectNameFromKey(prefix, rootPrefix);
+        return /seed|种子/i.test(folderName) || rootPrefix !== '';
+      })
+      .sort((a, b) => a.localeCompare(b, 'zh-CN'));
+
+    for (const seedPrefix of seedPrefixes) {
+      seenPrefixes.add(seedPrefix);
+      const folderName = cosObjectNameFromKey(seedPrefix, rootPrefix).replace(/\/$/, '') || path.basename(seedPrefix.replace(/\/$/, ''));
+      const seedListing = await cosListBucket({
+        Bucket: COS_BUCKET,
+        Region: COS_REGION,
+        Prefix: seedPrefix,
+        Delimiter: '/',
+        MaxKeys: 1000,
+      });
+      const sectionPrefixes = (Array.isArray(seedListing?.CommonPrefixes) ? seedListing.CommonPrefixes : [])
+        .map((item) => String(item?.Prefix || '').replace(/\/?$/, '/'))
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'zh-CN'));
+      const sections = sectionPrefixes.map((sectionPrefix) => ({
+        name: cosObjectNameFromKey(sectionPrefix, seedPrefix).replace(/\/$/, ''),
+        type: 'directory',
+        path: sectionPrefix,
+        children: [],
+      })).filter((section) => section.name);
+
+      let defaultVideo = null;
+      const originalSectionPrefix = sectionPrefixes.find((sectionPrefix) => /原始视频\/?$/.test(cosObjectNameFromKey(sectionPrefix, seedPrefix)));
+      if (originalSectionPrefix) {
+        const originalListing = await cosListBucket({
+          Bucket: COS_BUCKET,
+          Region: COS_REGION,
+          Prefix: originalSectionPrefix,
+          Delimiter: '/',
+          MaxKeys: 1000,
+        });
+        const originalVideo = (Array.isArray(originalListing?.Contents) ? originalListing.Contents : [])
+          .map((item) => item?.Key)
+          .filter((key) => key && isVideoFileName(key))
+          .sort((a, b) => a.localeCompare(b, 'zh-CN'))[0];
+        if (originalVideo) {
+          defaultVideo = {
+            name: path.basename(originalVideo),
+            key: originalVideo,
+          };
+        }
+      }
+      if (!defaultVideo) {
+        const firstVideo = (Array.isArray(seedListing?.Contents) ? seedListing.Contents : [])
+          .map((item) => item?.Key)
+          .filter((key) => key && isVideoFileName(key))
+          .sort((a, b) => a.localeCompare(b, 'zh-CN'))[0];
+        if (firstVideo) {
+          defaultVideo = {
+            name: path.basename(firstVideo),
+            key: firstVideo,
+          };
+        }
+      }
+      if (!defaultVideo) continue;
+
+      seeds.push({
+        id: folderName,
+        name: folderName,
+        folderName,
+        path: seedPrefix,
+        seedCosUrl: `cos://${COS_BUCKET}/${seedPrefix}`,
+        sections,
+        defaultVideo,
+      });
+    }
+  }
+
+  return seeds;
+}
+
+async function loadSeedDescriptionText(seed) {
+  const seedPrefix = String(seed?.path || '').replace(/^\/+/, '').replace(/\/?$/, '/');
+  const objects = await cosListAllObjects(seedPrefix);
+  const preferredKeys = objects
+    .map((item) => String(item?.Key || ''))
+    .filter((key) => /(?:^|\/)(种子内容说明|README)\.md$/i.test(key))
+    .sort((a, b) => {
+      const score = (key) => /种子内容说明\.md$/i.test(key) ? 0 : 1;
+      return score(a) - score(b) || a.localeCompare(b, 'zh-CN');
+    });
+  if (preferredKeys[0]) {
+    const object = await cosGetObject(preferredKeys[0]);
+    const body = Buffer.isBuffer(object?.Body) ? object.Body.toString('utf8') : String(object?.Body || '');
+    if (body.trim()) {
+      return {
+        key: preferredKeys[0],
+        path: `cos://${COS_BUCKET}/${preferredKeys[0]}`,
+        text: body.trim(),
+      };
+    }
+  }
+
+  const localEntries = existsSync(SEED_CONTENT_ROOT)
+    ? await readdir(SEED_CONTENT_ROOT, { withFileTypes: true })
+    : [];
+  const seedNeedle = String(seed?.name || seed?.id || '').replace(/^seed-\d+-/, '').replace(/\s+/g, '');
+  const localDir = localEntries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .find((name) => {
+      const normalizedName = String(name || '').replace(/\s+/g, '');
+      if (normalizedName === seed?.id || normalizedName.includes(seedNeedle) || seedNeedle.includes(normalizedName)) return true;
+      if (seedNeedle.includes('717') && normalizedName.includes('717')) return true;
+      return false;
+    });
+  if (localDir) {
+    const localCandidates = ['种子内容说明.md', 'README.md'];
+    for (const fileName of localCandidates) {
+      const localPath = path.join(SEED_CONTENT_ROOT, localDir, fileName);
+      if (!existsSync(localPath)) continue;
+      const text = (await readFile(localPath, 'utf8')).trim();
+      if (text) {
+        return {
+          key: `素材库/种子内容/${localDir}/${fileName}`,
+          path: localPath,
+          text,
+        };
+      }
+    }
+  }
+  return {
+    key: '',
+    path: '',
+    text: '当前种子内容没有找到说明 MD 文档。',
+  };
+}
+
+async function resolveSeedLibrary(seedId) {
+  const seeds = await loadSeedLibrary();
+  const normalizedSeedId = String(seedId || '').trim();
+  const seed = seeds.find((item) => {
+    const candidates = [
+      item.id,
+      item.name,
+      item.folderName,
+      item.path,
+      path.basename(String(item.path || '').replace(/\/$/, '')),
+    ].map((value) => String(value || '').trim());
+    if (candidates.includes(normalizedSeedId)) return true;
+    return candidates.some((candidate) => candidate && normalizedSeedId && (
+      candidate.includes(normalizedSeedId) || normalizedSeedId.includes(candidate)
+    ));
+  }) || (seeds.length === 1 ? seeds[0] : null);
+  if (!seed) {
+    throw new Error(`未找到种子内容：${seedId}`);
+  }
+  if (!seed.defaultVideo?.key) {
+    throw new Error(`种子内容 ${seed.name} 没有找到默认原视频`);
+  }
+  const signedUrl = await cosGetSignedUrl(seed.defaultVideo.key, 900);
+  const seedDoc = await loadSeedDescriptionText(seed);
+  return {
+    ok: true,
+    type: 'seed-library-result',
+    seedId: seed.id,
+    seedName: seed.name,
+    seedPath: seed.path,
+    seedCosUrl: seed.seedCosUrl || `cos://${COS_BUCKET}/${seed.path}`,
+    seedVideoKey: seed.defaultVideo.key,
+    seedVideoUrl: signedUrl,
+    videoUrl: signedUrl,
+    seedDocKey: seedDoc.key,
+    seedDocPath: seedDoc.path,
+    txtScript: seedDoc.text,
+  };
+}
+
 async function loadImageAssetTags() {
   const entries = existsSync(MATERIAL_TAG_DIR) ? await readdir(MATERIAL_TAG_DIR, { withFileTypes: true }) : [];
   const mdFiles = entries
@@ -376,18 +601,27 @@ async function loadImageAssetTags() {
 
   const assets = [];
   const seenHashes = new Set();
-  for (const fileName of mdFiles) {
-    const mdPath = path.join(MATERIAL_TAG_DIR, fileName);
+  for (const mdFileName of mdFiles) {
+    const mdPath = path.join(MATERIAL_TAG_DIR, mdFileName);
     const content = await readFile(mdPath, 'utf8');
     if (!content.includes('素材类型：图片')) continue;
 
     const sourcePath = extractMdField(content, '文件路径');
-    const fullSourcePath = path.resolve(root, sourcePath);
-    if (!sourcePath || !fullSourcePath.startsWith(path.join(MATERIAL_ROOT, '图片')) || !existsSync(fullSourcePath)) {
+    const normalizedSource = normalizeAssetSource(sourcePath);
+    if (!normalizedSource) {
       continue;
     }
 
-    const fileHash = createHash('sha1').update(await readFile(fullSourcePath)).digest('hex');
+    let fileHash = createHash('sha1').update(normalizedSource).digest('hex');
+    let fileName = assetFileNameFromSource(normalizedSource);
+    if (!isHttpUrl(normalizedSource)) {
+      const fullSourcePath = path.resolve(root, normalizedSource);
+      if (!fullSourcePath.startsWith(path.join(MATERIAL_ROOT, '图片')) || !existsSync(fullSourcePath)) {
+        continue;
+      }
+      fileHash = createHash('sha1').update(await readFile(fullSourcePath)).digest('hex');
+      fileName = path.basename(fullSourcePath);
+    }
     if (seenHashes.has(fileHash)) {
       continue;
     }
@@ -401,11 +635,11 @@ async function loadImageAssetTags() {
     assets.push({
       id: String(assets.length + 1),
       title,
-      tagFile: `素材库/标签MD/${fileName}`,
-      sourcePath,
-      fileName: path.basename(sourcePath),
+      tagFile: `素材库/标签MD/${mdFileName}`,
+      sourcePath: normalizedSource,
+      fileName,
       fileHash,
-      url: publicUrl(`/material-assets?path=${encodeURIComponent(sourcePath)}`),
+      url: publicUrl(`/material-assets?source=${encodeURIComponent(normalizedSource)}`),
       category: extractMdField(content, '素材分类'),
       tags: extractMdList(content, '检索标签'),
       uses: extractMdList(content, '适用方向'),
@@ -532,40 +766,6 @@ async function callMimoVideo(messages) {
     throw new Error('MiMo 视频理解返回为空：未拿到 choices[0].message.content');
   }
   return parseJsonContent(content);
-}
-
-async function fetchVideoAsDataUrl(videoUrl) {
-  const url = String(videoUrl || '').trim();
-  if (!/^https?:\/\//i.test(url)) {
-    throw new Error('视频 URL 必须是公网 http(s) 地址，不能填写本机路径或 file:// 地址');
-  }
-
-  const response = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/537.36 Chrome Safari',
-      Accept: 'video/mp4,video/*,*/*;q=0.8',
-    },
-    redirect: 'follow',
-  });
-  if (!response.ok) {
-    throw new Error(`URL 预检失败：HTTP ${response.status}`);
-  }
-
-  const contentType = response.headers.get('content-type') || '';
-  const contentLength = Number(response.headers.get('content-length') || 0);
-  if (contentLength > MAX_VIDEO_DOWNLOAD_BYTES) {
-    throw new Error(`URL 视频超过 ${Math.round(MAX_VIDEO_DOWNLOAD_BYTES / 1024 / 1024)}MB，当前测试接口不下载大文件`);
-  }
-  if (!/^video\//i.test(contentType) && !/octet-stream/i.test(contentType)) {
-    throw new Error(`URL 返回的不是直接视频文件，content-type=${contentType || 'unknown'}。请使用 mp4/mov 直链，不要使用网页分享链接`);
-  }
-
-  const arrayBuffer = await response.arrayBuffer();
-  if (arrayBuffer.byteLength > MAX_VIDEO_DOWNLOAD_BYTES) {
-    throw new Error(`URL 视频超过 ${Math.round(MAX_VIDEO_DOWNLOAD_BYTES / 1024 / 1024)}MB，当前测试接口不下载大文件`);
-  }
-  const mimeType = contentType.split(';')[0] || 'video/mp4';
-  return `data:${mimeType};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
 }
 
 function seedContext(payload) {
@@ -763,6 +963,86 @@ function assistantPrompt(payload) {
   ];
 }
 
+function videoScriptPrompt(payload) {
+  const userPrompt = String(payload.prompt || '').trim();
+  const toolInstruction = '生成一个口播视频脚本，标注好时间和对应的口播内容，以及对应的画面';
+  return [
+    {
+      role: 'system',
+      content: [
+        '你是红旗知识工作台里的短视频脚本 Agent。',
+        '你需要把用户的自然语言需求，生成可直接用于短视频制作的口播视频脚本。',
+        `固定任务要求：${toolInstruction}。`,
+        '脚本必须适合实际执行：时间要连续，口播要自然，画面建议要具体。',
+        '不要输出 Markdown，不要输出解释，只返回 JSON 对象。',
+      ].join('\n'),
+    },
+    {
+      role: 'user',
+      content: [
+        '请根据用户需求生成口播视频脚本。',
+        '返回格式：{"title":"...","summary":"...","segments":[{"time":"0-3s","voiceover":"...","visual":"..."}],"tips":["...","..."]}',
+        `用户需求：${userPrompt}`,
+        `当前功能：${payload.toolLabel || '视频脚本'}`,
+        `工作台上下文：${JSON.stringify(payload.context || {}, null, 2)}`,
+      ].join('\n\n'),
+    },
+  ];
+}
+
+function contentAnalysisPrompt(payload) {
+  const userPrompt = String(payload.prompt || '').trim();
+  return [
+    {
+      role: 'system',
+      content: [
+        '你是红旗知识工作台里的资料助手。',
+        '你会收到一份当前知识库资料，以及用户的一句自然语言需求。',
+        '不要把任务固定理解为“分析内容”。用户可能是在要求分析、二创、改写、生成脚本、写标题、提炼卖点、做审核或继续追问。',
+        '请优先服从用户原需求，结合当前资料直接输出可用内容。',
+        '不要编造资料外的硬参数。资料不足时，可以基于已知资料继续完成表达，但要避免新增未经提供的具体参数。',
+        '不要输出 Markdown，不要输出解释，只返回 JSON 对象。',
+      ].join('\n'),
+    },
+    {
+      role: 'user',
+      content: [
+        '请根据当前知识库资料和用户原始需求，直接生成用户需要的内容。',
+        '返回格式：{"reply":"..."}',
+        'reply 中可以自然分段，但不要为了固定格式强行分条；除非用户明确要求列表、脚本结构或表格。',
+        `用户原始需求：${userPrompt}`,
+        `当前模块：${payload.module || '知识库'}`,
+        `当前子功能：${payload.subModule || '资料助手'}`,
+        `当前资料：${JSON.stringify(payload.document || {}, null, 2)}`,
+        `额外上下文：${JSON.stringify(payload.context || {}, null, 2)}`,
+      ].join('\n\n'),
+    },
+  ];
+}
+
+function formatVideoScriptReply(result) {
+  const title = String(result?.title || '口播视频脚本').trim();
+  const summary = String(result?.summary || '').trim();
+  const segments = Array.isArray(result?.segments) ? result.segments : [];
+  const tips = Array.isArray(result?.tips) ? result.tips : [];
+  const segmentLines = segments.map((item, index) => {
+    const time = String(item.time || `${index * 3}-${(index + 1) * 3}s`).trim();
+    const voiceover = String(item.voiceover || item.copy || item.text || '').trim();
+    const visual = String(item.visual || item.picture || item.scene || '').trim();
+    return [
+      `${index + 1}. ${time}`,
+      `口播：${voiceover}`,
+      `画面：${visual}`,
+    ].join('\n');
+  });
+  return [
+    title,
+    summary,
+    segmentLines.join('\n\n'),
+    tips.length ? `制作提示：${tips.map((tip) => String(tip).trim()).filter(Boolean).join('；')}` : '',
+  ].filter(Boolean).join('\n\n');
+}
+
 function imageSearchPrompt(payload) {
   return [
     {
@@ -792,24 +1072,16 @@ function videoRecognitionPrompt(payload) {
     : ['contentAnalysis', 'scriptExtraction', 'frameAnalysis'];
   const sourceLabel = payload.sourceType === 'url'
     ? `视频 URL：${payload.videoUrl || ''}`
-    : `本地视频：${payload.localFile || payload.localAsset?.name || '未命名视频'}`;
+    : `视频 URL：${payload.videoUrl || ''}`;
   const outputSpec = {
     contentAnalysis: outputs.includes('contentAnalysis') ? {
-      summary: '视频内容一句话总结',
-      coreMessage: '视频想传递的核心信息',
-      audienceAppeal: '对用户有吸引力的点',
-      contentStructure: ['按时间顺序拆出内容结构'],
+      text: '纯文字内容总结，直接写一段好读的话，不要分点，不要 JSON。',
     } : undefined,
     scriptExtraction: outputs.includes('scriptExtraction') ? {
-      transcript: '如果能识别到字幕/口播/屏幕文字，则提取为完整文本；没有就写空字符串',
-      scriptBeats: [{ id: 'beat-01', text: '按表达意思拆出的脚本/画面节奏段', purpose: '这一段的传播作用' }],
-      reusableCopywritingPattern: ['可复用的文案结构'],
+      text: '纯脚本正文，保留口播可直接使用的文字，不要标题，不要分析，不要 JSON。',
     } : undefined,
     frameAnalysis: outputs.includes('frameAnalysis') ? {
-      visualStyle: '画面风格、色彩、构图、镜头语言',
-      timeline: [{ timeRange: '00:00-00:03', scene: '画面主体', camera: '镜头运动/景别', editingNote: '剪辑用途' }],
-      keyFrames: ['关键画面主体列表'],
-      editingStyle: '节奏、转场、字幕、包装风格',
+      text: '纯文字画面风格描述，写镜头、节奏、气质、包装感，不要表格，不要 JSON。',
     } : undefined,
   };
 
@@ -827,14 +1099,14 @@ function videoRecognitionPrompt(payload) {
     {
       role: 'user',
       content: [
-        {
-          type: 'video_url',
-          video_url: {
-            url: payload.videoUrl || payload.videoDataUrl,
+          {
+            type: 'video_url',
+            video_url: {
+              url: payload.videoUrl,
+            },
+            fps: 2,
+            media_resolution: 'default',
           },
-          fps: 2,
-          media_resolution: 'default',
-        },
         {
           type: 'text',
           text: [
@@ -844,9 +1116,9 @@ function videoRecognitionPrompt(payload) {
             `返回字段模板：${JSON.stringify(outputSpec, null, 2)}`,
             '额外要求：',
             '1. 顶层必须包含 ok=true、type="video-recognition-result"、sourceType、source、outputs、payload。',
-            '2. payload 里只填用户勾选的识别类型。',
-            '3. timeline 的 timeRange 用 00:00-00:00 格式。',
-            '4. 如果无法识别某部分，写明 reason，不要编造。',
+            '2. payload 里只填用户勾选的识别类型，每个字段都是纯文字字符串，不要对象、数组或子字段。',
+            '3. 内容总结、脚本、画面风格都只写正文文字，不要 Markdown，不要项目符号，不要 JSON。',
+            '4. 如果无法识别某部分，直接用一句纯文字说明原因。',
           ].join('\n\n'),
         },
       ],
@@ -854,46 +1126,60 @@ function videoRecognitionPrompt(payload) {
   ];
 }
 
-function videoFrameRecognitionPrompt(payload) {
-  const outputs = Array.isArray(payload.outputs) && payload.outputs.length
-    ? payload.outputs
-    : ['contentAnalysis', 'scriptExtraction', 'frameAnalysis'];
-  const frames = Array.isArray(payload.frameDataUrls) ? payload.frameDataUrls.slice(0, 8) : [];
-  return [
-    {
-      role: 'system',
-      content: [
-        '你是短视频种子内容识别 Agent。',
-        '现在视频直传处理失败，你将根据视频抽帧图片做兜底识别。',
-        '你必须明确这是基于关键帧的近似分析，不能编造音频、口播或完整字幕。',
-        '不要输出 Markdown，只返回 JSON 对象。',
-      ].join('\n'),
-    },
-    {
-      role: 'user',
-      content: [
-        ...frames.map((url) => ({
-          type: 'image_url',
-          image_url: { url },
-        })),
-        {
-          type: 'text',
-          text: [
-            '请基于这些按时间顺序抽取的视频关键帧，输出结构化视频识别结果。',
-            `视频名称：${payload.localFile || payload.videoUrl || payload.localAsset?.name || '未命名视频'}`,
-            `用户勾选识别类型：${outputs.join('、')}`,
-            '返回格式：',
-            '{"ok":true,"type":"video-recognition-result","fallback":"frame-extraction","sourceType":"local","source":"...","outputs":["contentAnalysis"],"payload":{"contentAnalysis":{},"scriptExtraction":{},"frameAnalysis":{}}}',
-            '字段要求：',
-            '1. contentAnalysis.summary/coreMessage/audienceAppeal/contentStructure 必须尽量填写。',
-            '2. scriptExtraction 不得编造口播逐字稿；没有字幕/文字就 transcript=""，scriptBeats 写画面节奏段。',
-            '3. frameAnalysis.timeline 按关键帧顺序写粗略 timeRange，例如 frame-01、frame-02 或 00:00-00:03。',
-            '4. payload 只填用户勾选的识别类型。',
-          ].join('\n\n'),
-        },
-      ],
-    },
-  ];
+function extractPlainVideoRecognitionText(source, keys = []) {
+  const payload = source?.payload && typeof source.payload === 'object' ? source.payload : source;
+  for (const key of keys) {
+    const value = payload?.[key] ?? source?.[key];
+    if (typeof value === 'string' && value.trim()) return String(value).trim();
+    if (value && typeof value === 'object') {
+      const text = readableObjectText(value);
+      if (text) return text;
+    }
+  }
+  return '';
+}
+
+function normalizeVideoRecognitionResult(result, payload = {}) {
+  const contentAnalysis = extractPlainVideoRecognitionText(result, [
+    'contentAnalysis',
+    'recognizedContent',
+    'contentSummary',
+    'summary',
+    'content',
+    'answer',
+    'copy',
+    'text',
+    'rawText',
+  ]);
+  const scriptExtraction = extractPlainVideoRecognitionText(result, [
+    'scriptExtraction',
+    'scriptText',
+    'transcript',
+    'copy',
+    'text',
+    'answer',
+    'rawText',
+  ]);
+  const frameAnalysis = extractPlainVideoRecognitionText(result, [
+    'frameAnalysis',
+    'visualStyle',
+    'frameStyle',
+    'style',
+    'shotAnalysis',
+    'visualAnalysis',
+    'description',
+    'summary',
+    'text',
+    'rawText',
+  ]);
+  return {
+    ...payload,
+    contentAnalysis,
+    recognizedContent: contentAnalysis,
+    scriptExtraction,
+    scriptText: scriptExtraction,
+    frameAnalysis,
+  };
 }
 
 function textProductionPrompt(payload) {
@@ -926,6 +1212,7 @@ function scriptSplitPrompt(payload) {
   const cleanScript = String(payload.cleanScript || '').trim();
   const segments = Array.isArray(payload.punctuationSegments) ? payload.punctuationSegments : [];
   const instruction = String(payload.instruction || '').trim();
+  const seedReferenceText = String(payload.seedReferenceText || '').trim();
   return [
     {
       role: 'system',
@@ -933,6 +1220,7 @@ function scriptSplitPrompt(payload) {
         '你只做脚本分组，输入已清洗切句。',
         '把小句分成内容大段 blocks；大段只表示主旨范围。',
         '每个大段内，把相邻且同一意思的小句合并为 visualUnits。',
+        '如果提供了种子内容说明，只作为理解背景和素材语义参考；不要因为素材边界把原本同一语义的小句拆碎。',
         '短实体引导词不能单独成段；如“红旗智驾，让/以/为/从此……”必须和后面的谓语或价值表达作为整体判断。',
         'materialType 是素材支撑要求，不是素材名称。',
         'general：抽象情绪/价值/感受/泛场景，通用素材可支撑。',
@@ -948,6 +1236,7 @@ function scriptSplitPrompt(payload) {
       role: 'user',
       content: [
         `额外要求：${instruction || '无'}`,
+        seedReferenceText ? `种子内容说明与素材边界：\n${seedReferenceText}` : '种子内容说明与素材边界：无',
         `已切小句：${JSON.stringify(segments.map((item) => ({ id: item.id, text: item.text })))}`,
         '只返回：{"ok":true,"type":"script-split-result","contentBlocks":[{"id":"block-001","order":1,"role":"钩子","segmentIds":["seg-001"],"visualUnits":[{"id":"unit-001","order":1,"segmentIds":["seg-001"],"mergeByAi":false,"materialType":"general|guided|specific","mergeLocked":false}]}]}',
       ].join('\n\n'),
@@ -1044,17 +1333,181 @@ function normalizeMaterialPackagePlan(result, scriptSplitResult, payload = {}) {
     ratio: String(payload.ratio || '4:3').trim(),
     note: String(payload.note || '').trim(),
     videoParams: payload.videoParams && typeof payload.videoParams === 'object' ? payload.videoParams : {},
+    seedContext: payload.seedContext && typeof payload.seedContext === 'object' ? payload.seedContext : null,
     blocks: normalizedBlocks,
     raw: result,
   };
 }
 
+function seedProjectPrefixFromContext(seedContext, seedName = '') {
+  const keyCandidates = [
+    seedContext?.seedVideoKey,
+    seedContext?.videoKey,
+    extractCosKey(seedContext?.seedVideoUrl),
+    extractCosKey(seedContext?.videoUrl),
+  ].map((value) => String(value || '').trim().replace(/^\/+/, ''));
+  for (const candidate of keyCandidates) {
+    if (!candidate || candidate.startsWith('素材库/')) continue;
+    const beforeOriginalVideo = candidate.split('/原始视频/')[0];
+    if (beforeOriginalVideo && beforeOriginalVideo !== candidate) {
+      return beforeOriginalVideo.replace(/\/?$/, '/');
+    }
+    const beforeMaterialPackage = candidate.split('/素材包/')[0];
+    if (beforeMaterialPackage && beforeMaterialPackage !== candidate) {
+      return beforeMaterialPackage.replace(/\/?$/, '/');
+    }
+  }
+  const pathCandidates = [
+    seedContext?.seedPath,
+    seedContext?.path,
+  ].map((value) => String(value || '').trim().replace(/^\/+/, ''));
+  for (const candidate of pathCandidates) {
+    if (!candidate || candidate.startsWith('素材库/') || candidate.includes('种子内容素材包')) continue;
+    if (/^种子内容\/[^/]+\/?$/.test(candidate)) {
+      return candidate.replace(/\/?$/, '/');
+    }
+    const beforeOriginalVideo = candidate.split('/原始视频/')[0];
+    if (beforeOriginalVideo && beforeOriginalVideo !== candidate && beforeOriginalVideo.startsWith('种子内容/')) {
+      return beforeOriginalVideo.replace(/\/?$/, '/');
+    }
+    const beforeMaterialPackage = candidate.split('/素材包/')[0];
+    if (beforeMaterialPackage && beforeMaterialPackage !== candidate && beforeMaterialPackage.startsWith('种子内容/')) {
+      return beforeMaterialPackage.replace(/\/?$/, '/');
+    }
+    if (candidate.endsWith('/') && candidate.startsWith('种子内容/')) {
+      return candidate.replace(/\/?$/, '/');
+    }
+  }
+  const cleanSeedName = safePackageName(seedName || seedContext?.seedId || '');
+  if (!cleanSeedName || cleanSeedName.includes('种子内容素材包')) {
+    throw new Error('素材包生成无法判断 COS 种子内容目录：请先重新执行种子内容库节点，确保拿到原视频 COS 地址');
+  }
+  return cosObjectKeyJoin('种子内容', cleanSeedName).replace(/\/?$/, '/');
+}
+
+function seedProjectPrefixFromInventoryPayload(payload = {}) {
+  const seedContext = {
+    seedPath: payload.seedPath,
+    path: payload.path,
+    seedVideoKey: payload.seedVideoKey,
+    videoKey: payload.videoKey,
+    seedVideoUrl: payload.seedVideoUrl,
+    videoUrl: payload.videoUrl,
+    seedId: payload.seedId,
+    seedName: payload.seedName,
+  };
+  const fromCosUrl = extractCosKey(payload.seedCosUrl || payload.cosUrl);
+  if (fromCosUrl && fromCosUrl.startsWith('种子内容/')) {
+    return fromCosUrl.replace(/\/?$/, '/');
+  }
+  return seedProjectPrefixFromContext(seedContext, payload.seedName || payload.seedId || '');
+}
+
+async function cosListAllObjects(prefix) {
+  const objects = [];
+  let marker = '';
+  do {
+    const result = await cosListBucket({
+      Bucket: COS_BUCKET,
+      Region: COS_REGION,
+      Prefix: prefix,
+      MaxKeys: 1000,
+      ...(marker ? { Marker: marker } : {}),
+    });
+    objects.push(...(Array.isArray(result?.Contents) ? result.Contents : []));
+    marker = result?.NextMarker || '';
+    if (!result?.IsTruncated || result.IsTruncated === 'false') break;
+  } while (marker);
+  return objects;
+}
+
+function materialKindFromKey(key) {
+  if (/\/$/.test(key)) return '文件夹';
+  if (/\.(mp4|mov|m4v|webm)$/i.test(key)) return '视频';
+  if (/\.(png|jpe?g|webp|gif|heic)$/i.test(key)) return '图片';
+  if (/\.(mp3|wav|m4a|aac|ogg)$/i.test(key)) return '音频';
+  if (/\.(txt|md|json)$/i.test(key)) return '文本';
+  return '文件';
+}
+
+function buildMaterialInventoryText({ seedProjectPrefix, materialRootPrefix, objects }) {
+  const filtered = objects
+    .map((item) => ({
+      key: String(item?.Key || ''),
+      size: Number(item?.Size || 0),
+    }))
+    .filter((item) => item.key && item.key !== materialRootPrefix)
+    .filter((item) => !/\/\.DS_Store$|\/素材占位\.txt$|\/\.keep$|\/素材包说明\.txt$/i.test(item.key))
+    .sort((a, b) => a.key.localeCompare(b.key, 'zh-CN'));
+  const packageNames = [...new Set(filtered.map((item) => item.key.slice(materialRootPrefix.length).split('/')[0]).filter(Boolean))];
+  const lines = [
+    `种子目录：cos://${COS_BUCKET}/${seedProjectPrefix}`,
+    `素材包根目录：cos://${COS_BUCKET}/${materialRootPrefix}`,
+    `素材包数量：${packageNames.length}`,
+    `素材文件数量：${filtered.filter((item) => item.size > 0 && !item.key.endsWith('/')).length}`,
+    '',
+  ];
+  if (!filtered.length) {
+    lines.push('未在素材包目录下找到可用素材文件。');
+    return lines.join('\n');
+  }
+  let currentPackage = '';
+  let currentTopic = '';
+  for (const item of filtered) {
+    const relative = item.key.slice(materialRootPrefix.length);
+    const parts = relative.split('/').filter(Boolean);
+    if (!parts.length) continue;
+    const packageName = parts[0];
+    const topicName = parts[1] || '';
+    const fileName = parts[parts.length - 1] || '';
+    if (packageName !== currentPackage) {
+      currentPackage = packageName;
+      currentTopic = '';
+      lines.push(`素材包：${packageName}`);
+    }
+    if (topicName && topicName !== currentTopic) {
+      currentTopic = topicName;
+      lines.push(`  主旨：${topicName}`);
+    }
+    if (item.key.endsWith('/')) continue;
+    const kind = materialKindFromKey(item.key);
+    lines.push(`    - ${kind}：${fileName}`);
+  }
+  return lines.join('\n');
+}
+
+async function loadMaterialInventory(payload = {}) {
+  const seedProjectPrefix = seedProjectPrefixFromInventoryPayload(payload);
+  const materialRootPrefix = cosObjectKeyJoin(seedProjectPrefix, '素材包').replace(/\/?$/, '/');
+  const objects = await cosListAllObjects(materialRootPrefix);
+  const inventoryText = buildMaterialInventoryText({ seedProjectPrefix, materialRootPrefix, objects });
+  return {
+    ok: true,
+    type: 'material-inventory-result',
+    seedCosUrl: `cos://${COS_BUCKET}/${seedProjectPrefix}`,
+    materialRootPrefix,
+    materialRootUrl: `cos://${COS_BUCKET}/${materialRootPrefix}`,
+    objectCount: objects.length,
+    txtScript: inventoryText,
+    inventoryText,
+    materialInventoryText: inventoryText,
+  };
+}
+
 async function createMaterialPackageFiles(plan) {
   const packageId = `${Date.now()}-${randomUUID().slice(0, 8)}`;
-  const outputRoot = path.join(root, 'outputs', 'material-packages');
-  const packageDir = path.join(outputRoot, packageId, plan.packageName || '素材包');
-  await mkdir(packageDir, { recursive: true });
+  const seedContext = plan.seedContext && typeof plan.seedContext === 'object' ? plan.seedContext : null;
+  const seedName = safePackageName(seedContext?.seedName || seedContext?.seedId || '', '');
+  const packageName = safePackageName(plan.packageName || '素材包', '素材包');
+  if (!seedName && !seedContext?.seedPath && !seedContext?.seedVideoKey && !seedContext?.seedVideoUrl) {
+    throw new Error('素材包生成缺少种子内容上下文：请先连接并执行种子内容库节点');
+  }
+  const seedProjectPrefix = seedProjectPrefixFromContext(seedContext, seedName);
+  const packageRootPrefix = cosObjectKeyJoin(seedProjectPrefix, '素材包').replace(/\/?$/, '/');
+  const packagePrefix = cosObjectKeyJoin(packageRootPrefix, packageName).replace(/\/?$/, '/');
   const noteLines = [
+    seedName ? `种子内容：${seedName}` : '',
+    seedContext?.seedVideoKey ? `种子原视频：${seedContext.seedVideoKey}` : '',
     `素材比例：${plan.ratio || '4:3'}`,
     '素材类型：实拍视频优先，可补充图片。',
     '建议数量：每个画面文件夹放 1-3 个素材。',
@@ -1073,25 +1526,38 @@ async function createMaterialPackageFiles(plan) {
       ].join('\n')),
     ]),
   ].filter((line) => line !== '');
-  await writeFile(path.join(packageDir, 'test.txt'), noteLines.join('\n'), 'utf8');
+  const createdKeys = [];
+  const putTextObject = async (key, text) => {
+    const normalizedKey = String(key || '').replace(/^\/+/, '');
+    await cosPutObject(normalizedKey, Buffer.from(text, 'utf8'), 'text/plain; charset=utf-8');
+    createdKeys.push(normalizedKey);
+  };
+  await putTextObject(cosObjectKeyJoin(packagePrefix, '素材包说明.txt'), noteLines.join('\n'));
   for (const block of plan.blocks) {
-    const blockDir = path.join(packageDir, `${String(block.order).padStart(2, '0')}_${block.folderName}`);
-    await mkdir(blockDir, { recursive: true });
+    const blockPrefix = cosObjectKeyJoin(packagePrefix, `${String(block.order).padStart(2, '0')}_${block.folderName}`);
+    await putTextObject(cosObjectKeyJoin(blockPrefix, '素材占位.txt'), '这个文件用于在 COS 中显示素材包目录，可在上传真实素材后删除。');
     for (const item of block.items) {
-      const itemDir = path.join(blockDir, `${String(item.order).padStart(2, '0')}_${item.folderName}`);
-      await mkdir(itemDir, { recursive: true });
+      const itemPrefix = cosObjectKeyJoin(blockPrefix, `${String(item.order).padStart(2, '0')}_${item.folderName}`);
+      await putTextObject(
+        cosObjectKeyJoin(itemPrefix, '素材占位.txt'),
+        [
+          '请把对应的视频或图片素材上传到这个目录。',
+          item.materialBrief ? `画面要求：${item.materialBrief}` : '',
+          item.text ? `对应口播：${item.text}` : '',
+        ].filter(Boolean).join('\n'),
+      );
     }
   }
-  const zipName = `material-package-${packageId}.zip`;
-  const zipPath = path.join(outputRoot, packageId, zipName);
-  await execFileAsync('zip', ['-qry', zipPath, plan.packageName || '素材包'], {
-    cwd: path.join(outputRoot, packageId),
-  });
   return {
     packageId,
-    packageDir,
-    zipPath,
-    zipUrl: publicUrl(`/outputs/material-packages/${packageId}/${zipName}`),
+    packageRootDir: `cos://${COS_BUCKET}/${packageRootPrefix}`,
+    packageDir: `cos://${COS_BUCKET}/${packagePrefix}`,
+    packageRootPrefix,
+    packagePrefix,
+    cosBucket: COS_BUCKET,
+    cosRegion: COS_REGION,
+    seedName,
+    createdKeys,
   };
 }
 
@@ -1268,8 +1734,214 @@ function safeFileName(value) {
   return ascii || 'voice';
 }
 
-function resolveProcessImagePath(sourcePath) {
-  const fullPath = path.resolve(root, String(sourcePath || ''));
+function isHttpUrl(value) {
+  return /^https?:\/\//i.test(String(value || '').trim());
+}
+
+function hasCosCredentials() {
+  return Boolean(COS_SECRET_ID && COS_SECRET_KEY && COS_BUCKET && COS_REGION);
+}
+
+function getCosClient() {
+  if (!hasCosCredentials()) {
+    throw new Error('COS 未配置完整，请补充 COS_SECRET_ID、COS_SECRET_KEY、COS_BUCKET、COS_REGION');
+  }
+  if (!cosClient) {
+    cosClient = new COS({
+      SecretId: COS_SECRET_ID,
+      SecretKey: COS_SECRET_KEY,
+      SecurityToken: COS_SESSION_TOKEN || undefined,
+      FileParallelLimit: 5,
+      ChunkParallelLimit: 5,
+    });
+  }
+  return cosClient;
+}
+
+function extractCosKey(source) {
+  const value = normalizeAssetSource(source);
+  if (!value) return '';
+  if (/^cos:\/\//i.test(value)) {
+    return value.replace(/^cos:\/\/[^/]+\//i, '').replace(/^\/+/, '');
+  }
+  if (!isHttpUrl(value)) return value.replace(/^\/+/, '');
+  try {
+    const url = new URL(value);
+    return decodeURIComponent(url.pathname.replace(/^\/+/, ''));
+  } catch {
+    return '';
+  }
+}
+
+async function cosGetObject(source) {
+  const key = extractCosKey(source);
+  if (!key) {
+    throw new Error('COS 读取失败：缺少对象 Key');
+  }
+  const client = getCosClient();
+  return new Promise((resolve, reject) => {
+    client.getObject({
+      Bucket: COS_BUCKET,
+      Region: COS_REGION,
+      Key: key,
+    }, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(data);
+    });
+  });
+}
+
+async function cosListBucket(params) {
+  const client = getCosClient();
+  return client.getBucket(params);
+}
+
+function cosObjectNameFromKey(key, prefix = '') {
+  const normalizedKey = String(key || '').replace(/^\/+/, '');
+  const normalizedPrefix = String(prefix || '').replace(/^\/+/, '').replace(/\/?$/, '/');
+  if (normalizedKey.startsWith(normalizedPrefix)) {
+    return normalizedKey.slice(normalizedPrefix.length);
+  }
+  return path.basename(normalizedKey);
+}
+
+function cosObjectKeyJoin(...parts) {
+  return parts
+    .map((part, index) => String(part || '').trim().replace(index === 0 ? /\/+$/ : /^\/+|\/+$/g, ''))
+    .filter(Boolean)
+    .join('/')
+    .replace(/\/+/g, '/');
+}
+
+async function cosPutObject(key, buffer, contentType) {
+  const client = getCosClient();
+  return new Promise((resolve, reject) => {
+    client.putObject({
+      Bucket: COS_BUCKET,
+      Region: COS_REGION,
+      Key: String(key || '').replace(/^\/+/, ''),
+      Body: buffer,
+      ContentType: contentType || 'application/octet-stream',
+    }, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(data);
+    });
+  });
+}
+
+async function cosGetSignedUrl(key, expiresSeconds = 600) {
+  const normalizedKey = String(key || '').replace(/^\/+/, '');
+  if (!normalizedKey) throw new Error('COS 签名失败：缺少对象 Key');
+  const client = getCosClient();
+  return new Promise((resolve, reject) => {
+    client.getObjectUrl({
+      Bucket: COS_BUCKET,
+      Region: COS_REGION,
+      Key: normalizedKey,
+      Sign: true,
+      Expires: Math.max(60, Math.min(3600, Number(expiresSeconds || 600))),
+    }, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(typeof data === 'string' ? data : data?.Url || data?.url || '');
+    });
+  });
+}
+
+function contentTypeFromUrl(urlString) {
+  try {
+    return contentTypeForFile(decodeURIComponent(new URL(urlString).pathname));
+  } catch {
+    return 'application/octet-stream';
+  }
+}
+
+function normalizeAssetSource(sourcePath) {
+  return String(sourcePath || '').trim();
+}
+
+function assetFileNameFromSource(sourcePath) {
+  const value = normalizeAssetSource(sourcePath);
+  if (!value) return 'asset';
+  if (isHttpUrl(value)) {
+    try {
+      const url = new URL(value);
+      return path.basename(decodeURIComponent(url.pathname)) || 'asset';
+    } catch {
+      return 'asset';
+    }
+  }
+  return path.basename(value) || 'asset';
+}
+
+async function downloadRemoteAssetToCache(sourceUrl) {
+  const url = new URL(sourceUrl);
+  const cacheDir = path.join(root, 'outputs', 'remote-assets');
+  await mkdir(cacheDir, { recursive: true });
+  const cacheKey = createHash('sha1').update(sourceUrl).digest('hex');
+  const fallbackName = path.basename(decodeURIComponent(url.pathname)) || 'asset';
+  const cachedPath = path.join(cacheDir, `${cacheKey}-${safeFileName(fallbackName)}`);
+  if (existsSync(cachedPath)) return cachedPath;
+
+  const response = await fetch(sourceUrl, {
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Codex-Workflow-Canvas/1.0',
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`远程素材下载失败：HTTP ${response.status}`);
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  await writeFileAsync(cachedPath, buffer);
+  return cachedPath;
+}
+
+async function fetchRemoteAsset(sourceUrl) {
+  if (hasCosCredentials() && isHttpUrl(sourceUrl)) {
+    const url = new URL(sourceUrl);
+    if (/\.cos\./i.test(url.hostname)) {
+      const data = await cosGetObject(sourceUrl);
+      const body = data?.Body || data?.body || data?.data || data;
+      const file = Buffer.isBuffer(body) ? body : Buffer.from(body || '');
+      const contentType = data?.headers?.['content-type']
+        || data?.Headers?.['content-type']
+        || contentTypeFromUrl(sourceUrl);
+      return { file, contentType };
+    }
+  }
+  const response = await fetch(sourceUrl, {
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Codex-Workflow-Canvas/1.0',
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`远程素材读取失败：HTTP ${response.status}`);
+  }
+  const file = Buffer.from(await response.arrayBuffer());
+  const contentType = response.headers.get('content-type') || contentTypeFromUrl(sourceUrl);
+  return { file, contentType };
+}
+
+async function resolveProcessImagePath(sourcePath) {
+  const value = normalizeAssetSource(sourcePath);
+  if (!value) {
+    throw new Error('图片不存在或不允许处理：空路径');
+  }
+  if (isHttpUrl(value)) {
+    return downloadRemoteAssetToCache(value);
+  }
+  const fullPath = path.resolve(root, value);
   const allowedRoots = [
     path.join(MATERIAL_ROOT, '图片'),
     path.join(root, 'outputs', 'image-ai'),
@@ -1284,9 +1956,11 @@ async function processImagesWithAi(payload) {
   const selectedAssets = Array.isArray(payload.assets) ? payload.assets : [];
   if (selectedAssets.length === 0) throw new Error('请先选择要处理的图片');
 
-  const imagePaths = selectedAssets
-    .map((asset) => resolveProcessImagePath(asset.sourcePath))
-    .slice(0, 4);
+  const imagePaths = await Promise.all(
+    selectedAssets
+      .map((asset) => resolveProcessImagePath(asset.sourcePath))
+      .slice(0, 4),
+  );
 
   const outputDir = path.join(root, 'outputs', 'image-ai');
   await mkdir(outputDir, { recursive: true });
@@ -1768,113 +2442,139 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    if (req.method === 'POST' && req.url === '/ai/material-upload') {
+    if (req.method === 'POST' && req.url === '/cos/upload') {
       const payload = JSON.parse(await readBody(req) || '{}');
-      const packageDir = path.resolve(String(payload.packageDir || ''));
-      const materialRoot = path.join(root, 'outputs', 'material-packages');
-      if (!packageDir || !packageDir.startsWith(materialRoot) || !existsSync(packageDir)) {
-        throw new Error('素材上传缺少有效素材包目录');
+      const key = String(payload.key || '').trim();
+      if (!key) {
+        throw new Error('缺少 COS 对象 key');
       }
-      const blockDirName = `${String(payload.blockOrder || 1).padStart(2, '0')}_${safePackageName(payload.blockFolderName || '主旨段')}`;
-      const itemDirName = `${String(payload.itemOrder || 1).padStart(2, '0')}_${safePackageName(payload.itemFolderName || '画面素材')}`;
-      const targetDir = path.join(packageDir, blockDirName, itemDirName);
-      if (!targetDir.startsWith(packageDir)) throw new Error('素材上传路径非法');
-      await mkdir(targetDir, { recursive: true });
-      const { mimeType, buffer } = bufferFromDataUrl(payload.dataUrl);
-      const savedName = safeUploadedFileName(payload.fileName || 'asset');
-      const savedPath = path.join(targetDir, savedName);
-      await writeFile(savedPath, buffer);
+      const { buffer, mimeType } = bufferFromDataUrl(payload.dataUrl);
+      const uploadResult = await cosPutObject(key, buffer, payload.contentType || mimeType);
       sendJson(res, 200, {
         ok: true,
-        type: 'material-upload-result',
-        unitId: payload.unitId || '',
-        fileName: savedName,
-        originalName: payload.fileName || '',
-        mimeType,
+        bucket: COS_BUCKET,
+        region: COS_REGION,
+        key,
+        contentType: payload.contentType || mimeType,
         size: buffer.length,
-        savedPath,
-        savedAt: new Date().toISOString(),
+        uploadResult,
       });
+      return;
+    }
+
+    if (req.method === 'GET' && req.url === '/cos/status') {
+      if (!hasCosCredentials()) {
+        sendJson(res, 200, {
+          ok: false,
+          configured: false,
+          error: 'COS 未配置完整',
+        });
+        return;
+      }
+      const listing = await cosListBucket({
+        Bucket: COS_BUCKET,
+        Region: COS_REGION,
+        Prefix: COS_MATERIAL_PREFIX,
+        MaxKeys: 10,
+      });
+      const contents = Array.isArray(listing?.Contents) ? listing.Contents : [];
+      sendJson(res, 200, {
+        ok: true,
+        configured: true,
+        bucket: COS_BUCKET,
+        region: COS_REGION,
+        materialPrefix: COS_MATERIAL_PREFIX,
+        sampleCount: contents.length,
+        sampleKeys: contents.map((item) => item.Key).filter(Boolean),
+      });
+      return;
+    }
+
+    if (req.method === 'GET' && req.url?.startsWith('/seed-library')) {
+      const seedUrl = new URL(req.url, PUBLIC_AI_BASE_URL);
+      const seedId = seedUrl.searchParams.get('seedId') || '';
+      const seeds = await loadSeedLibrary();
+      if (seedId) {
+        const seed = seeds.find((item) => item.id === seedId || item.name === seedId || item.folderName === seedId);
+        if (!seed) {
+          sendJson(res, 404, { ok: false, error: `未找到种子内容：${seedId}` });
+          return;
+        }
+        sendJson(res, 200, { ok: true, seed });
+        return;
+      }
+      sendJson(res, 200, { ok: true, seeds });
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === '/seed-library/resolve') {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const seedId = String(payload.seedId || payload.seedPath || '').trim();
+      if (!seedId) {
+        throw new Error('缺少种子内容 ID');
+      }
+      const result = await resolveSeedLibrary(seedId);
+      sendJson(res, 200, result);
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === '/cos/material-inventory') {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const result = await loadMaterialInventory(payload);
+      sendJson(res, 200, result);
+      return;
+    }
+
+    if (req.method === 'GET' && req.url?.startsWith('/cos/object')) {
+      const cosUrl = new URL(req.url, PUBLIC_AI_BASE_URL);
+      const source = cosUrl.searchParams.get('source') || cosUrl.searchParams.get('key') || '';
+      if (!source) {
+        sendJson(res, 400, { ok: false, error: '缺少 source 或 key' });
+        return;
+      }
+      const data = await cosGetObject(source);
+      const body = data?.Body || data?.body || data?.data || data;
+      const file = Buffer.isBuffer(body) ? body : Buffer.from(body || '');
+      const contentType = data?.headers?.['content-type']
+        || data?.Headers?.['content-type']
+        || contentTypeFromUrl(source);
+      res.writeHead(200, {
+        'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${safeFileName(assetFileNameFromSource(source))}"`,
+        'Access-Control-Allow-Origin': '*',
+      });
+      res.end(file);
       return;
     }
 
     if (req.method === 'POST' && req.url === '/ai/video-recognition') {
       const payload = JSON.parse(await readBody(req) || '{}');
       const outputs = Array.isArray(payload.outputs) ? payload.outputs : [];
-      const hasUrl = payload.sourceType === 'url' && String(payload.videoUrl || '').trim();
-      const hasLocalData = payload.sourceType !== 'url' && String(payload.videoDataUrl || '').startsWith('data:video/');
-      const hasLocalFrames = payload.sourceType !== 'url'
-        && Array.isArray(payload.frameDataUrls)
-        && payload.frameDataUrls.length > 0;
-      if (!hasUrl && !hasLocalData && !hasLocalFrames) {
-        throw new Error('缺少视频输入：请上传本地视频或填写视频 URL');
+      const videoUrl = String(payload.videoUrl || payload.seedVideoUrl || '').trim();
+      if (!videoUrl) {
+        throw new Error('缺少视频输入：请填写公开视频 URL');
       }
-      if (hasUrl && !/^https?:\/\//i.test(String(payload.videoUrl || '').trim())) {
+      if (!/^https?:\/\//i.test(videoUrl)) {
         throw new Error('视频 URL 必须是公网 http(s) 地址，不能填写本机路径或 file:// 地址');
       }
-      if (hasLocalData && Buffer.byteLength(payload.videoDataUrl, 'utf8') > 70 * 1024 * 1024) {
-        throw new Error('本地视频超过可直传大小，请改用视频 URL 或上传 50MB 以内的视频');
-      }
-
-      let result;
-      let fallback = '';
-      try {
-        if (hasLocalFrames && !hasLocalData) {
-          fallback = 'frame-extraction';
-          result = await callMimoVideo(videoFrameRecognitionPrompt({
-            ...payload,
-            outputs,
-          }));
-        } else {
-          result = await callMimoVideo(videoRecognitionPrompt({
-            ...payload,
-            outputs,
-          }));
-        }
-      } catch (error) {
-        const canRetryUrlAsData = payload.sourceType === 'url'
-          && /download or process media content|media content/i.test(error.message);
-        if (canRetryUrlAsData) {
-          try {
-            const videoDataUrl = await fetchVideoAsDataUrl(payload.videoUrl);
-            fallback = 'url-downloaded-as-data-url';
-            result = await callMimoVideo(videoRecognitionPrompt({
-              ...payload,
-              sourceType: 'local',
-              videoDataUrl,
-              localFile: path.basename(new URL(payload.videoUrl).pathname) || 'url-video',
-              outputs,
-            }));
-          } catch (retryError) {
-            throw new Error(`${error.message}；URL 重试失败：${retryError.message}`);
-          }
-        } else {
-          const canFallbackToFrames = payload.sourceType !== 'url'
-          && /download or process media content|media content|Param Incorrect/i.test(error.message)
-          && Array.isArray(payload.frameDataUrls)
-          && payload.frameDataUrls.length > 0;
-          if (!canFallbackToFrames) throw error;
-          fallback = 'frame-extraction';
-          result = await callMimoVideo(videoFrameRecognitionPrompt({
-            ...payload,
-            outputs,
-          }));
-        }
-      }
-      const normalizedPayload = result.payload && Object.values(result.payload).some((value) => (
-        value && (typeof value !== 'object' || Object.keys(value).length > 0)
-      ))
-        ? result.payload
-        : (result.outputs && !Array.isArray(result.outputs) ? result.outputs : result);
+      const recognitionPayload = {
+        ...payload,
+        sourceType: 'url',
+        videoUrl,
+        outputs,
+      };
+      const result = await callMimoVideo(videoRecognitionPrompt(recognitionPayload));
+      const normalizedPayload = normalizeVideoRecognitionResult(result, {
+        outputs,
+      });
       sendJson(res, 200, {
         ok: true,
         type: 'video-recognition-result',
-        sourceType: payload.sourceType || 'local',
-        source: payload.sourceType === 'url'
-          ? payload.videoUrl
-          : (payload.localFile || payload.localAsset?.name || '本地视频'),
+        sourceType: 'url',
+        source: videoUrl,
+        cosVideo: null,
         outputs,
-        fallback: fallback || result.fallback || '',
+        fallback: result.fallback || '',
         payload: normalizedPayload,
         raw: result,
       });
@@ -1890,6 +2590,47 @@ const server = createServer(async (req, res) => {
         ok: true,
         reply,
         suggestions: Array.isArray(result.suggestions) ? result.suggestions : [],
+        raw: result,
+      });
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === '/ai/content-analysis') {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const prompt = String(payload.prompt || '').trim();
+      if (!prompt) throw new Error('缺少 prompt');
+      const result = await callMimo(contentAnalysisPrompt(payload));
+      const reply = String(result.reply || result.text || result.content || '').trim();
+      if (!reply) {
+        throw new Error('AI 返回格式错误：缺少 reply');
+      }
+      sendJson(res, 200, {
+        ok: true,
+        type: 'document-assistant',
+        reply,
+        raw: result,
+      });
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === '/ai/video-script') {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const prompt = String(payload.prompt || '').trim();
+      if (!prompt) throw new Error('缺少 prompt');
+      const result = await callMimo(videoScriptPrompt(payload));
+      const segments = Array.isArray(result.segments) ? result.segments : [];
+      if (segments.length === 0 && !result.reply && !result.text) {
+        throw new Error('AI 返回格式错误：缺少 segments');
+      }
+      const reply = String(result.reply || result.text || formatVideoScriptReply(result)).trim();
+      sendJson(res, 200, {
+        ok: true,
+        type: 'video-script',
+        reply,
+        title: result.title || '口播视频脚本',
+        summary: result.summary || '',
+        segments,
+        tips: Array.isArray(result.tips) ? result.tips : [],
         raw: result,
       });
       return;
@@ -2171,16 +2912,27 @@ const server = createServer(async (req, res) => {
 
     const materialAssetUrl = new URL(req.url, PUBLIC_AI_BASE_URL);
     if (req.method === 'GET' && materialAssetUrl.pathname === '/material-assets') {
-      const sourcePath = materialAssetUrl.searchParams.get('path') || '';
-      const fullPath = path.resolve(root, sourcePath);
-      if (!sourcePath || !fullPath.startsWith(path.join(MATERIAL_ROOT, '图片')) || !existsSync(fullPath)) {
+      const sourcePath = materialAssetUrl.searchParams.get('source') || materialAssetUrl.searchParams.get('path') || '';
+      if (!sourcePath) {
         sendJson(res, 404, { ok: false, error: 'File not found' });
         return;
       }
-      const file = await readFile(fullPath);
+      let file;
+      let contentType;
+      if (isHttpUrl(sourcePath)) {
+        ({ file, contentType } = await fetchRemoteAsset(sourcePath));
+      } else {
+        const fullPath = path.resolve(root, sourcePath);
+        if (!fullPath.startsWith(path.join(MATERIAL_ROOT, '图片')) || !existsSync(fullPath)) {
+          sendJson(res, 404, { ok: false, error: 'File not found' });
+          return;
+        }
+        file = await readFile(fullPath);
+        contentType = contentTypeForFile(fullPath);
+      }
       res.writeHead(200, {
-        'Content-Type': contentTypeForFile(fullPath),
-        'Content-Disposition': `inline; filename="${safeFileName(path.basename(fullPath))}"`,
+        'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${safeFileName(assetFileNameFromSource(sourcePath))}"`,
         'Access-Control-Allow-Origin': '*',
       });
       res.end(file);
@@ -2188,16 +2940,27 @@ const server = createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && materialAssetUrl.pathname === '/seed-assets') {
-      const sourcePath = materialAssetUrl.searchParams.get('path') || '';
-      const fullPath = path.resolve(root, sourcePath);
-      if (!sourcePath || !fullPath.startsWith(path.join(MATERIAL_ROOT, '种子内容')) || !existsSync(fullPath)) {
+      const sourcePath = materialAssetUrl.searchParams.get('source') || materialAssetUrl.searchParams.get('path') || '';
+      if (!sourcePath) {
         sendJson(res, 404, { ok: false, error: 'File not found' });
         return;
       }
-      const file = await readFile(fullPath);
+      let file;
+      let contentType;
+      if (isHttpUrl(sourcePath)) {
+        ({ file, contentType } = await fetchRemoteAsset(sourcePath));
+      } else {
+        const fullPath = path.resolve(root, sourcePath);
+        if (!fullPath.startsWith(path.join(MATERIAL_ROOT, '种子内容')) || !existsSync(fullPath)) {
+          sendJson(res, 404, { ok: false, error: 'File not found' });
+          return;
+        }
+        file = await readFile(fullPath);
+        contentType = contentTypeForFile(fullPath);
+      }
       res.writeHead(200, {
-        'Content-Type': contentTypeForFile(fullPath),
-        'Content-Disposition': `attachment; filename="${safeFileName(path.basename(fullPath))}${path.extname(fullPath)}"`,
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${safeFileName(assetFileNameFromSource(sourcePath))}"`,
         'Access-Control-Allow-Origin': '*',
       });
       res.end(file);

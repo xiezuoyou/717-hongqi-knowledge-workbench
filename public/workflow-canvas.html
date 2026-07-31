@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="data:," />
-    <title>717 内容裂变自由工作流</title>
+    <title>自由工作流</title>
   <style>
     :root {
       font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
       color: #0f172a;
-      background: #edf1f5;
+      background: #f6f8fb;
       font-synthesis: none;
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
@@ -29,121 +29,84 @@
 
     body {
       background:
-        radial-gradient(circle at 30% -10%, rgba(82, 121, 255, 0.24), transparent 36%),
-        linear-gradient(180deg, #eef2f7 0%, #e9eef5 100%);
+        radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.98), transparent 24%),
+        radial-gradient(circle at 24% 16%, rgba(180, 205, 255, 0.24), transparent 22%),
+        radial-gradient(circle at 82% 12%, rgba(208, 217, 255, 0.24), transparent 20%),
+        radial-gradient(circle at 52% 110%, rgba(191, 219, 254, 0.2), transparent 26%),
+        linear-gradient(180deg, #fbfcfe 0%, #eef3f8 100%);
     }
 
     .app {
       width: 100vw;
       height: 100vh;
       display: grid;
-      grid-template-rows: 64px minmax(0, 1fr);
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 0 18px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.1);
-      background: rgba(248, 250, 252, 0.78);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 10px;
-      background: #0f172a;
-      color: #fff;
-      font-weight: 950;
-    }
-
-    .brand strong {
-      display: block;
-      font-size: 15px;
-      font-weight: 900;
-    }
-
-    .brand span {
-      display: block;
-      margin-top: 2px;
-      color: rgba(15, 23, 42, 0.58);
-      font-size: 12px;
-    }
-
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-
-    .topbar-actions button {
-      height: 38px;
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      border-radius: 10px;
-      padding: 0 13px;
-      background: #fff;
-      color: #0f172a;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .topbar-actions .primary {
-      border-color: transparent;
-      background: #0f172a;
-      color: #fff;
-    }
-
-    .topbar-actions .template {
-      border-color: rgba(37, 99, 235, 0.22);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96));
-      color: #1d4ed8;
+      grid-template-rows: minmax(0, 1fr);
+      overflow: hidden;
     }
 
     .workspace {
       min-height: 0;
       display: grid;
       grid-template-columns: 268px minmax(0, 1fr);
-      gap: 12px;
-      padding: 12px;
+      gap: 14px;
+      padding: 14px;
     }
 
-    .panel, .canvas-wrap {
+    .canvas-wrap,
+    .dock-pane {
       min-height: 0;
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      background: rgba(248, 250, 252, 0.9);
-      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 249, 253, 0.76)),
+        rgba(255, 255, 255, 0.74);
+      box-shadow:
+        0 30px 90px rgba(148, 163, 184, 0.16),
+        inset 0 1px rgba(255, 255, 255, 0.92),
+        inset 0 -1px rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(34px) saturate(1.18);
+      -webkit-backdrop-filter: blur(34px) saturate(1.18);
     }
 
     .panel {
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border-radius: 18px;
+      border-radius: 28px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      min-width: 0;
+      border-radius: 28px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .canvas-wrap::before,
+    .dock-pane::before,
+    .trace-panel::before,
+    .node::before,
+    .project-item::before,
+    .palette-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 36%);
+      opacity: 0.9;
     }
 
     .panel-head {
-      min-height: 72px;
+      min-height: 76px;
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 18px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      padding: 18px 18px 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      background: rgba(255, 255, 255, 0.18);
     }
 
     .panel-icon {
@@ -152,9 +115,13 @@
       display: grid;
       place-items: center;
       flex: 0 0 auto;
-      border-radius: 10px;
-      background: #0f172a;
-      color: #fff;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow:
+        0 12px 26px rgba(148, 163, 184, 0.12),
+        inset 0 1px rgba(255, 255, 255, 0.94);
+      color: #0f172a;
       font-size: 16px;
     }
 
@@ -166,7 +133,7 @@
 
     .panel-head p, .hint-card p {
       margin: 4px 0 0;
-      color: rgba(15, 23, 42, 0.58);
+      color: rgba(15, 23, 42, 0.78);
       font-size: 12px;
       line-height: 1.45;
     }
@@ -179,9 +146,98 @@
       padding: 14px;
     }
 
+    .palette-group {
+      display: block;
+    }
+
+    .palette-group + .palette-group {
+      margin-top: 4px;
+    }
+
+    .palette-group-summary {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 34px;
+      padding: 0 4px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: rgba(15, 23, 42, 0.82);
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: left;
+      user-select: none;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .palette-group-summary:hover {
+      background: rgba(255, 255, 255, 0.46);
+      color: #0f172a;
+    }
+
+    .palette-group-summary::after {
+      content: "+";
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: rgba(15, 23, 42, 0.62);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      transition: transform 220ms ease, background 180ms ease;
+    }
+
+    .palette-group.is-open .palette-group-summary::after {
+      content: "−";
+      transform: rotate(180deg);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .palette-group-summary span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .palette-group-summary small {
+      color: rgba(15, 23, 42, 0.54);
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .palette-group-list {
+      display: grid;
+      gap: 8px;
+      max-height: 0;
+      overflow: hidden;
+      padding-top: 0;
+      opacity: 0;
+      transform: translateY(-7px);
+      transition:
+        max-height 280ms cubic-bezier(.2, .8, .2, 1),
+        padding-top 280ms ease,
+        opacity 180ms ease,
+        transform 280ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .palette-group.is-open .palette-group-list {
+      max-height: 900px;
+      padding-top: 8px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .project-panel {
       max-height: 260px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
     }
 
     .project-actions {
@@ -192,30 +248,31 @@
 
     .project-actions input {
       min-width: 0;
-      height: 38px;
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      border-radius: 10px;
+      height: 42px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 14px;
       padding: 0 10px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.82);
       color: #0f172a;
       font-size: 13px;
       outline: none;
     }
 
     .project-actions input:focus {
-      border-color: rgba(37, 99, 235, 0.42);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: rgba(78, 132, 255, 0.36);
+      box-shadow: 0 0 0 4px rgba(78, 132, 255, 0.11);
     }
 
     .project-actions button {
-      height: 38px;
+      height: 42px;
       border: 0;
-      border-radius: 10px;
-      padding: 0 12px;
-      background: #0f172a;
+      border-radius: 14px;
+      padding: 0 14px;
+      background: linear-gradient(180deg, #111827, #0b1220);
       color: #fff;
       font-size: 13px;
       font-weight: 850;
+      box-shadow: 0 14px 24px rgba(15, 23, 42, 0.18);
     }
 
     .project-list {
@@ -224,22 +281,24 @@
     }
 
     .project-item {
+      position: relative;
       min-height: 54px;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
       gap: 8px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 13px;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 18px;
       padding: 9px 10px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.72);
       color: #0f172a;
       text-align: left;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.68);
     }
 
     .project-item.is-active {
-      border-color: rgba(37, 99, 235, 0.32);
-      background: rgba(37, 99, 235, 0.08);
+      border-color: rgba(78, 132, 255, 0.28);
+      background: rgba(78, 132, 255, 0.08);
     }
 
     .project-item strong {
@@ -254,7 +313,7 @@
     .project-item span {
       display: block;
       margin-top: 3px;
-      color: rgba(15, 23, 42, 0.52);
+      color: rgba(15, 23, 42, 0.64);
       font-size: 11px;
     }
 
@@ -263,13 +322,13 @@
       height: 28px;
       border: 0;
       border-radius: 8px;
-      background: rgba(15, 23, 42, 0.06);
-      color: rgba(15, 23, 42, 0.62);
+      background: rgba(255, 255, 255, 0.82);
+      color: #0f172a;
       font-weight: 900;
     }
 
     .project-delete:hover {
-      background: #fee2e2;
+      background: rgba(248, 113, 113, 0.14);
       color: #b91c1c;
     }
 
@@ -278,29 +337,40 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 14px 0;
-      color: rgba(15, 23, 42, 0.58);
+      color: rgba(15, 23, 42, 0.74);
       font-size: 12px;
       font-weight: 850;
     }
 
     .palette-item {
+      position: relative;
+      overflow: hidden;
       min-height: 48px;
       display: grid;
       grid-template-columns: 32px minmax(0, 1fr) 22px;
       align-items: center;
       gap: 8px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 13px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 18px;
       padding: 0 10px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.72);
       color: #0f172a;
       text-align: left;
       transition: transform 160ms ease, border-color 160ms ease;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.7);
+    }
+
+    .palette-item > * {
+      position: relative;
+      z-index: 1;
     }
 
     .palette-item:hover {
-      border-color: rgba(15, 23, 42, 0.18);
+      border-color: color-mix(in srgb, var(--accent), white 44%);
       transform: translateY(-1px);
+      box-shadow:
+        0 16px 30px rgba(148, 163, 184, 0.16),
+        inset 0 1px rgba(255, 255, 255, 0.82);
     }
 
     .palette-icon {
@@ -308,10 +378,27 @@
       height: 30px;
       display: grid;
       place-items: center;
-      border-radius: 9px;
-      background: color-mix(in srgb, var(--accent), white 88%);
-      color: var(--accent);
+      border-radius: 10px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.86);
+      color: #0f172a;
+      box-shadow:
+        0 8px 18px rgba(148, 163, 184, 0.1),
+        inset 0 1px rgba(255, 255, 255, 0.9);
       font-size: 15px;
+    }
+
+    .palette-icon svg,
+    .node-icon svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+      color: currentColor;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .palette-item b {
@@ -324,19 +411,10 @@
       display: block;
       overflow: hidden;
       margin-top: 2px;
-      color: rgba(15, 23, 42, 0.52);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 11px;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    .canvas-wrap {
-      position: relative;
-      min-width: 0;
-      border-radius: 18px;
-      overflow: hidden;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
     }
 
     .toolbar {
@@ -346,7 +424,8 @@
       justify-content: space-between;
       gap: 14px;
       padding: 14px 16px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .toolbar strong {
@@ -358,7 +437,7 @@
     .toolbar span {
       display: block;
       margin-top: 4px;
-      color: rgba(15, 23, 42, 0.58);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 12px;
     }
 
@@ -370,40 +449,52 @@
     }
 
     .toolbar-actions button {
-      min-width: 38px;
-      height: 38px;
+      min-width: 40px;
+      height: 40px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      border-radius: 10px;
-      padding: 0 12px;
-      background: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 999px;
+      padding: 0 14px;
+      background: rgba(255, 255, 255, 0.84);
       color: #0f172a;
       font-size: 13px;
       font-weight: 800;
+      box-shadow:
+        0 12px 24px rgba(148, 163, 184, 0.12),
+        inset 0 1px rgba(255, 255, 255, 0.92);
     }
 
     .toolbar-actions .run {
-      border-color: transparent;
-      background: #0f172a;
-      color: #fff;
+      border-color: rgba(15, 23, 42, 0.06);
+      background: rgba(255, 255, 255, 0.92);
+      color: #0f172a;
+      box-shadow:
+        0 12px 28px rgba(148, 163, 184, 0.14),
+        inset 0 1px rgba(255, 255, 255, 0.94);
+    }
+
+    .toolbar-actions .template {
+      border-color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.94);
+      color: #0f172a;
     }
 
     .toolbar-actions .selection-count {
       min-width: auto;
       border-radius: 999px;
       padding: 0 4px;
-      color: rgba(15, 23, 42, 0.56);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 12px;
       font-weight: 900;
       white-space: nowrap;
     }
 
     .toolbar-actions .danger {
-      border-color: rgba(185, 28, 28, 0.18);
-      background: #fff;
+      border-color: rgba(248, 113, 113, 0.22);
+      background: rgba(255, 255, 255, 0.78);
       color: #b91c1c;
     }
 
@@ -412,7 +503,10 @@
       min-height: 0;
       overflow: hidden;
       cursor: grab;
-      background: #eef2f7;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.8), transparent 24%),
+        radial-gradient(circle at 50% 110%, rgba(214, 227, 255, 0.28), transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #eef4f9 100%);
       touch-action: none;
     }
 
@@ -424,14 +518,16 @@
       bottom: 16px;
       z-index: 8;
       height: 36px;
-      border: 1px solid rgba(15, 23, 42, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.76);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.9);
       color: #0f172a;
       padding: 0 12px;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 16px 30px rgba(148, 163, 184, 0.12);
       font-size: 12px;
       font-weight: 900;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .trace-panel {
@@ -443,11 +539,13 @@
       max-height: min(520px, calc(100% - 92px));
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.96);
-      box-shadow: 0 18px 46px rgba(15, 23, 42, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.76));
+      box-shadow: 0 28px 64px rgba(148, 163, 184, 0.16);
       overflow: hidden;
+      backdrop-filter: blur(24px) saturate(1.08);
+      -webkit-backdrop-filter: blur(24px) saturate(1.08);
     }
 
     .trace-panel[hidden] {
@@ -460,7 +558,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 12px 12px 10px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
     }
 
     .trace-head strong {
@@ -473,17 +571,17 @@
     .trace-head span {
       display: block;
       margin-top: 2px;
-      color: rgba(15, 23, 42, 0.5);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 11px;
       font-weight: 750;
     }
 
     .trace-head button {
       height: 30px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 9px;
-      background: rgba(248, 250, 252, 0.96);
-      color: rgba(15, 23, 42, 0.74);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      color: rgba(15, 23, 42, 0.72);
       padding: 0 9px;
       font-size: 12px;
       font-weight: 900;
@@ -500,11 +598,12 @@
       grid-template-columns: 28px minmax(0, 1fr) auto;
       gap: 8px;
       align-items: start;
-      border: 1px solid rgba(15, 23, 42, 0.07);
-      border-radius: 12px;
-      background: rgba(248, 250, 252, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
       padding: 9px;
       margin-bottom: 8px;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.72);
     }
 
     .trace-index {
@@ -513,7 +612,7 @@
       display: grid;
       place-items: center;
       border-radius: 999px;
-      background: #e2e8f0;
+      background: rgba(15, 23, 42, 0.07);
       color: #334155;
       font-size: 11px;
       font-weight: 950;
@@ -529,7 +628,7 @@
 
     .trace-item p {
       margin: 4px 0 0;
-      color: rgba(15, 23, 42, 0.58);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 11px;
       line-height: 1.45;
     }
@@ -537,7 +636,7 @@
     .trace-status {
       border-radius: 999px;
       padding: 4px 7px;
-      background: rgba(14, 165, 233, 0.1);
+      background: rgba(59, 130, 246, 0.1);
       color: #0369a1;
       font-size: 10px;
       font-weight: 950;
@@ -550,11 +649,11 @@
     .trace-item.loop .trace-status { background: rgba(219, 39, 119, 0.1); color: #be185d; }
 
     .trace-empty {
-      border: 1px dashed rgba(15, 23, 42, 0.16);
-      border-radius: 12px;
-      background: rgba(248, 250, 252, 0.86);
+      border: 1px dashed rgba(148, 163, 184, 0.16);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.88);
       padding: 14px;
-      color: rgba(15, 23, 42, 0.54);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 12px;
       line-height: 1.55;
       text-align: center;
@@ -565,8 +664,8 @@
       inset: 0;
       z-index: 0;
       background-image:
-        linear-gradient(rgba(15, 23, 42, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 23, 42, 0.07) 1px, transparent 1px);
+        linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
       background-size: 28px 28px;
     }
 
@@ -601,24 +700,24 @@
     }
 
     .edge-path.loop-flow {
-      stroke: #db2777;
+      stroke: #ff4d9f;
       stroke-width: 3.3;
-      filter: drop-shadow(0 0 7px rgba(219, 39, 119, 0.42));
+      filter: drop-shadow(0 0 7px rgba(255, 77, 159, 0.4));
       stroke-dasharray: 10 8;
       animation: loopEdgeDash 1.8s linear infinite, loopEdgePulse 1.6s ease-in-out infinite;
     }
 
     .edge-group:hover .edge-path,
     .edge-path.selected {
-      stroke: #2563eb;
+      stroke: #4e84ff;
       stroke-width: 4;
-      filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.24));
+      filter: drop-shadow(0 4px 8px rgba(78, 132, 255, 0.24));
     }
 
     .edge-path.loop-flow.selected,
     .edge-group:hover .edge-path.loop-flow {
-      stroke: #ef5aa0;
-      filter: drop-shadow(0 0 10px rgba(219, 39, 119, 0.54));
+      stroke: #ff79b7;
+      filter: drop-shadow(0 0 10px rgba(255, 77, 159, 0.5));
     }
 
     @keyframes loopEdgeDash {
@@ -680,9 +779,9 @@
 
     .selection-box {
       position: absolute;
-      border: 1px solid rgba(37, 99, 235, 0.8);
-      background: rgba(37, 99, 235, 0.12);
-      border-radius: 10px;
+      border: 1px solid rgba(78, 132, 255, 0.84);
+      background: rgba(78, 132, 255, 0.12);
+      border-radius: 14px;
       pointer-events: none;
       z-index: 5;
     }
@@ -698,21 +797,32 @@
       pointer-events: auto;
       width: 264px;
       min-height: 132px;
-      border: 1px solid rgba(15, 23, 42, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.82);
       border-top: 4px solid var(--accent);
       border-radius: 14px;
       padding: 14px;
-      background: rgba(255, 255, 255, 0.96);
-      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(249, 251, 254, 0.68)),
+        rgba(255, 255, 255, 0.74);
+      box-shadow:
+        0 18px 42px rgba(148, 163, 184, 0.14),
+        inset 0 1px rgba(255, 255, 255, 0.96),
+        inset 0 -1px rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(34px) saturate(1.15);
+      -webkit-backdrop-filter: blur(34px) saturate(1.15);
       cursor: move;
       user-select: none;
     }
 
     .node.is-global {
-      border-color: rgba(51, 65, 85, 0.24);
+      border-color: rgba(51, 65, 85, 0.12);
       border-top-color: #334155;
-      background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.96));
-      box-shadow: 0 16px 38px rgba(51, 65, 85, 0.18);
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 252, 0.7)),
+        rgba(255, 255, 255, 0.68);
+      box-shadow:
+        0 18px 38px rgba(148, 163, 184, 0.12),
+        inset 0 1px rgba(255, 255, 255, 0.96);
     }
 
     .node.is-global::after {
@@ -734,12 +844,14 @@
     .node.is-loop {
       width: 288px;
       min-height: 150px;
-      border-color: rgba(219, 39, 119, 0.24);
+      border-color: rgba(219, 39, 119, 0.14);
       border-top-color: #db2777;
       background:
-        linear-gradient(135deg, rgba(253, 242, 248, 0.98), rgba(255, 255, 255, 0.96) 58%),
-        #fff;
-      box-shadow: 0 18px 42px rgba(219, 39, 119, 0.16);
+        linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(253, 242, 248, 0.62) 58%),
+        rgba(255, 255, 255, 0.68);
+      box-shadow:
+        0 18px 42px rgba(148, 163, 184, 0.14),
+        inset 0 1px rgba(255, 255, 255, 0.96);
     }
 
     .node.is-loop::after {
@@ -775,12 +887,14 @@
     .node.is-sandbox {
       width: 300px;
       min-height: 156px;
-      border-color: rgba(13, 148, 136, 0.22);
+      border-color: rgba(13, 148, 136, 0.12);
       border-top-color: #0f766e;
       background:
-        linear-gradient(135deg, rgba(240, 253, 250, 0.98), rgba(255, 255, 255, 0.96) 62%),
-        #fff;
-      box-shadow: 0 18px 42px rgba(15, 118, 110, 0.14);
+        linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 253, 250, 0.64) 62%),
+        rgba(255, 255, 255, 0.68);
+      box-shadow:
+        0 18px 42px rgba(148, 163, 184, 0.14),
+        inset 0 1px rgba(255, 255, 255, 0.96);
     }
 
     .node.is-sandbox::after {
@@ -806,11 +920,11 @@
     }
 
     .node.selected {
-      outline: 3px solid color-mix(in srgb, var(--accent), transparent 72%);
+      outline: 3px solid color-mix(in srgb, var(--accent), transparent 84%);
     }
 
     .node.multi-selected {
-      outline: 3px solid rgba(37, 99, 235, 0.42);
+      outline: 3px solid rgba(37, 99, 235, 0.24);
     }
 
     .node header {
@@ -827,14 +941,14 @@
       place-items: center;
       border: 0;
       border-radius: 8px;
-      background: rgba(15, 23, 42, 0.05);
-      color: rgba(15, 23, 42, 0.66);
+      background: rgba(255, 255, 255, 0.8);
+      color: #0f172a;
       font-size: 18px;
       line-height: 1;
     }
 
     .node-menu-trigger:hover {
-      background: rgba(15, 23, 42, 0.09);
+      background: rgba(255, 255, 255, 0.96);
     }
 
     .node-menu-trigger.is-active {
@@ -848,8 +962,10 @@
       display: grid;
       place-items: center;
       border-radius: 10px;
-      background: color-mix(in srgb, var(--accent), white 86%);
-      color: var(--accent);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.9);
+      color: #0f172a;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.94);
       font-size: 15px;
     }
 
@@ -864,7 +980,7 @@
 
     .node header p {
       margin: 2px 0 0;
-      color: rgba(15, 23, 42, 0.52);
+      color: rgba(15, 23, 42, 0.72);
       font-size: 11px;
     }
 
@@ -872,7 +988,7 @@
       min-width: 48px;
       border-radius: 999px;
       padding: 5px 8px;
-      background: #f1f5f9;
+      background: rgba(255, 255, 255, 0.9);
       color: #475569;
       font-size: 11px;
       text-align: center;
@@ -890,7 +1006,7 @@
     .node > p {
       min-height: 42px;
       margin: 12px 0;
-      color: rgba(15, 23, 42, 0.72);
+      color: rgba(15, 23, 42, 0.78);
       font-size: 12px;
       line-height: 1.55;
     }
@@ -900,7 +1016,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      color: rgba(15, 23, 42, 0.44);
+      color: rgba(15, 23, 42, 0.66);
       font-size: 11px;
     }
 
@@ -916,7 +1032,7 @@
     .node footer em {
       overflow: hidden;
       max-width: 104px;
-      color: rgba(15, 23, 42, 0.66);
+      color: rgba(15, 23, 42, 0.84);
       font-weight: 750;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -996,7 +1112,7 @@
     .inspector-form label {
       display: grid;
       gap: 7px;
-      color: rgba(15, 23, 42, 0.62);
+      color: rgba(15, 23, 42, 0.8);
       font-size: 12px;
       font-weight: 800;
     }
@@ -1039,6 +1155,7 @@
       display: block;
       font-size: 13px;
       font-weight: 900;
+      color: #0f172a;
     }
 
     .selection-tip {
@@ -1046,7 +1163,7 @@
       padding: 10px 12px;
       border-radius: 12px;
       background: rgba(37, 99, 235, 0.08);
-      color: rgba(15, 23, 42, 0.72);
+      color: rgba(15, 23, 42, 0.84);
       font-size: 12px;
       line-height: 1.45;
     }
@@ -1108,7 +1225,7 @@
 
     .node-popover-head p {
       margin: 3px 0 0;
-      color: rgba(15, 23, 42, 0.56);
+      color: rgba(15, 23, 42, 0.76);
       font-size: 12px;
     }
 
@@ -1178,7 +1295,7 @@
       border-radius: 14px;
       padding: 12px 13px;
       background: rgba(255, 255, 255, 0.88);
-      color: rgba(15, 23, 42, 0.78);
+      color: rgba(15, 23, 42, 0.84);
     }
 
     .node-guide strong {
@@ -1252,7 +1369,7 @@
     }
 
     .node-output-head span {
-      color: rgba(15, 23, 42, 0.54);
+      color: rgba(15, 23, 42, 0.76);
       font-size: 11px;
     }
 
@@ -1296,14 +1413,14 @@
     }
 
     .node-section-head span {
-      color: rgba(15, 23, 42, 0.46);
+      color: rgba(15, 23, 42, 0.7);
       font-size: 11px;
     }
 
     .node-section label {
       display: grid;
       gap: 7px;
-      color: rgba(15, 23, 42, 0.64);
+      color: rgba(15, 23, 42, 0.84);
       font-size: 12px;
       font-weight: 850;
     }
@@ -1337,7 +1454,17 @@
       padding-right: 2px;
     }
 
+    .video-output-editor {
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: grid;
+      gap: 10px;
+      padding-right: 2px;
+    }
+
     .script-output-editor[hidden],
+    .video-output-editor[hidden],
     .material-output-editor[hidden],
     .voice-output-editor[hidden],
     .sandbox-output-editor[hidden],
@@ -1354,6 +1481,42 @@
       display: grid;
       gap: 12px;
       padding-right: 2px;
+    }
+
+    .video-output-card {
+      display: grid;
+      gap: 8px;
+      border: 1px solid rgba(15, 23, 42, 0.09);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .video-output-card strong {
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .video-output-card p {
+      margin: 0;
+      color: rgba(15, 23, 42, 0.56);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .video-output-card textarea {
+      min-height: 96px;
+      resize: vertical;
+      border: 1px solid rgba(15, 23, 42, 0.09);
+      border-radius: 12px;
+      background: rgba(248, 250, 252, 0.94);
+      color: #0f172a;
+      font-size: 13px;
+      line-height: 1.65;
+      font-weight: 650;
+      padding: 10px;
+      outline: none;
     }
 
     .material-status-card,
@@ -1416,7 +1579,7 @@
       border-radius: 10px;
       background: rgba(248, 250, 252, 0.9);
       padding: 8px;
-      color: rgba(15, 23, 42, 0.56);
+      color: rgba(15, 23, 42, 0.76);
       font-size: 11px;
       font-weight: 850;
     }
@@ -1474,7 +1637,7 @@
     .sandbox-home-card p,
     .sandbox-detail-head p {
       margin: 4px 0 0;
-      color: rgba(15, 23, 42, 0.54);
+      color: rgba(15, 23, 42, 0.76);
       font-size: 12px;
       line-height: 1.45;
     }
@@ -1690,50 +1853,6 @@
       border-color: transparent;
       background: #0f172a;
       color: #fff;
-    }
-
-    .material-upload-slot {
-      display: grid;
-      gap: 5px;
-      margin-top: 7px;
-      border: 1px dashed rgba(79, 70, 229, 0.26);
-      border-radius: 10px;
-      background: rgba(79, 70, 229, 0.04);
-      padding: 9px;
-      cursor: pointer;
-      transition: border-color 160ms ease, background 160ms ease;
-    }
-
-    .material-upload-slot:hover,
-    .material-upload-slot.is-dragover {
-      border-color: rgba(79, 70, 229, 0.55);
-      background: rgba(79, 70, 229, 0.08);
-    }
-
-    .material-upload-slot small {
-      color: rgba(15, 23, 42, 0.48);
-      font-size: 11px;
-      font-weight: 850;
-    }
-
-    .material-upload-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-
-    .material-upload-list em {
-      max-width: 150px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(22, 163, 74, 0.09);
-      color: #15803d;
-      padding: 4px 7px;
-      font-size: 10px;
-      font-style: normal;
-      font-weight: 850;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
     .material-block-list {
@@ -2376,21 +2495,6 @@
 </head>
   <body>
   <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-logo">v</div>
-        <div>
-          <strong>717 内容裂变自由工作流</strong>
-          <span>独立画布原型：脚本、语音、字幕、素材匹配、Remotion 合成</span>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <button class="template" id="buildDemoBtn" type="button">视频裂变模板</button>
-        <button id="exportBtn">导出 JSON</button>
-        <button class="primary" id="runBtn">试运行</button>
-      </div>
-    </header>
-
     <main class="workspace">
       <aside class="panel">
         <div class="panel-head">
@@ -2421,6 +2525,9 @@
             <span>拖动画布平移，按住 Cmd/Ctrl + 滚轮缩放；Shift + 拖拽可框选多个节点；点击连线可删除。</span>
           </div>
           <div class="toolbar-actions">
+            <button class="template" id="buildDemoBtn" type="button">视频裂变模板</button>
+            <button id="exportBtn" type="button">导出 JSON</button>
+            <button class="primary" id="runBtn" type="button">试运行</button>
             <button id="zoomOut">-</button>
             <button id="fitView">适配</button>
             <button id="zoomIn">+</button>
@@ -2517,6 +2624,7 @@
             <button class="node-output-close" id="closeOutputBtn" type="button" aria-label="关闭输出">×</button>
           </div>
           <div class="script-output-editor" id="scriptOutputEditor" hidden></div>
+          <div class="video-output-editor" id="videoOutputEditor" hidden></div>
           <div class="material-output-editor" id="materialOutputEditor" hidden></div>
           <div class="voice-output-editor" id="voiceOutputEditor" hidden></div>
           <div class="sandbox-output-editor" id="sandboxOutputEditor" hidden></div>
@@ -2536,35 +2644,44 @@
       const fromQuery = params.get('aiServerUrl');
       const fromStorage = window.localStorage?.getItem('workflow-canvas-ai-server-url');
       const fromGlobal = window.__AI_SERVER_URL__;
-      const fallback = `${window.location.protocol}//${window.location.hostname}:8790`;
+      const fallbackHost = window.location.hostname || '127.0.0.1';
+      const fallbackProtocol = window.location.protocol === 'http:' || window.location.protocol === 'https:' ? window.location.protocol : 'http:';
+      const fallback = `${fallbackProtocol}//${fallbackHost}:8790`;
       return String(fromQuery || fromStorage || fromGlobal || fallback).replace(/\/$/, '');
     })();
 
     const nodeTypes = [
-      { type: 'input', label: '需求输入', icon: '✎', accent: '#2563eb', outputFields: ['briefText'], description: '收集主题、账号风格、目标时长和参考种子。' },
-      { type: 'video-params', label: '视频参数', icon: '参', accent: '#334155', scope: 'global', inputFields: [], outputFields: ['videoParams'], description: '配置视频比例和可选补充需求，会沿下游链路透传。' },
-      { type: 'loop-control', label: '循环控制', icon: '循', accent: '#db2777', scope: 'loop', inputFields: ['*'], outputFields: ['*', 'loopContext'], description: '设置循环次数和每轮补充要求，作为控制上下文贯穿下游流程。' },
-      { type: 'script', label: '脚本生成', icon: '文', accent: '#7c3aed', inputFields: ['briefText'], outputFields: ['scriptText'], description: '生成口播脚本，并按句号和视觉主体拆节奏段。' },
-      { type: 'tts', label: '语音生成', icon: '♪', accent: '#0891b2', inputFields: ['scriptStructure'], outputFields: ['voicePackage', 'audioUrl', 'subtitles', 'visualTimeline'], description: '用语音时长反推节奏段时间轴。' },
-      { type: 'caption', label: '字幕对齐', icon: '字', accent: '#0f766e', inputFields: ['voicePackage'], outputFields: ['captionTrack'], description: '生成纯字字幕，绑定到每个口播段。' },
-      { type: 'asset', label: '素材匹配', icon: '图', accent: '#b45309', inputFields: ['scriptStructure'], outputFields: ['mediaPlan'], description: '用素材描述文件反向核对脚本可呈现性。' },
-      { type: 'video-recognition', label: '视频识别', icon: '视', accent: '#0ea5e9', outputFields: ['recognizedContent', 'scriptText', 'frameAnalysis'], description: '支持本地视频 / URL 输入，按识别类型返回结构化结果。' },
-      { type: 'text-production', label: '脚本裂变', icon: '生', accent: '#4f46e5', inputFields: ['briefText', 'recognizedContent', 'scriptText', 'videoParams'], outputFields: ['scriptText'], description: '根据输入内容生成一版纯净口播脚本，只产出 scriptText。' },
-      { type: 'script-split', label: '脚本拆解', icon: '段', accent: '#9333ea', inputFields: ['scriptText'], outputFields: ['scriptStructure'], description: '提取纯净口播，按内容主旨拆成粗粒度大段，并给出整体素材方向。' },
-      { type: 'material-package', label: '素材包生成', icon: '包', accent: '#b45309', inputFields: ['scriptStructure'], outputFields: ['mediaPackage'], description: '按脚本拆解出的画面容器生成空素材包文件夹。' },
-      { type: 'content-sandbox', label: '内容沙盒', icon: '箱', accent: '#0f766e', inputFields: ['briefText', 'videoParams', 'loopContext', 'scriptText', 'scriptStructure', 'voicePackage', 'audioUrl', 'subtitles', 'visualTimeline', 'mediaPackage', 'mediaPlan', 'videoRenderPlan', 'captionTrack', 'recognizedContent', 'frameAnalysis', 'reviewResult'], outputFields: [], description: '收纳多个前置节点的完整产出，按阶段归档预览，作为循环流程的结果落点。' },
-      { type: 'edit', label: 'Remotion 剪辑', icon: '剪', accent: '#be123c', inputFields: ['scriptStructure', 'voicePackage', 'mediaPackage'], outputFields: ['videoRenderPlan'], description: '按时间轴放素材、转场、字幕、BGM。' },
-      { type: 'review', label: '审核导出', icon: '✓', accent: '#15803d', inputFields: ['videoRenderPlan'], outputFields: ['reviewResult'], description: '检查口径、比例、音频完整性并导出结果。' },
+      { type: 'input', group: 'special', label: '需求输入', iconKey: 'edit', accent: '#2563eb', outputFields: ['briefText'], description: '收集主题、账号风格、目标时长和参考种子。' },
+      { type: 'video-params', group: 'special', label: '视频参数', iconKey: 'sliders', accent: '#334155', scope: 'global', inputFields: [], outputFields: ['videoParams'], description: '配置视频比例和可选补充需求，会沿下游链路透传。' },
+      { type: 'seed-library', group: 'special', label: '种子内容库', iconKey: 'folder-tree', accent: '#0f766e', inputFields: [], outputFields: ['seedVideoUrl', 'seedCosUrl', 'txtScript'], description: '输出原始视频公网 URL、种子内容 COS 根目录和种子说明纯文本。' },
+      { type: 'loop-control', group: 'special', label: '循环控制', iconKey: 'loop', accent: '#db2777', scope: 'loop', inputFields: ['*'], outputFields: ['*', 'loopContext'], description: '设置循环次数和每轮补充要求，作为控制上下文贯穿下游流程。' },
+      { type: 'script', group: 'text', label: '脚本生成', iconKey: 'file-text', accent: '#7c3aed', inputFields: ['briefText'], outputFields: ['scriptText'], description: '生成口播脚本，并按句号和视觉主体拆节奏段。' },
+      { type: 'tts', group: 'tools', label: '语音生成', iconKey: 'mic', accent: '#0891b2', inputFields: ['scriptStructure'], outputFields: ['voicePackage', 'audioUrl', 'subtitles', 'visualTimeline'], description: '用语音时长反推节奏段时间轴。' },
+      { type: 'caption', group: 'tools', label: '字幕对齐', iconKey: 'captions', accent: '#0f766e', inputFields: ['voicePackage'], outputFields: ['captionTrack'], description: '生成纯字字幕，绑定到每个口播段。' },
+      { type: 'asset', group: 'tools', label: '素材匹配', iconKey: 'image', accent: '#b45309', inputFields: ['scriptStructure'], outputFields: ['mediaPlan'], description: '用素材描述文件反向核对脚本可呈现性。' },
+      { type: 'video-recognition', group: 'text', label: '视频识别', iconKey: 'scan-search', accent: '#0ea5e9', inputFields: ['videoUrl', 'seedVideoUrl'], outputFields: ['recognizedContent', 'scriptText', 'frameAnalysis'], description: '接收公开视频 URL，输出内容总结、脚本和画面风格三段纯文字。' },
+      { type: 'text-production', group: 'text', label: '口播脚本生成', iconKey: 'sparkles', accent: '#4f46e5', inputFields: ['briefText', 'recognizedContent', 'scriptText', 'txtScript', 'videoParams'], outputFields: ['scriptText'], description: '根据输入内容生成一版纯粹的口播脚本，只产出 scriptText。' },
+      { type: 'script-split', group: 'text', label: '脚本拆解', iconKey: 'scissors', accent: '#9333ea', inputFields: ['scriptText', 'txtScript'], outputFields: ['scriptStructure'], description: '结合口播脚本和种子说明，按已有素材边界拆画面容器。' },
+      { type: 'material-package', group: 'tools', label: '素材包生成', iconKey: 'folder-open', accent: '#b45309', inputFields: ['scriptStructure'], outputFields: ['mediaPackage'], description: '按脚本拆解结果自动落盘素材包文件夹结构。' },
+      { type: 'content-sandbox', group: 'special', label: '内容沙盒', iconKey: 'archive', accent: '#0f766e', inputFields: ['briefText', 'videoParams', 'loopContext', 'scriptText', 'txtScript', 'scriptStructure', 'voicePackage', 'audioUrl', 'subtitles', 'visualTimeline', 'mediaPackage', 'mediaPlan', 'videoRenderPlan', 'captionTrack', 'recognizedContent', 'frameAnalysis', 'reviewResult'], outputFields: [], description: '收纳多个前置节点的完整产出，按阶段归档预览，作为循环流程的结果落点。' },
+      { type: 'edit', group: 'tools', label: 'Remotion 剪辑', iconKey: 'scissors-cut', accent: '#be123c', inputFields: ['scriptStructure', 'voicePackage', 'mediaPackage'], outputFields: ['videoRenderPlan'], description: '按时间轴放素材、转场、字幕、BGM。' },
+      { type: 'review', group: 'tools', label: '审核导出', iconKey: 'check-circle', accent: '#15803d', inputFields: ['videoRenderPlan'], outputFields: ['reviewResult'], description: '检查口径、比例、音频完整性并导出结果。' },
     ];
 
     const fieldRegistry = {
       briefText: '需求文本',
       videoParams: '视频参数',
+      seedLibrary: '种子内容库',
+      seedPath: '种子路径',
+      seedName: '种子名称',
+      seedVideoUrl: '种子视频',
+      seedCosUrl: '种子 COS 目录',
       loopContext: '循环控制',
       loopTrigger: '循环触发',
       '*': '任意字段',
       recognizedContent: '识别内容',
       scriptText: '纯净脚本',
+      txtScript: '纯文本',
       scriptStructure: '脚本结构',
       voicePackage: '语音包',
       audioUrl: '音频',
@@ -2617,9 +2734,10 @@
       try {
         const parsed = JSON.parse(localStorage.getItem(PROJECT_STORAGE_KEY) || '{}');
         if (Array.isArray(parsed.projects) && parsed.projects.length) {
+          const projects = parsed.projects.map((project) => sanitizeProjectForStorage(project));
           return {
-            projects: parsed.projects,
-            activeProjectId: parsed.activeProjectId || parsed.projects[0].id,
+            projects,
+            activeProjectId: parsed.activeProjectId || projects[0].id,
           };
         }
       } catch {}
@@ -2657,6 +2775,7 @@
     const nodeOutputMeta = document.getElementById('nodeOutputMeta');
     const nodeResultEditor = document.getElementById('nodeResultEditor');
     const scriptOutputEditor = document.getElementById('scriptOutputEditor');
+    const videoOutputEditor = document.getElementById('videoOutputEditor');
     const materialOutputEditor = document.getElementById('materialOutputEditor');
     const voiceOutputEditor = document.getElementById('voiceOutputEditor');
     const sandboxOutputEditor = document.getElementById('sandboxOutputEditor');
@@ -2680,6 +2799,11 @@
     const traceSummary = document.getElementById('traceSummary');
     const traceList = document.getElementById('traceList');
     const clearTraceBtn = document.getElementById('clearTraceBtn');
+    const miniMap = document.getElementById('miniMap');
+    const miniMapStage = document.getElementById('miniMapStage');
+    const miniMapFrame = document.getElementById('miniMapFrame');
+    const miniMapZoomOutBtn = document.getElementById('miniMapZoomOut');
+    const miniMapZoomInBtn = document.getElementById('miniMapZoomIn');
     let nodeResults = {};
     let executionLogs = [];
     let executionTrace = [];
@@ -2699,6 +2823,13 @@
     let selectedEdgeId = '';
     let activeLoopRunContext = null;
     let sandboxViewState = { sourceNodeId: '', page: 0 };
+    let seedLibraryState = {
+      loading: false,
+      loaded: false,
+      error: '',
+      seeds: [],
+    };
+    let miniMapDrag = null;
     const runningNodeIds = new Set();
 
     function applyViewport() {
@@ -2708,14 +2839,115 @@
       edgeDeleteLayer.style.transform = transform;
     }
 
+    function projectBounds() {
+      if (!nodes.length) {
+        return { left: 0, top: 0, width: 2400, height: 900 };
+      }
+      const padding = 120;
+      const rects = nodes.map((node) => {
+        const size = nodeFootprint(node);
+        return {
+          left: node.x,
+          top: node.y,
+          right: node.x + size.width,
+          bottom: node.y + size.height,
+        };
+      });
+      const left = Math.max(0, Math.min(...rects.map((item) => item.left)) - padding);
+      const top = Math.max(0, Math.min(...rects.map((item) => item.top)) - padding);
+      const right = Math.max(...rects.map((item) => item.right)) + padding;
+      const bottom = Math.max(...rects.map((item) => item.bottom)) + padding;
+      return {
+        left,
+        top,
+        width: Math.max(1200, right - left),
+        height: Math.max(700, bottom - top),
+      };
+    }
+
+    function renderMiniMap() {
+      if (!miniMapStage || !miniMapFrame) return;
+      miniMapStage.innerHTML = '';
+      const canvasWidth = canvas?.clientWidth || 1;
+      const canvasHeight = canvas?.clientHeight || 1;
+      const bounds = projectBounds();
+      const stageRect = miniMapStage.getBoundingClientRect();
+      const stageWidth = Math.max(1, stageRect.width || 190);
+      const stageHeight = Math.max(1, stageRect.height || 110);
+      const innerPadding = 10;
+      const scale = Math.min(
+        (stageWidth - innerPadding * 2) / bounds.width,
+        (stageHeight - innerPadding * 2) / bounds.height,
+      );
+      const contentWidth = bounds.width * scale;
+      const contentHeight = bounds.height * scale;
+      const offsetX = (stageWidth - contentWidth) / 2;
+      const offsetY = (stageHeight - contentHeight) / 2;
+
+      nodes.forEach((node) => {
+        const definition = typeMap[node.type] || nodeTypes[0];
+        const size = nodeFootprint(node);
+        const miniNode = document.createElement('div');
+        miniNode.className = `minimap-node ${definition.scope === 'global' ? 'is-global' : ''} ${definition.scope === 'loop' ? 'is-loop' : ''} ${node.type === 'content-sandbox' ? 'is-sandbox' : ''}`;
+        miniNode.style.left = `${offsetX + (node.x - bounds.left) * scale}px`;
+        miniNode.style.top = `${offsetY + (node.y - bounds.top) * scale}px`;
+        miniNode.style.width = `${Math.max(4, size.width * scale)}px`;
+        miniNode.style.height = `${Math.max(4, size.height * scale)}px`;
+        miniMapStage.appendChild(miniNode);
+      });
+
+      const visibleLeft = ((-viewport.x / viewport.zoom) - bounds.left) * scale + offsetX;
+      const visibleTop = ((-viewport.y / viewport.zoom) - bounds.top) * scale + offsetY;
+      const visibleWidth = (canvasWidth / viewport.zoom) * scale;
+      const visibleHeight = (canvasHeight / viewport.zoom) * scale;
+      miniMapFrame.style.left = `${Math.max(0, visibleLeft)}px`;
+      miniMapFrame.style.top = `${Math.max(0, visibleTop)}px`;
+      miniMapFrame.style.width = `${Math.max(24, visibleWidth)}px`;
+      miniMapFrame.style.height = `${Math.max(24, visibleHeight)}px`;
+      miniMapFrame.dataset.scale = String(scale);
+      miniMapStage.dataset.bounds = JSON.stringify(bounds);
+      miniMapStage.dataset.offsetX = String(offsetX);
+      miniMapStage.dataset.offsetY = String(offsetY);
+    }
+
+    function moveViewportToMiniMapPoint(clientX, clientY) {
+      if (!miniMapStage) return;
+      const stageRect = miniMapStage.getBoundingClientRect();
+      const bounds = projectBounds();
+      const scale = Number(miniMapStage.dataset.scale || '0.1') || 0.1;
+      const offsetX = Number(miniMapStage.dataset.offsetX || '0');
+      const offsetY = Number(miniMapStage.dataset.offsetY || '0');
+      const localX = clientX - stageRect.left;
+      const localY = clientY - stageRect.top;
+      const worldX = bounds.left + (localX - offsetX) / scale;
+      const worldY = bounds.top + (localY - offsetY) / scale;
+      viewport.x = Math.round(canvas.clientWidth / 2 - worldX * viewport.zoom);
+      viewport.y = Math.round(canvas.clientHeight / 2 - worldY * viewport.zoom);
+      applyViewport();
+      renderMiniMap();
+    }
+
     function activeProject() {
       return projects.find((project) => project.id === activeProjectId) || projects[0] || null;
+    }
+
+    function sanitizeNodeForStorage(node) {
+      if (!node || typeof node !== 'object') return node;
+      return node;
+    }
+
+    function sanitizeProjectForStorage(project) {
+      if (!project || typeof project !== 'object') return project;
+      return {
+        ...project,
+        nodes: Array.isArray(project.nodes) ? project.nodes.map((node) => sanitizeNodeForStorage(node)) : [],
+      };
     }
 
     function snapshotCurrentProject() {
       const project = activeProject();
       if (!project) return;
-      project.nodes = nodes;
+      project.nodes = nodes.map((node) => sanitizeNodeForStorage(node));
       project.edges = edges;
       project.nodeResults = nodeResults;
       project.executionLogs = executionLogs;
@@ -2729,14 +2961,19 @@
     function persistProjects() {
       snapshotCurrentProject();
       try {
-        localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify({ projects, activeProjectId }));
+        const storagePayload = {
+          projects: projects.map((project) => sanitizeProjectForStorage(project)),
+          activeProjectId,
+        };
+        localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(storagePayload));
       } catch (error) {
         console.warn('项目保存失败', error);
-        window.alert('项目保存失败：当前浏览器本地存储空间不足。建议减少本地视频抽帧数量，或删除较大的历史测试项目。');
+        window.alert('项目保存失败：当前浏览器本地存储空间不足。现在已改为不保存视频本体，但旧项目里如果还有大文件，请删掉后再试。');
       }
     }
 
     function loadProjectToCanvas(project) {
+      const projectId = project?.id || activeProjectId || 'project';
       nodes = Array.isArray(project?.nodes) ? project.nodes : [];
       edges = Array.isArray(project?.edges) ? project.edges : [];
       nodeResults = project?.nodeResults && typeof project.nodeResults === 'object' ? project.nodeResults : {};
@@ -2853,7 +3090,7 @@
         create('text-production', {
           x: 380,
           y: 92,
-          title: '脚本裂变',
+          title: '口播脚本生成',
           input: {
             content: '围绕“红旗天工 717 粉丝盛典现场打卡探场”生成一版 25 秒短视频口播，口吻要干净直接，适合明天给老板演示。',
           },
@@ -2948,15 +3185,156 @@
       renderLogs();
     }
 
+    function nodeIconMarkup(kind) {
+      const icons = {
+        edit: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            <path d="m15 5 4 4"/>
+          </svg>`,
+        sliders: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="4" y1="6" x2="20" y2="6"/>
+            <circle cx="9" cy="6" r="2"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <circle cx="15" cy="12" r="2"/>
+            <line x1="4" y1="18" x2="20" y2="18"/>
+            <circle cx="7" cy="18" r="2"/>
+          </svg>`,
+        loop: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17 2l4 4-4 4"/>
+            <path d="M21 6H8a4 4 0 0 0 0 8h13"/>
+            <path d="M7 22l-4-4 4-4"/>
+            <path d="M3 18h13a4 4 0 0 0 0-8H3"/>
+          </svg>`,
+        'file-text': `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/>
+            <path d="M14 2v5h5"/>
+            <path d="M9 13h6"/>
+            <path d="M9 17h6"/>
+          </svg>`,
+        mic: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="9" y="2" width="6" height="12" rx="3"/>
+            <path d="M5 11a7 7 0 0 0 14 0"/>
+            <path d="M12 19v3"/>
+            <path d="M8 22h8"/>
+          </svg>`,
+        captions: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="4"/>
+            <path d="M8 10h2"/>
+            <path d="M8 14h5"/>
+            <path d="M14 10h2"/>
+            <path d="M14 14h2"/>
+          </svg>`,
+        image: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="3"/>
+            <path d="m6 16 4-4 3 3 3-4 2 3"/>
+            <circle cx="9" cy="9" r="1.5"/>
+          </svg>`,
+        'scan-search': `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6"/>
+            <path d="m20 20-3.5-3.5"/>
+            <path d="M11 8v6"/>
+            <path d="M8 11h6"/>
+          </svg>`,
+        sparkles: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3l1.7 4.6L18 9.3l-4.3 1.7L12 15l-1.7-4L6 9.3l4.3-1.7Z"/>
+            <path d="M5 4l.9 2.1L8 7l-2.1.9L5 10l-.9-2.1L2 7l2.1-.9Z"/>
+            <path d="M18 14l.9 2.1L21 17l-2.1.9L18 20l-.9-2.1L15 17l2.1-.9Z"/>
+          </svg>`,
+        scissors: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="6" cy="6" r="2.4"/>
+            <circle cx="6" cy="18" r="2.4"/>
+            <path d="M8 8l12 8"/>
+            <path d="M8 16 20 8"/>
+          </svg>`,
+        'folder-open': `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 7h7l2 2h9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2"/>
+          </svg>`,
+        'folder-tree': `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 7h6l2 2h10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M10 11v7"/>
+            <path d="M10 14h4"/>
+            <path d="M14 11v7"/>
+            <path d="M14 14h4"/>
+          </svg>`,
+        archive: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="4" width="16" height="16" rx="3"/>
+            <path d="M8 8h8"/>
+            <path d="M9 12h6"/>
+            <path d="M10 16h4"/>
+          </svg>`,
+        'scissors-cut': `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="6" cy="6" r="2.2"/>
+            <circle cx="6" cy="18" r="2.2"/>
+            <path d="M8 8l12 8"/>
+            <path d="M8 16 20 8"/>
+            <path d="M13 12h8"/>
+          </svg>`,
+        'check-circle': `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="m8 12 2.5 2.5L16 9"/>
+          </svg>`,
+        default: `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="4" width="16" height="16" rx="4"/>
+          </svg>`,
+      };
+      return icons[kind] || icons.default;
+    }
+
     function renderPalette() {
       palette.innerHTML = '';
-      nodeTypes.forEach((item) => {
-        const button = document.createElement('button');
-        button.className = 'palette-item';
-        button.style.setProperty('--accent', item.accent);
-        button.innerHTML = `<span class="palette-icon">${item.icon}</span><span><b>${item.label}</b><small>${item.description}</small></span><span>+</span>`;
-        button.addEventListener('click', () => addNode(item.type));
-        palette.appendChild(button);
+      const groups = [
+        { key: 'special', label: '特殊节点', hint: '全局 / 循环 / 结果', open: true },
+        { key: 'text', label: '文本与脚本', hint: '输入 / 生成 / 拆解', open: true },
+        { key: 'tools', label: '工具节点', hint: '语音 / 素材 / 剪辑', open: false },
+      ];
+
+      groups.forEach((group) => {
+        const groupNodes = nodeTypes.filter((item) => item.group === group.key);
+        const section = document.createElement('section');
+        section.className = `palette-group ${group.open ? 'is-open' : ''}`;
+        section.dataset.group = group.key;
+
+        const summary = document.createElement('button');
+        summary.type = 'button';
+        summary.className = 'palette-group-summary';
+        summary.setAttribute('aria-expanded', String(group.open));
+        summary.innerHTML = `<span>${group.label}<small>${group.hint} · ${groupNodes.length} 个</small></span>`;
+        summary.addEventListener('click', () => {
+          const isOpen = section.classList.toggle('is-open');
+          summary.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        const list = document.createElement('div');
+        list.className = 'palette-group-list';
+        groupNodes.forEach((item) => {
+          const button = document.createElement('button');
+          button.className = 'palette-item';
+          button.style.setProperty('--accent', item.accent);
+          button.innerHTML = `<span class="palette-icon">${nodeIconMarkup(item.iconKey)}</span><span><b>${item.label}</b><small>${item.description}</small></span><span>+</span>`;
+          button.addEventListener('click', () => addNode(item.type));
+          list.appendChild(button);
+        });
+
+        section.append(summary, list);
+        palette.appendChild(section);
       });
     }
 
@@ -3094,7 +3472,7 @@
         article.style.setProperty('--accent', definition.accent);
         article.innerHTML = `
           <header>
-            <span class="node-icon">${definition.icon}</span>
+            <span class="node-icon">${nodeIconMarkup(definition.iconKey)}</span>
             <div><strong>${escapeHtml(node.title)}</strong><p>${definition.label}</p></div>
             <b>${statusLabels[status]}</b>
             <button class="node-menu-trigger ${isPrimarySelected && isNodePopoverOpen ? 'is-active' : ''}" type="button" aria-label="打开节点菜单">⋯</button>
@@ -3194,8 +3572,9 @@
 
     function renderOutputPanel() {
       const node = nodes.find((item) => item.id === outputNodeId);
-      const outputValue = ['material-package', 'tts', 'content-sandbox'].includes(node?.type)
-        ? (node.savedResult || nodeResults[node.id] || nodeOutputValue(node))
+      const rawResult = node?.savedResult || nodeResults[node?.id] || null;
+      const outputValue = ['material-package', 'tts', 'content-sandbox', 'video-recognition'].includes(node?.type)
+        ? (rawResult || nodeOutputValue(node))
         : nodeOutputValue(node);
       const hasResult = Boolean(node && outputValue);
       if (!isOutputPaneOpen || !node || !hasResult) {
@@ -3203,6 +3582,8 @@
         nodeResultEditor.value = '';
         scriptOutputEditor.hidden = true;
         scriptOutputEditor.innerHTML = '';
+        videoOutputEditor.hidden = true;
+        videoOutputEditor.innerHTML = '';
         materialOutputEditor.hidden = true;
         materialOutputEditor.innerHTML = '';
         voiceOutputEditor.hidden = true;
@@ -3232,19 +3613,29 @@
       nodeOutputTitle.textContent = `${node.title} · 执行结果`;
       const savedText = stringifyOutput(outputValue);
       const contentChanged = savedText !== outputLastSavedText;
+      const parsedOutputValue = parseMaybeJson(outputValue);
       const isScriptSplitResult = node.type === 'script-split' && isScriptSplitOutput(outputValue);
+      const isVideoRecognitionResult = node.type === 'video-recognition' && (
+        parsedOutputValue?.type === 'video-recognition-result'
+        || node.savedResult?.type === 'video-recognition-result'
+        || Boolean(outputValue)
+      );
       const isMaterialPackageResult = node.type === 'material-package' && isMaterialPackageOutput(outputValue);
       const isVoicePackageResult = node.type === 'tts' && isVoicePackageOutput(outputValue);
       const isSandboxResult = node.type === 'content-sandbox' && isContentSandboxOutput(outputValue);
       nodeOutputPanel.classList.toggle('script-split-mode', isScriptSplitResult);
       scriptOutputEditor.hidden = !isScriptSplitResult;
+      videoOutputEditor.hidden = !isVideoRecognitionResult;
       materialOutputEditor.hidden = !isMaterialPackageResult;
       voiceOutputEditor.hidden = !isVoicePackageResult;
       sandboxOutputEditor.hidden = !isSandboxResult;
-      nodeResultEditor.hidden = isScriptSplitResult || isMaterialPackageResult || isVoicePackageResult || isSandboxResult;
+      nodeResultEditor.hidden = isScriptSplitResult || isVideoRecognitionResult || isMaterialPackageResult || isVoicePackageResult || isSandboxResult;
       if (!isScriptSplitResult) {
         scriptOutputEditor.innerHTML = '';
         selectedScriptGroupIndexes = new Set();
+      }
+      if (!isVideoRecognitionResult) {
+        videoOutputEditor.innerHTML = '';
       }
       if (!isMaterialPackageResult) {
         materialOutputEditor.innerHTML = '';
@@ -3263,6 +3654,9 @@
       if (isScriptSplitResult && (previousOutputNodeId !== node.id || contentChanged || !scriptOutputEditor.innerHTML)) {
         renderScriptSplitOutputEditor(outputValue);
       }
+      if (isVideoRecognitionResult && (previousOutputNodeId !== node.id || contentChanged || !videoOutputEditor.innerHTML)) {
+        videoOutputEditor.innerHTML = renderVideoRecognitionOutput(node, outputValue);
+      }
       if (isMaterialPackageResult && (previousOutputNodeId !== node.id || contentChanged || !materialOutputEditor.innerHTML)) {
         renderMaterialPackageOutput(outputValue);
       }
@@ -3275,6 +3669,13 @@
       nodeResultEditor.readOnly = isRunning;
       regenNodeResultBtn.disabled = isRunning;
       updateOutputDirtyState();
+      saveNodeResultBtn.hidden = isVideoRecognitionResult;
+      regenNodeResultBtn.hidden = false;
+      if (isVideoRecognitionResult) {
+        saveNodeResultBtn.disabled = true;
+        saveNodeResultBtn.textContent = '已归纳';
+        nodeOutputMeta.textContent = isRunning ? '正在识别视频内容' : '已输出三段纯文字';
+      }
       if (isMaterialPackageResult) {
         saveNodeResultBtn.disabled = true;
         saveNodeResultBtn.textContent = '已生成';
@@ -3434,7 +3835,11 @@
         fields.add('loopContext');
         fields.add('*');
       }
-      if (parsed.type === 'script-variation-result' || parsed.type === 'text-production-result' || typeof parsed.scriptText === 'string' || parsed.payload?.scriptText) fields.add('scriptText');
+      if (parsed.type === 'script-variation-result' || parsed.type === 'text-production-result') {
+        fields.add('scriptText');
+        return [...fields];
+      }
+      if (typeof parsed.scriptText === 'string' || parsed.payload?.scriptText) fields.add('scriptText');
       if (parsed.type === 'script-split-result') {
         fields.add('scriptStructure');
         fields.add('scriptSplitResult');
@@ -3444,6 +3849,11 @@
       if (parsed.type === 'material-package-result') {
         fields.add('mediaPackage');
         fields.add('materialPackage');
+      }
+      if (parsed.type === 'seed-library-result') {
+        fields.add('seedVideoUrl');
+        fields.add('seedCosUrl');
+        fields.add('txtScript');
       }
       if (parsed.type === 'voice-package-result') {
         fields.add('voicePackage');
@@ -3675,7 +4085,7 @@
         || target.closest('.node-menu-trigger')
         || target.closest('.edge-delete-chip')
         || target.closest('.edge-group')
-        || target.closest('.project-panel')
+        || target.closest('.panel')
         || target.closest('.node-palette')
         || target.closest('.toolbar-actions');
       if (isInteractiveSurface) return;
@@ -3848,10 +4258,7 @@
     function defaultNodeInput(node) {
       if (node.type === 'input') {
         return {
-          topic: '',
-          targetDuration: '',
-          ratio: '4:3',
-          seedPath: '',
+          briefText: '',
         };
       }
       if (node.type === 'video-params') {
@@ -3861,6 +4268,18 @@
           materialPreference: '',
           visualStyle: '',
           requirement: '',
+        };
+      }
+      if (node.type === 'seed-library') {
+        return {
+          seedId: '',
+          seedPath: '',
+          seedName: '',
+          seedVideoUrl: '',
+          seedVideoKey: '',
+          seedCosUrl: '',
+          seedSections: [],
+          note: '选择一个种子内容文件夹，默认输出其原始视频。',
         };
       }
       if (node.type === 'loop-control') {
@@ -3894,14 +4313,11 @@
       if (node.type === 'video-recognition') {
         return {
           provider: 'default',
-          sourceType: 'local',
-          localFile: '',
-          localAsset: null,
-          videoDataUrl: '',
-          frameDataUrls: [],
+          sourceType: 'url',
           videoUrl: '',
+          seedVideoUrl: '',
           outputs: ['contentAnalysis', 'scriptExtraction', 'frameAnalysis'],
-          note: '先走模拟返回，后续接真实视频识别接口。',
+          note: '只接收公开视频 URL，优先使用上游种子内容库输出。',
         };
       }
       if (node.type === 'text-production') {
@@ -3930,10 +4346,19 @@
         return fallback;
       }
       if (node.type === 'video-recognition' && typeof node.input === 'object' && node.input !== null) {
+        return sanitizeVideoRecognitionInput({
+          ...fallback,
+          ...node.input,
+          videoUrl: String(node.input.videoUrl || node.input.seedVideoUrl || '').trim(),
+          seedVideoUrl: String(node.input.seedVideoUrl || '').trim(),
+          sourceType: 'url',
+        });
+      }
+      if (node.type === 'seed-library' && typeof node.input === 'object' && node.input !== null) {
         return {
           ...fallback,
           ...node.input,
-          outputs: Array.isArray(node.input.outputs) && node.input.outputs.length ? node.input.outputs : fallback.outputs,
+          seedSections: Array.isArray(node.input.seedSections) ? node.input.seedSections : fallback.seedSections,
         };
       }
       if (node.type === 'video-params' && typeof node.input === 'object' && node.input !== null) {
@@ -3998,8 +4423,35 @@
       return node.input;
     }
 
+    function sanitizeVideoRecognitionInput(input) {
+      const source = input && typeof input === 'object' ? input : {};
+      const {
+        seedId: _seedId,
+        seedPath: _seedPath,
+        seedName: _seedName,
+        seedSections: _seedSections,
+        seedLibrary: _seedLibrary,
+        ...rest
+      } = source;
+      const videoUrl = String(rest.videoUrl || rest.seedVideoUrl || '').trim();
+      return {
+        ...rest,
+        sourceType: 'url',
+        videoUrl,
+        seedVideoUrl: String(rest.seedVideoUrl || videoUrl || '').trim(),
+        outputs: Array.isArray(rest.outputs) && rest.outputs.length ? rest.outputs : ['contentAnalysis', 'scriptExtraction', 'frameAnalysis'],
+        note: rest.note || '只接收公开视频 URL，优先使用上游种子内容库输出。',
+      };
+    }
+
     function setSelectedNodeInput(nextInput) {
-      nodes = nodes.map((item) => item.id === selectedNodeId ? { ...item, input: nextInput } : item);
+      nodes = nodes.map((item) => {
+        if (item.id !== selectedNodeId) return item;
+        if (item.type === 'video-recognition') {
+          return { ...item, input: sanitizeVideoRecognitionInput(nextInput) };
+        }
+        return { ...item, input: nextInput };
+      });
       renderNodes();
       renderRunStrip();
       renderProjects();
@@ -4019,7 +4471,10 @@
       const input = normalizeNodeInput(node);
       if (!input || typeof input !== 'object') return Boolean(String(input || '').trim());
       if (node.type === 'video-recognition') {
-        return Boolean(input.videoUrl || input.localFile || input.videoDataUrl || input.localAsset);
+        return Boolean(String(input.videoUrl || input.seedVideoUrl || '').trim());
+      }
+      if (node.type === 'seed-library') {
+        return Boolean(String(input.seedId || input.seedPath || '').trim());
       }
       if (node.type === 'video-params') {
         return true;
@@ -4114,6 +4569,7 @@
       if (outputNodeId === nodeId) {
         nodeResultEditor.value = '';
         scriptOutputEditor.innerHTML = '';
+        videoOutputEditor.innerHTML = '';
         materialOutputEditor.innerHTML = '';
         voiceOutputEditor.innerHTML = '';
         sandboxOutputEditor.innerHTML = '';
@@ -4223,6 +4679,7 @@
             type: upstreamNode.type,
             rawResult,
             output: output ? stringifyOutput(output) : '',
+            fields: Array.isArray(edge.fields) ? edge.fields : [],
           };
         })
         .filter(Boolean);
@@ -4238,6 +4695,14 @@
       const payload = parsed.payload && typeof parsed.payload === 'object' ? parsed.payload : {};
       const value = parsed.scriptText || payload.scriptText || '';
       return typeof value === 'string' ? value.replace(/[\r\n\t]+/g, '').trim() : '';
+    }
+
+    function extractTxtScriptFromResult(result) {
+      const parsed = parseMaybeJson(result);
+      if (!parsed || typeof parsed !== 'object') return '';
+      const payload = parsed.payload && typeof parsed.payload === 'object' ? parsed.payload : {};
+      const value = parsed.txtScript || payload.txtScript || '';
+      return typeof value === 'string' ? value.trim() : '';
     }
 
     function isFreshForActiveLoop(result) {
@@ -4283,6 +4748,47 @@
         prompts,
         mode: 'loop',
       };
+    }
+
+    function upstreamNodesForNode(node) {
+      if (!node) return [];
+      const visited = new Set();
+      const collected = [];
+      const walk = (nodeId, depth = 0) => {
+        if (visited.has(nodeId)) return;
+        visited.add(nodeId);
+        edges
+          .filter((edge) => edge.to === nodeId)
+          .forEach((edge) => {
+            const upstreamNode = nodes.find((item) => item.id === edge.from);
+            if (!upstreamNode) return;
+            collected.push({ node: upstreamNode, edge, depth });
+            walk(upstreamNode.id, depth + 1);
+          });
+      };
+      walk(node.id);
+      return collected.reverse();
+    }
+
+    function seedContextFromNode(node) {
+      if (!node || node.type !== 'seed-library') return null;
+      const input = normalizeNodeInput(node);
+      const result = parseMaybeJson(node.savedResult || nodeResults[node.id] || null) || {};
+      return {
+        seedId: String(result.seedId || input.seedId || '').trim(),
+        seedName: String(result.seedName || result.name || input.seedName || input.seedId || '').trim(),
+        seedPath: String(result.seedPath || result.path || input.seedPath || '').trim(),
+        seedVideoKey: String(result.seedVideoKey || result.videoKey || input.seedVideoKey || '').trim(),
+        seedVideoUrl: String(result.seedVideoUrl || result.videoUrl || input.seedVideoUrl || input.videoUrl || '').trim(),
+        seedCosUrl: String(result.seedCosUrl || input.seedCosUrl || '').trim(),
+      };
+    }
+
+    function upstreamSeedContextForNode(node) {
+      const seedNode = upstreamNodesForNode(node)
+        .map(({ node: upstreamNode }) => upstreamNode)
+        .find((upstreamNode) => upstreamNode.type === 'seed-library');
+      return seedContextFromNode(seedNode);
     }
 
     function inheritedGlobalNodesForNode(node) {
@@ -4392,6 +4898,26 @@
             title: upstreamNode.title,
             scriptText: extractScriptTextFromResult(rawResult),
           };
+        })
+        .filter(Boolean);
+    }
+
+    function upstreamTxtScriptsForNode(node) {
+      if (!node) return [];
+      return edges
+        .filter((edge) => edge.to === node.id)
+        .map((edge, index) => {
+          const upstreamNode = nodes.find((item) => item.id === edge.from);
+          if (!upstreamNode) return null;
+          const rawResult = upstreamNode.savedResult || nodeResults[upstreamNode.id] || null;
+          if (!isFreshForActiveLoop(rawResult)) return null;
+          const txtScript = extractTxtScriptFromResult(rawResult);
+          return txtScript ? {
+            order: index + 1,
+            id: upstreamNode.id,
+            title: upstreamNode.title,
+            txtScript,
+          } : null;
         })
         .filter(Boolean);
     }
@@ -4528,6 +5054,7 @@
 
     function buildScriptSplitPayload(node, input) {
       const upstreamScripts = upstreamScriptTextsForNode(node);
+      const upstreamSeedDocs = upstreamTxtScriptsForNode(node);
       const globalContext = globalContextForNode(node);
       if (!upstreamScripts.length) {
         throw new Error('脚本拆分缺少上游节点：请先连接文本生产节点');
@@ -4538,9 +5065,16 @@
       }
       return {
         scriptText: upstreamScripts.map((item) => item.scriptText).join('\n'),
+        seedReferenceText: upstreamSeedDocs.map((item) => [
+          `# ${item.title}`,
+          item.txtScript,
+        ].join('\n')).join('\n\n'),
         instruction: String(input.instruction || '').trim(),
         globalContext,
-        upstreamIds: upstreamScripts.map((item) => item.id),
+        upstreamIds: [
+          ...upstreamScripts.map((item) => item.id),
+          ...upstreamSeedDocs.map((item) => item.id),
+        ],
       };
     }
 
@@ -4548,6 +5082,7 @@
       const upstreamResults = upstreamScriptSplitResultsForNode(node);
       const upstreamParams = upstreamVideoParamsForNode(node);
       const videoParams = upstreamParams[0]?.params || {};
+      const seedContext = upstreamSeedContextForNode(node);
       if (!upstreamResults.length) {
         throw new Error('素材包生成缺少上游节点：请先连接脚本拆解节点');
       }
@@ -4567,6 +5102,7 @@
           String(input.note || '').trim(),
         ].filter(Boolean).join('\n'),
         videoParams,
+        seedContext,
         globalContext: globalContextForNode(node),
         upstreamIds: valid.map((item) => item.id),
       };
@@ -4909,8 +5445,24 @@
         .filter((item) => item.output)
         .map((item) => `#${item.order} ${item.parentNodeTitle}（${item.parentNodeId}）\n${item.output}`)
         .join('\n\n');
+      const inheritedFields = {};
+      upstreamOutputs.forEach((item) => {
+        const parsed = parseMaybeJson(item.rawResult);
+        const payload = parsed && typeof parsed === 'object'
+          ? (parsed.payload && typeof parsed.payload === 'object' ? parsed.payload : parsed)
+          : null;
+        if (!payload || typeof payload !== 'object') return;
+        const matchedFields = Array.isArray(item.fields) ? item.fields : [];
+        matchedFields.forEach((field) => {
+          if (field === '*') return;
+          if (payload[field] !== undefined && payload[field] !== null && payload[field] !== '') {
+            inheritedFields[field] = payload[field];
+          }
+        });
+      });
       const nextInput = {
         ...normalizeNodeInput(node),
+        ...inheritedFields,
         parentInputs,
         parentNodeIds: parentInputs.map((item) => item.parentNodeId),
         parentNodeTitles: parentInputs.map((item) => item.parentNodeTitle),
@@ -4925,10 +5477,14 @@
     }
 
     function renderNodeSpecificFields(node) {
-      if (!node || !['video-params', 'loop-control', 'video-recognition', 'text-production', 'script-split', 'material-package', 'tts', 'edit', 'review'].includes(node.type)) {
+      if (!node || !['input', 'video-params', 'seed-library', 'loop-control', 'video-recognition', 'text-production', 'script-split', 'material-package', 'tts', 'edit', 'review'].includes(node.type)) {
         nodeSpecificSection.hidden = true;
         nodeSpecificFields.hidden = true;
         nodeSpecificFields.innerHTML = '';
+        return;
+      }
+      if (node.type === 'input') {
+        renderInputFields(node);
         return;
       }
       if (node.type === 'text-production') {
@@ -4937,6 +5493,10 @@
       }
       if (node.type === 'video-params') {
         renderVideoParamsFields(node);
+        return;
+      }
+      if (node.type === 'seed-library') {
+        renderSeedLibraryFields(node);
         return;
       }
       if (node.type === 'loop-control') {
@@ -4963,33 +5523,143 @@
         renderReviewFields(node);
         return;
       }
+    }
+
+    async function loadSeedLibraryCatalog() {
+      if (seedLibraryState.loading || seedLibraryState.loaded) return seedLibraryState;
+      seedLibraryState = { ...seedLibraryState, loading: true, error: '' };
+      renderAll();
+      try {
+        const response = await fetch(`${AI_SERVER_URL}/seed-library`);
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.error || result.message || `种子内容库读取失败：HTTP ${response.status}`);
+        }
+        seedLibraryState = {
+          loading: false,
+          loaded: true,
+          error: '',
+          seeds: Array.isArray(result.seeds) ? result.seeds : [],
+        };
+        const currentNode = nodes.find((item) => item.id === selectedNodeId);
+        if (currentNode?.type === 'seed-library') {
+          const currentInput = normalizeNodeInput(currentNode);
+          if (!String(currentInput.seedId || currentInput.seedPath || '').trim() && seedLibraryState.seeds[0]) {
+            const first = seedLibraryState.seeds[0];
+            setSelectedNodeInput({
+              ...currentInput,
+              seedId: first.id,
+              seedPath: first.path,
+              seedName: first.name,
+              seedSections: first.sections,
+              seedVideoUrl: first.defaultVideo?.url || '',
+              seedVideoKey: first.defaultVideo?.key || '',
+              seedCosUrl: first.seedCosUrl || '',
+            });
+            return seedLibraryState;
+          }
+          renderNodeSpecificFields(currentNode);
+        }
+      } catch (error) {
+        seedLibraryState = {
+          loading: false,
+          loaded: false,
+          error: error.message || String(error),
+          seeds: [],
+        };
+      }
+      renderAll();
+      return seedLibraryState;
+    }
+
+    function renderSeedLibraryFields(node) {
+      const input = normalizeNodeInput(node);
+      nodeSpecificSection.hidden = false;
+      nodeSpecificTitle.textContent = '种子内容库';
+      nodeSpecificTag.textContent = '特殊节点';
+      nodeSpecificFields.hidden = false;
+
+      const catalog = seedLibraryState;
+      const selectedSeed = catalog.seeds.find((seed) => seed.id === input.seedId || seed.path === input.seedPath || seed.name === input.seedName) || catalog.seeds[0] || null;
+      const sections = selectedSeed?.sections || [];
+      const defaultVideo = selectedSeed?.defaultVideo || null;
+      const sectionNames = sections.map((section) => section.name).filter(Boolean);
+
+      nodeSpecificFields.innerHTML = `
+        <div class="field-grid">
+          <label>
+            种子文件夹
+            <select id="seedLibrarySelect" ${catalog.loading ? 'disabled' : ''}>
+              <option value="">${catalog.loading ? '正在加载...' : '请选择种子内容'}</option>
+              ${catalog.seeds.map((seed) => `<option value="${escapeAttr(seed.id)}" ${seed.id === selectedSeed?.id ? 'selected' : ''}>${escapeHtml(seed.name)}</option>`).join('')}
+            </select>
+          </label>
+        </div>
+        <div class="preview-card">
+          <div class="helper">${catalog.loading ? '正在读取种子内容库...' : (catalog.error ? `读取失败：${catalog.error}` : `已读取 ${catalog.seeds.length} 个种子内容文件夹。`)}</div>
+          ${selectedSeed ? `
+            <div class="helper">默认原视频：${escapeHtml(defaultVideo?.name || '未找到原视频')}</div>
+            <div class="helper">种子目录：${escapeHtml(selectedSeed.seedCosUrl || selectedSeed.path || '')}</div>
+            <div class="helper">执行时会默认把这个原视频作为输出，供后续节点直接接收。</div>
+          ` : ''}
+        </div>
+        <div class="seed-library-list">
+          ${sectionNames.length ? sectionNames.map((name, index) => `
+            <div class="seed-library-item">
+              <b>${escapeHtml(name)}</b>
+              <span>二级文件夹</span>
+            </div>
+          `).join('') : `<div class="helper">还没有读取到二级文件夹名称。</div>`}
+        </div>
+      `;
+
+      const seedSelect = nodeSpecificFields.querySelector('#seedLibrarySelect');
+      seedSelect?.addEventListener('change', () => {
+        const nextSeed = seedLibraryState.seeds.find((seed) => seed.id === seedSelect.value) || null;
+        const currentNode = nodes.find((item) => item.id === selectedNodeId) || node;
+        const currentInput = normalizeNodeInput(currentNode);
+        if (!nextSeed) {
+          setSelectedNodeInput({
+            ...currentInput,
+            seedId: '',
+            seedPath: '',
+            seedName: '',
+            seedSections: [],
+            seedVideoUrl: '',
+            seedVideoKey: '',
+            seedCosUrl: '',
+          });
+          return;
+        }
+        setSelectedNodeInput({
+          ...currentInput,
+          seedId: nextSeed.id,
+          seedPath: nextSeed.path,
+          seedName: nextSeed.name,
+          seedSections: nextSeed.sections,
+          seedVideoUrl: nextSeed.defaultVideo?.url || '',
+          seedVideoKey: nextSeed.defaultVideo?.key || '',
+          seedCosUrl: nextSeed.seedCosUrl || '',
+        });
+      });
+
+      if (!catalog.loaded && !catalog.loading) {
+        loadSeedLibraryCatalog();
+      }
+    }
+
+    function renderVideoRecognitionFields(node) {
       const input = normalizeNodeInput(node);
       nodeSpecificSection.hidden = false;
       nodeSpecificTitle.textContent = '识别配置';
       nodeSpecificTag.textContent = '视频识别';
       nodeSpecificFields.hidden = false;
+      const currentVideoUrl = String(input.videoUrl || input.seedVideoUrl || '').trim();
       nodeSpecificFields.innerHTML = `
         <div class="field-grid">
           <label>
-            输入来源
-            <select id="videoSourceType">
-              <option value="local" ${input.sourceType === 'local' ? 'selected' : ''}>本地视频</option>
-              <option value="url" ${input.sourceType === 'url' ? 'selected' : ''}>视频 URL</option>
-            </select>
-          </label>
-        </div>
-        <div class="field-grid">
-          <label id="localFileField">
-            本地视频
-            <div class="drop-zone" id="videoDropZone">
-              <strong>${escapeHtml(input.localFile || '拖入视频文件')}</strong>
-              <span>${input.localAsset ? `${formatFileSize(input.localAsset.size)} · 已抽取 ${input.frameDataUrls?.length || 0} 帧` : '也可以点击选择文件'}</span>
-            </div>
-            <input id="videoLocalFile" type="file" accept="video/*" hidden />
-          </label>
-          <label id="videoUrlField">
             视频 URL
-            <input id="videoUrl" placeholder="https://example.com/video.mp4" value="${escapeAttr(input.videoUrl || '')}" />
+            <input id="videoRecognitionUrl" placeholder="https://..." value="${escapeAttr(currentVideoUrl)}" />
           </label>
         </div>
         <div class="toggle-group">
@@ -4999,81 +5669,28 @@
           <label><input type="checkbox" data-output-key="frameAnalysis" ${input.outputs.includes('frameAnalysis') ? 'checked' : ''} />画面分析</label>
         </div>
         <div class="preview-card">
-          <div class="helper">识别类型选择得越多，节点会返回越完整的结构化结果。</div>
+          <div class="helper">${currentVideoUrl ? `当前视频 URL：${escapeHtml(currentVideoUrl)}。` : '当前还没有接入视频 URL，请粘贴公开视频地址或连接上游种子内容库。'}识别类型选择得越多，节点会返回越完整的结构化结果。</div>
         </div>
       `;
-      const sourceType = nodeSpecificFields.querySelector('#videoSourceType');
-      const localFileInput = nodeSpecificFields.querySelector('#videoLocalFile');
-      const dropZone = nodeSpecificFields.querySelector('#videoDropZone');
-      const videoUrl = nodeSpecificFields.querySelector('#videoUrl');
+      const videoRecognitionUrl = nodeSpecificFields.querySelector('#videoRecognitionUrl');
       const updateFromControls = () => {
         const currentNode = nodes.find((item) => item.id === selectedNodeId) || node;
         const currentInput = normalizeNodeInput(currentNode);
         const outputs = [...nodeSpecificFields.querySelectorAll('[data-output-key]:checked')].map((item) => item.dataset.outputKey);
-        setSelectedNodeInput({
+        const videoUrl = String(videoRecognitionUrl.value || currentInput.seedVideoUrl || '').trim();
+        setSelectedNodeInput(sanitizeVideoRecognitionInput({
           ...currentInput,
-          sourceType: sourceType.value,
-          videoUrl: videoUrl.value,
+          sourceType: 'url',
+          videoUrl,
+          seedVideoUrl: String(currentInput.seedVideoUrl || videoUrl || '').trim(),
           outputs,
-        });
+        }));
       };
-      const updateFile = async (file) => {
-        if (!file) return;
-        if (file.size > 500 * 1024 * 1024) {
-          window.alert('本地视频超过 500MB，浏览器抽帧可能不稳定，建议先压缩或改用视频直链测试。');
-          return;
-        }
-        const frameDataUrls = await extractVideoFrames(file).catch((error) => {
-          window.alert(`本地视频抽帧失败：${error.message || error}`);
-          return [];
-        });
-        if (!frameDataUrls.length) return;
-        const currentNode = nodes.find((item) => item.id === selectedNodeId) || node;
-        const currentInput = normalizeNodeInput(currentNode);
-        setSelectedNodeInput({
-          ...currentInput,
-          sourceType: 'local',
-          localFile: file.name,
-          videoDataUrl: '',
-          frameDataUrls,
-          localAsset: {
-            name: file.name,
-            size: file.size,
-            type: file.type || 'video/*',
-            lastModified: file.lastModified,
-            frameCount: frameDataUrls.length,
-          },
-        });
-        renderNodeSpecificFields(nodes.find((item) => item.id === selectedNodeId));
-      };
-      const toggleSourceFields = () => {
-        const isLocal = sourceType.value === 'local';
-        localFileInput.parentElement.hidden = !isLocal;
-        videoUrl.parentElement.hidden = isLocal;
-      };
-      [sourceType, videoUrl].forEach((item) => {
-        item.addEventListener('input', updateFromControls);
-        item.addEventListener('change', updateFromControls);
-      });
-      dropZone.addEventListener('click', () => localFileInput.click());
-      dropZone.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        dropZone.classList.add('is-dragover');
-      });
-      dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('is-dragover');
-      });
-      dropZone.addEventListener('drop', (event) => {
-        event.preventDefault();
-        dropZone.classList.remove('is-dragover');
-        updateFile(event.dataTransfer.files[0]);
-      });
-      localFileInput.addEventListener('change', (event) => updateFile(event.target.files[0]));
+      videoRecognitionUrl.addEventListener('input', updateFromControls);
+      videoRecognitionUrl.addEventListener('change', updateFromControls);
       nodeSpecificFields.querySelectorAll('[data-output-key]').forEach((item) => {
         item.addEventListener('change', updateFromControls);
       });
-      sourceType.addEventListener('change', toggleSourceFields);
-      toggleSourceFields();
       updateFromControls();
     }
 
@@ -5137,6 +5754,35 @@
         item.addEventListener('input', updateFromControls);
         item.addEventListener('change', updateFromControls);
       });
+      updateFromControls();
+    }
+
+    function renderInputFields(node) {
+      const input = normalizeNodeInput(node);
+      nodeSpecificSection.hidden = false;
+      nodeSpecificTitle.textContent = '需求输入';
+      nodeSpecificTag.textContent = '特殊节点';
+      nodeSpecificFields.hidden = false;
+      nodeSpecificFields.innerHTML = `
+        <div class="field-grid">
+          <label>
+            需求文本
+            <textarea id="briefTextInput" rows="8" placeholder="直接输入整条需求，输出就是 briefText">${escapeHtml(input.briefText || '')}</textarea>
+          </label>
+        </div>
+        <div class="preview-card">
+          <div class="helper">这个节点只有一个文本入口。保存后会输出 briefText，后面的脚本生成和口播脚本生成都会直接读取它。</div>
+        </div>
+      `;
+      const briefTextInput = nodeSpecificFields.querySelector('#briefTextInput');
+      const updateFromControls = () => {
+        setSelectedNodeInput({
+          ...normalizeNodeInput(nodes.find((item) => item.id === selectedNodeId) || node),
+          briefText: briefTextInput.value,
+        });
+      };
+      briefTextInput.addEventListener('input', updateFromControls);
+      briefTextInput.addEventListener('change', updateFromControls);
       updateFromControls();
     }
 
@@ -5230,7 +5876,7 @@
         : '';
       nodeSpecificSection.hidden = false;
       nodeSpecificTitle.textContent = '脚本配置';
-      nodeSpecificTag.textContent = '脚本裂变';
+      nodeSpecificTag.textContent = '口播脚本生成';
       nodeSpecificFields.hidden = false;
       nodeSpecificFields.innerHTML = `
         <div class="field-grid">
@@ -5289,7 +5935,7 @@
           </label>
         </div>
         <div class="preview-card">
-          <div class="helper">${globalText}${upstreamOutputs.length ? `已接入 ${upstreamOutputs.length} 个母节点：${escapeHtml(upstreamOutputs.map((item) => item.title).join('、'))}。` : '未接入母节点。'}执行后会按脚本拆解的主旨段和画面单元生成素材槽位。</div>
+          <div class="helper">${globalText}${upstreamOutputs.length ? `已接入 ${upstreamOutputs.length} 个母节点：${escapeHtml(upstreamOutputs.map((item) => item.title).join('、'))}。` : '未接入母节点。'}执行后会按脚本拆解的主旨段和画面单元自动落盘素材包目录。</div>
         </div>
       `;
       const packageName = nodeSpecificFields.querySelector('#materialPackageName');
@@ -5309,6 +5955,7 @@
       });
       updateFromControls();
     }
+
 
     function renderTtsFields(node) {
       const input = normalizeNodeInput(node);
@@ -5461,17 +6108,17 @@
       }
     }
 
-    async function callVideoRecognition(input) {
+    async function callVideoRecognition(node, input) {
+      const videoUrl = String(input.videoUrl || input.seedVideoUrl || '').trim();
+      if (!videoUrl) {
+        throw new Error('缺少视频输入：请粘贴公开视频 URL 或连接种子内容库');
+      }
       const response = await fetch(`${AI_SERVER_URL}/ai/video-recognition`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sourceType: input.sourceType || 'local',
-          localFile: input.localFile || '',
-          localAsset: input.localAsset || null,
-          videoDataUrl: input.videoDataUrl || '',
-          frameDataUrls: input.frameDataUrls || [],
-          videoUrl: input.videoUrl || '',
+          sourceType: 'url',
+          videoUrl,
           outputs: input.outputs || [],
         }),
       });
@@ -5506,6 +6153,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scriptText: payload.scriptText,
+          seedReferenceText: payload.seedReferenceText,
           instruction: payload.instruction,
         }),
       });
@@ -5527,6 +6175,8 @@
           ratio: payload.ratio,
           note: payload.note,
           videoParams: payload.videoParams,
+          seedContext: payload.seedContext,
+          globalContext: payload.globalContext,
         }),
       });
       const result = await response.json().catch(() => ({}));
@@ -5553,11 +6203,14 @@
     async function executeNode(node) {
       const input = ['video-params', 'loop-control', 'video-recognition', 'text-production', 'script-split', 'material-package', 'tts'].includes(node.type) ? normalizeNodeInput(node) : parseNodeInput(node);
       if (node.type === 'input') {
+        const briefText = String(input.briefText || input.content || input.topic || '').trim();
         return {
           ok: true,
           type: 'content-brief',
-          payload: input,
-          next: ['seed', 'script'],
+          payload: {
+            briefText,
+          },
+          next: ['script', 'text-production'],
         };
       }
       if (node.type === 'video-params') {
@@ -5585,6 +6238,22 @@
           payload,
         };
       }
+      if (node.type === 'seed-library') {
+        const seedId = String(input.seedId || input.seedPath || input.seedName || '').trim();
+        if (!seedId) {
+          throw new Error('请先选择一个种子内容文件夹');
+        }
+        const response = await fetch(`${AI_SERVER_URL}/seed-library/resolve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ seedId }),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.error || result.message || `种子内容库执行失败：HTTP ${response.status}`);
+        }
+        return result;
+      }
       if (node.type === 'loop-control') {
         const count = Math.max(1, Math.min(12, Number(input.count || 1)));
         const prompts = Array.from({ length: count }, (_, index) => String(input.prompts?.[index] || '').trim());
@@ -5599,7 +6268,7 @@
         };
       }
       if (node.type === 'video-recognition') {
-        return callVideoRecognition(input);
+        return callVideoRecognition(node, input);
       }
       if (node.type === 'text-production') {
         return callTextProduction(node, input);
@@ -5955,7 +6624,7 @@
     function runningMessageForNode(node) {
       if (node.type === 'video-recognition') return '正在调用视频理解模型，视频越长等待时间越久，请稍等...';
       if (node.type === 'loop-control') return '正在生成循环控制上下文，请稍等...';
-      if (node.type === 'text-production') return '正在生成纯净口播脚本，请稍等...';
+      if (node.type === 'text-production') return '正在生成口播脚本，请稍等...';
       if (node.type === 'script-split') return '正在清洗口播脚本并拆分画面容器，请稍等...';
       if (node.type === 'material-package') return '正在生成素材槽位，请稍等...';
       if (node.type === 'tts') return '正在生成语音和 word 级字幕时间轴，请稍等...';
@@ -6520,23 +7189,81 @@
     function extractTextProductionOutput(result) {
       if (typeof result === 'string') return result.trim();
       if (!result || typeof result !== 'object') return '';
-      if (result.type === 'node-running') return result.message || '正在生成纯净口播脚本，请稍等...';
-      if (result.ok === false) return result.message || result.error || '脚本裂变执行失败';
+      if (result.type === 'node-running') return result.message || '正在生成口播脚本，请稍等...';
+      if (result.ok === false) return result.message || result.error || '口播脚本生成失败';
       const payload = result.payload && typeof result.payload === 'object' ? result.payload : result;
       if (typeof result.scriptText === 'string' && result.scriptText.trim()) return result.scriptText.trim();
       if (typeof payload.scriptText === 'string' && payload.scriptText.trim()) return payload.scriptText.trim();
       if (typeof result.handoffText === 'string' && result.handoffText.trim()) return result.handoffText.trim();
       if (typeof result.displayOutput === 'string' && result.displayOutput.trim()) return result.displayOutput.trim();
-      if (typeof payload.rawText === 'string' && payload.rawText.trim()) return payload.rawText.trim();
-      if (typeof payload.copy === 'string' && payload.copy.trim()) return payload.copy.trim();
-      if (typeof payload.answer === 'string' && payload.answer.trim()) return payload.answer.trim();
-      if (Array.isArray(payload.variants) && payload.variants.length) {
-        return compactTextLines(payload.variants.map((item) => {
-          if (typeof item === 'string') return item;
-          return item.copy || item.text || '';
-        }));
-      }
       return readableObjectText(payload) || stringifyOutput(result);
+    }
+
+    function getVideoRecognitionSourceResult(result) {
+      if (typeof result === 'string') return parseMaybeJson(result);
+      if (!result || typeof result !== 'object') return {};
+      return result.payload && typeof result.payload === 'object' ? { ...result, payload: result.payload } : result;
+    }
+
+    function extractVideoRecognitionText(result, key) {
+      const source = getVideoRecognitionSourceResult(result);
+      const payload = source.payload && typeof source.payload === 'object' ? source.payload : source;
+      const aliasMap = {
+        contentAnalysis: ['contentAnalysis', 'recognizedContent', 'contentSummary', 'summary', 'content', 'answer', 'copy', 'text', 'rawText'],
+        scriptExtraction: ['scriptExtraction', 'scriptText', 'transcript', 'copy', 'text', 'answer', 'rawText'],
+        frameAnalysis: ['frameAnalysis', 'visualStyle', 'frameStyle', 'style', 'shotAnalysis', 'visualAnalysis', 'description', 'summary', 'text', 'rawText'],
+      };
+      const lookupKeys = aliasMap[key] || [key];
+      const directValue = lookupKeys
+        .flatMap((field) => [payload?.[field], source?.[field]])
+        .find((value) => typeof value === 'string' && value.trim());
+      if (directValue) return String(directValue).trim();
+      const nested = lookupKeys
+        .map((field) => payload?.[field] ?? source?.[field])
+        .find((value) => value && typeof value === 'object');
+      if (nested && typeof nested === 'object') {
+        return readableObjectText(nested);
+      }
+      return '';
+    }
+
+    function renderVideoRecognitionOutput(node, value) {
+      const parsed = parseMaybeJson(value);
+      const input = normalizeNodeInput(node);
+      const selectedOutputs = Array.isArray(input.outputs) && input.outputs.length
+        ? input.outputs
+        : ['contentAnalysis', 'scriptExtraction', 'frameAnalysis'];
+      const sections = [];
+      const sectionMap = {
+        contentAnalysis: {
+          label: '内容总结',
+          hint: '视频在讲什么',
+          text: extractVideoRecognitionText(parsed, 'contentAnalysis') || extractVideoRecognitionText(parsed, 'recognizedContent') || '未识别到内容总结。',
+        },
+        scriptExtraction: {
+          label: '纯脚本',
+          hint: '可直接给下游脚本节点',
+          text: extractVideoRecognitionText(parsed, 'scriptExtraction') || extractVideoRecognitionText(parsed, 'scriptText') || '未识别到脚本。',
+        },
+        frameAnalysis: {
+          label: '画面风格',
+          hint: '镜头 / 节奏 / 画面气质',
+          text: extractVideoRecognitionText(parsed, 'frameAnalysis') || '未识别到画面风格。',
+        },
+      };
+      selectedOutputs.forEach((key) => {
+        const section = sectionMap[key];
+        if (section) sections.push(section);
+      });
+      return sections.map((section) => `
+        <div class="video-output-card">
+          <div>
+            <strong>${escapeHtml(section.label)}</strong>
+            <p>${escapeHtml(section.hint)}</p>
+          </div>
+          <textarea readonly spellcheck="false">${escapeHtml(section.text)}</textarea>
+        </div>
+      `).join('');
     }
 
     function displayOutputForNode(node, result) {
@@ -6549,6 +7276,15 @@
       if (node?.type === 'text-production' || result?.type === 'text-production-result' || result?.type === 'script-variation-result') {
         return extractTextProductionOutput(result);
       }
+      if (node?.type === 'video-recognition' || result?.type === 'video-recognition-result') {
+        const parsed = parseMaybeJson(result);
+        const sections = [
+          extractVideoRecognitionText(parsed, 'contentAnalysis') || extractVideoRecognitionText(parsed, 'recognizedContent'),
+          extractVideoRecognitionText(parsed, 'scriptExtraction') || extractVideoRecognitionText(parsed, 'scriptText'),
+          extractVideoRecognitionText(parsed, 'frameAnalysis'),
+        ].filter(Boolean);
+        return sections.join('\n\n');
+      }
       if (node?.type === 'video-params' || result?.type === 'video-params-result') {
         const payload = result?.payload && typeof result.payload === 'object' ? result.payload : result;
         return [
@@ -6557,6 +7293,14 @@
           payload?.visualStyle ? `画面风格：${payload.visualStyle}` : '',
           payload?.materialPreference ? `素材要求：${payload.materialPreference}` : '',
           payload?.requirement ? `补充需求：${payload.requirement}` : '',
+        ].filter(Boolean).join('\n');
+      }
+      if (node?.type === 'seed-library' || result?.type === 'seed-library-result') {
+        const payload = result?.payload && typeof result.payload === 'object' ? result.payload : result;
+        return [
+          payload?.seedVideoUrl || payload?.videoUrl ? `原始视频：${payload.seedVideoUrl || payload.videoUrl}` : '',
+          payload?.seedCosUrl ? `种子目录：${payload.seedCosUrl}` : '',
+          payload?.txtScript ? `种子内容说明：\n${payload.txtScript}` : '',
         ].filter(Boolean).join('\n');
       }
       if (node?.type === 'loop-control' || result?.type === 'loop-control-result') {
@@ -6572,8 +7316,9 @@
         return [
           `素材包：${result?.packageName || '素材包'}`,
           `比例：${result?.ratio || '4:3'}`,
-          result?.zipUrl ? `下载：${result.zipUrl}` : '',
-          result?.packageDir ? `本地目录：${result.packageDir}` : '',
+          result?.packageRootDir ? `素材包根目录：${result.packageRootDir}` : '',
+          result?.packageDir ? `本次包目录：${result.packageDir}` : '',
+          Array.isArray(result?.createdKeys) ? `占位对象：${result.createdKeys.length} 个` : '',
           '',
           ...blocks.flatMap((block) => [
             `${String(block.order).padStart(2, '0')}_${block.folderName}`,
@@ -6654,20 +7399,6 @@
       const minutes = Math.floor(totalSeconds / 60);
       const seconds = totalSeconds % 60;
       return minutes ? `${minutes}:${String(seconds).padStart(2, '0')}` : `${seconds} 秒`;
-    }
-
-    function fileToDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error || new Error('文件读取失败'));
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function materialUploadedAssets(result, unitId) {
-      const uploaded = result.uploadedAssets && typeof result.uploadedAssets === 'object' ? result.uploadedAssets : {};
-      return Array.isArray(uploaded[unitId]) ? uploaded[unitId] : [];
     }
 
     function firstMediaUrlFromResult(result, mediaType) {
@@ -6792,60 +7523,15 @@
       });
     }
 
-    async function uploadMaterialFiles(result, block, item, files) {
-      const fileList = [...files].filter(Boolean);
-      if (!fileList.length) return;
-      const next = parseMaybeJson(nodeResultEditor.value || stringifyOutput(result)) || result;
-      const maxSizeMb = Number(next.videoParams?.maxAssetSizeMb || 200);
-      const tooLarge = fileList.find((file) => file.size > maxSizeMb * 1024 * 1024);
-      if (tooLarge) {
-        throw new Error(`素材过大：${tooLarge.name} 超过 ${maxSizeMb}MB，请压缩后上传`);
-      }
-      next.uploadedAssets = next.uploadedAssets && typeof next.uploadedAssets === 'object' ? next.uploadedAssets : {};
-      next.uploadedAssets[item.unitId] = Array.isArray(next.uploadedAssets[item.unitId]) ? next.uploadedAssets[item.unitId] : [];
-      for (const file of fileList) {
-        const dataUrl = await fileToDataUrl(file);
-        const response = await fetch(`${AI_SERVER_URL}/ai/material-upload`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            packageDir: next.packageDir,
-            blockOrder: block.order,
-            blockFolderName: block.folderName,
-            itemOrder: item.order,
-            itemFolderName: item.folderName,
-            unitId: item.unitId,
-            fileName: file.name,
-            dataUrl,
-          }),
-        });
-        const uploaded = await response.json().catch(() => ({}));
-        if (!response.ok || uploaded.ok === false) {
-          throw new Error(uploaded.error || uploaded.message || `素材上传失败：HTTP ${response.status}`);
-        }
-        next.uploadedAssets[item.unitId].push(uploaded);
-      }
-      next.uploadStatus = 'uploaded';
-      nodeResultEditor.value = stringifyOutput(next);
-      setNodeOutput(outputNodeId, next);
-      outputLastSavedText = stringifyOutput(next);
-      outputDirty = false;
-      renderMaterialPackageOutput(next);
-      renderNodes();
-      renderRunStrip();
-      persistProjects();
-    }
-
     function renderMaterialPackageOutput(value) {
       const result = parseMaybeJson(value) || {};
       const blocks = Array.isArray(result.blocks) ? result.blocks : [];
       const folderCount = blocks.reduce((sum, block) => sum + (Array.isArray(block.items) ? block.items.length : 0), 0);
-      const uploadedCount = Object.values(result.uploadedAssets || {}).reduce((sum, items) => sum + (Array.isArray(items) ? items.length : 0), 0);
       materialOutputEditor.innerHTML = `
         <div class="material-status-card">
           <div class="material-status-head">
-            <strong>素材槽位已生成</strong>
-            <span class="material-status-badge">${uploadedCount ? `已上传 ${uploadedCount} 个` : '等待上传'}</span>
+            <strong>素材包已创建到 COS</strong>
+            <span class="material-status-badge">${result.packagePrefix ? 'COS 目录已创建' : '未生成目录'}</span>
           </div>
           <div class="material-meta-grid">
             <span>素材包名称<b>${escapeHtml(result.packageName || '素材包')}</b></span>
@@ -6853,62 +7539,32 @@
             <span>主旨段<b>${blocks.length} 个</b></span>
             <span>画面槽位<b>${folderCount} 个</b></span>
           </div>
+          <div class="voice-link-row">
+            ${result.packageRootDir ? `<span>素材包根目录：${escapeHtml(result.packageRootDir)}</span>` : ''}
+            ${result.packageDir ? `<span>本次包目录：${escapeHtml(result.packageDir)}</span>` : ''}
+            ${Array.isArray(result.createdKeys) ? `<span>已创建 ${result.createdKeys.length} 个占位对象</span>` : ''}
+          </div>
         </div>
         <div class="material-structure-card">
-          <strong>按画面上传素材</strong>
+          <strong>自动生成的文件夹结构</strong>
           <div class="material-block-list">
             ${blocks.map((block) => `
               <section class="material-block">
                 <h4>${String(block.order || 1).padStart(2, '0')}_${escapeHtml(block.folderName || block.role || '主旨段')}</h4>
                 <div class="material-folder-list">
-                  ${(block.items || []).map((item) => {
-                    const assets = materialUploadedAssets(result, item.unitId);
-                    return `
+                  ${(block.items || []).map((item) => `
                     <div class="material-folder-item">
                       <b>${String(item.order || 1).padStart(2, '0')}_${escapeHtml(item.folderName || '画面素材')}</b>
                       <span>${escapeHtml(item.materialBrief || item.text || '把对应视频或图片素材放入该文件夹')}</span>
-                      <div class="material-upload-slot" data-block-order="${block.order}" data-item-id="${escapeAttr(item.unitId)}">
-                        <small>${assets.length ? `已上传 ${assets.length} 个素材，继续拖拽可追加` : '拖拽素材到这里，或点击选择文件'}</small>
-                        <div class="material-upload-list">
-                          ${assets.slice(-4).map((asset) => `<em>${escapeHtml(asset.originalName || asset.fileName || '素材')}</em>`).join('')}
-                        </div>
-                      </div>
+                      <div class="helper">素材类型：${escapeHtml(materialTypeLabel(item.materialType))}</div>
                     </div>
-                  `; }).join('')}
+                  `).join('')}
                 </div>
               </section>
             `).join('')}
           </div>
         </div>
       `;
-      materialOutputEditor.querySelectorAll('.material-upload-slot').forEach((slot) => {
-        const block = blocks.find((item) => String(item.order) === String(slot.dataset.blockOrder));
-        const item = (block?.items || []).find((entry) => entry.unitId === slot.dataset.itemId);
-        if (!block || !item) return;
-        const openPicker = () => {
-          const input = document.createElement('input');
-          input.type = 'file';
-          input.multiple = true;
-          input.accept = 'video/*,image/*';
-          input.addEventListener('change', () => {
-            uploadMaterialFiles(result, block, item, input.files).catch((error) => window.alert(error.message || String(error)));
-          });
-          input.click();
-        };
-        slot.addEventListener('click', openPicker);
-        slot.addEventListener('dragover', (event) => {
-          event.preventDefault();
-          slot.classList.add('is-dragover');
-        });
-        slot.addEventListener('dragleave', () => {
-          slot.classList.remove('is-dragover');
-        });
-        slot.addEventListener('drop', (event) => {
-          event.preventDefault();
-          slot.classList.remove('is-dragover');
-          uploadMaterialFiles(result, block, item, event.dataTransfer.files).catch((error) => window.alert(error.message || String(error)));
-        });
-      });
     }
 
     function renderVoicePackageOutput(value) {
@@ -7409,57 +8065,6 @@
         reader.onload = () => resolve(reader.result);
         reader.onerror = () => reject(reader.error || new Error('读取本地视频失败'));
         reader.readAsDataURL(file);
-      });
-    }
-
-    async function extractVideoFrames(file, frameCount = 4) {
-      const objectUrl = URL.createObjectURL(file);
-      try {
-        const video = document.createElement('video');
-        video.muted = true;
-        video.preload = 'metadata';
-        video.src = objectUrl;
-        video.playsInline = true;
-        await once(video, 'loadedmetadata');
-        const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : frameCount;
-        const canvas = document.createElement('canvas');
-        const sourceWidth = video.videoWidth || 960;
-        const sourceHeight = video.videoHeight || 540;
-        const maxWidth = 480;
-        const scale = Math.min(1, maxWidth / sourceWidth);
-        canvas.width = Math.max(1, Math.round(sourceWidth * scale));
-        canvas.height = Math.max(1, Math.round(sourceHeight * scale));
-        const ctx = canvas.getContext('2d');
-        const frames = [];
-        for (let index = 0; index < frameCount; index += 1) {
-          const time = Math.min(duration - 0.05, Math.max(0, duration * ((index + 1) / (frameCount + 1))));
-          video.currentTime = time;
-          await once(video, 'seeked');
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          frames.push(canvas.toDataURL('image/jpeg', 0.64));
-        }
-        return frames;
-      } finally {
-        URL.revokeObjectURL(objectUrl);
-      }
-    }
-
-    function once(target, eventName) {
-      return new Promise((resolve, reject) => {
-        const cleanup = () => {
-          target.removeEventListener(eventName, handleEvent);
-          target.removeEventListener('error', handleError);
-        };
-        const handleEvent = () => {
-          cleanup();
-          resolve();
-        };
-        const handleError = () => {
-          cleanup();
-          reject(new Error(`视频 ${eventName} 阶段失败`));
-        };
-        target.addEventListener(eventName, handleEvent, { once: true });
-        target.addEventListener('error', handleError, { once: true });
       });
     }
 

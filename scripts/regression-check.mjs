@@ -22,9 +22,13 @@ function assertNoMissingJsxImports(source, file) {
     .flatMap((match) => match[1].split(','))
     .map((item) => item.trim().split(/\s+as\s+/).pop())
     .filter(Boolean);
-  const defaultImports = [...source.matchAll(/import\s+([A-Z][A-Za-z0-9_]*)\s+from/g)].map((match) => match[1]);
+  const defaultImports = [
+    ...source.matchAll(/import\s+([A-Z][A-Za-z0-9_]*)\s+from/g),
+    ...source.matchAll(/import\s+([A-Z][A-Za-z0-9_]*)\s*,/g),
+  ].map((match) => match[1]);
+  const constDeclarations = [...source.matchAll(/const\s+([A-Z][A-Za-z0-9_]*)\s*=/g)].map((match) => match[1]);
   const functionComponents = [...source.matchAll(/function\s+([A-Z][A-Za-z0-9_]*)\s*\(/g)].map((match) => match[1]);
-  const known = new Set([...namedImports, ...defaultImports, ...functionComponents]);
+  const known = new Set([...namedImports, ...defaultImports, ...constDeclarations, ...functionComponents]);
   const missing = [...new Set(jsxTags)].filter((tag) => !known.has(tag));
 
   if (missing.length) {
@@ -62,20 +66,22 @@ const seedVideo = await text('src/remotion/SeedVideo.jsx');
 const rootFile = await text('src/remotion/Root.jsx');
 
 [
-  ['src/main.jsx', main, "const voiceAuditionText = '欢迎使用红旗内容裂变平台'"],
-  ['src/main.jsx', main, "postAi('/ai/generate-script'"],
-  ['src/main.jsx', main, "postAi('/ai/check-material-support'"],
-  ['src/main.jsx', main, "postAi('/ai/check-grammar'"],
-  ['src/main.jsx', main, "postAi('/ai/refine-line'"],
-  ['src/main.jsx', main, "postAi('/ai/refine-script'"],
-  ['src/main.jsx', main, "postAi('/ai/package-video'"],
-  ['src/main.jsx', main, 'workflowProject'],
-  ['src/main.jsx', main, 'materialPlan: plan'],
-  ['src/main.jsx', main, '生成中...'],
-  ['src/main.jsx', main, 'onBlur={(event) => checkScriptLine(index, event.target.value)}'],
+  ['src/main.jsx', main, 'const workflowNodeTypes = ['],
+  ['src/main.jsx', main, "type: 'tts'"],
+  ['src/main.jsx', main, "fetch(`http://127.0.0.1:8790/ai/${endpoint}`"],
+  ['src/main.jsx', main, "fetch('http://127.0.0.1:8790/ai/process-images'"],
+  ['src/main.jsx', main, 'workflow-studio'],
+  ['src/main.jsx', main, 'workflow-project-bar'],
+  ['src/main.jsx', main, 'workflowNodeTypes.map'],
   ['scripts/ai-server.mjs', aiServer, "req.url === '/ai/package-video'"],
   ['scripts/ai-server.mjs', aiServer, "req.url === '/ai/check-material-support'"],
   ['scripts/ai-server.mjs', aiServer, "req.url === '/ai/check-grammar'"],
+  ['scripts/ai-server.mjs', aiServer, "req.url === '/ai/text-production'"],
+  ['scripts/ai-server.mjs', aiServer, "req.url === '/ai/script-split'"],
+  ['scripts/ai-server.mjs', aiServer, "req.url === '/ai/material-package'"],
+  ['scripts/ai-server.mjs', aiServer, 'async function createMaterialPackageFiles'],
+  ['scripts/ai-server.mjs', aiServer, 'packageDir'],
+  ['scripts/ai-server.mjs', aiServer, "req.url === '/tts/voice-package'"],
   ['src/remotion/SeedVideo.jsx', seedVideo, 'Video,'],
   ['src/remotion/SeedVideo.jsx', seedVideo, 'materialPlan'],
   ['src/remotion/SeedVideo.jsx', seedVideo, 'activeTransform.fit'],
