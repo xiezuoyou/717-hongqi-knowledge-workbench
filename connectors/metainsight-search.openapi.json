@@ -1,0 +1,91 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Meta Insight 素材搜索连接器",
+    "version": "1.0.0",
+    "description": "搜索 717 知识库中的图片、视频和文档素材。仅返回 Meta Insight 实际检索到的结果，不编造文件、地址或来源。"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_PUBLIC_DOMAIN",
+      "description": "部署 storage-server 的公网 HTTPS 地址"
+    }
+  ],
+  "paths": {
+    "/connector/metainsight/search": {
+      "post": {
+        "operationId": "searchKnowledgeBaseAssets",
+        "summary": "搜索知识库图片、视频和文档素材",
+        "description": "当用户要求找图片、找视频、搜索素材、推荐配图或匹配视觉资料时调用。支持按素材类型筛选，并按相关度返回结果。",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SearchRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Meta Insight 搜索结果",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SearchResponse" }
+              }
+            }
+          },
+          "400": { "description": "搜索参数无效" },
+          "401": { "description": "连接器鉴权失败" },
+          "500": { "description": "Meta Insight 查询失败" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "服务端设置的 METAINSIGHT_CONNECTOR_TOKEN"
+      }
+    },
+    "schemas": {
+      "SearchRequest": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": { "type": "string", "description": "自然语言搜索关键词，例如：红旗 HS6 上市视频" },
+          "type": { "type": "string", "enum": ["all", "image", "video", "document"], "default": "all", "description": "素材类型" },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 50, "default": 20, "description": "最多返回条数" },
+          "threshold": { "type": "number", "minimum": 0, "description": "Meta Insight 匹配阈值" }
+        }
+      },
+      "SearchResult": {
+        "type": "object",
+        "required": ["type", "uri", "score"],
+        "properties": {
+          "type": { "type": "string", "enum": ["image", "video", "document"] },
+          "uri": { "type": "string", "description": "Meta Insight 返回的原始资源地址" },
+          "assetUrl": { "type": "string" },
+          "previewUrl": { "type": "string" },
+          "text": { "type": "string", "description": "匹配到的文本或语义摘要" },
+          "page": { "type": "string", "description": "文档页码（如有）" },
+          "score": { "type": "number" },
+          "imageUrls": { "type": "string" }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "required": ["connector", "query", "results", "count"],
+        "properties": {
+          "connector": { "type": "string", "example": "metainsight" },
+          "query": { "type": "string" },
+          "count": { "type": "integer" },
+          "dataset": { "type": "array", "items": { "type": "string" } },
+          "results": { "type": "array", "items": { "$ref": "#/components/schemas/SearchResult" } }
+        }
+      }
+    }
+  }
+}
