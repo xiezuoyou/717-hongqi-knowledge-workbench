@@ -9,6 +9,37 @@
   --radius-module: 24px;
   --radius-card: 18px;
   --radius-media: 16px;
+
+  /* ---- ink scale (was hardcoded across ~100 sites) ---- */
+  --ink-900: #111318;
+  --ink-800: #15181d;
+  --ink-700: #25272b;
+  --ink-600: rgba(20, 24, 30, 0.62);
+  --ink-500: rgba(20, 24, 30, 0.52);
+  --ink-400: rgba(20, 24, 30, 0.44);
+  --ink-300: rgba(20, 24, 30, 0.36);
+  --ink-line: rgba(20, 24, 30, 0.08);
+  --ink-line-soft: rgba(20, 24, 30, 0.04);
+
+  /* ---- light glass system ---- */
+  --glass-bg: rgba(255, 255, 255, 0.58);
+  --glass-bg-hover: rgba(255, 255, 255, 0.68);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-edge: rgba(20, 24, 30, 0.07);
+  --glass-edge-hover: rgba(20, 24, 30, 0.11);
+  --glass-blur: blur(18px) saturate(180%);
+  --glass-blur-strong: blur(28px) saturate(190%);
+  --glass-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --glass-lift: 0 16px 34px -20px rgba(20, 24, 30, 0.26);
+  --glass-lift-hover: 0 26px 52px -22px rgba(20, 24, 30, 0.32);
+
+  /* ---- ambient tint (drives the blobs behind the glass) ---- */
+  --tint-a: rgba(150, 142, 255, 0.3);
+  --tint-b: rgba(126, 190, 255, 0.24);
+  --tint-c: rgba(255, 176, 168, 0.2);
+
+  --ease-glass: cubic-bezier(0.22, 1, 0.36, 1);
+
   --condensed-font:
     "Bebas Neue",
     "PingFang SC",
@@ -494,6 +525,60 @@ button {
   --library-drawer-width: min(420px, calc(100vw - 68px));
 }
 
+/* Ambient colour field: gives the glass something to refract.
+   Pure CSS gradients, no canvas/WebGL, negligible cost. */
+.workbench-page::before,
+.workbench-page::after {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.workbench-page::before {
+  top: -18vh;
+  left: -8vw;
+  width: 62vw;
+  height: 62vh;
+  background:
+    radial-gradient(circle at 30% 30%, var(--tint-a), transparent 62%),
+    radial-gradient(circle at 70% 60%, var(--tint-b), transparent 66%);
+  animation: ambientDriftA 26s ease-in-out infinite alternate;
+}
+
+.workbench-page::after {
+  right: -12vw;
+  bottom: -22vh;
+  width: 58vw;
+  height: 58vh;
+  background:
+    radial-gradient(circle at 60% 40%, var(--tint-c), transparent 64%),
+    radial-gradient(circle at 30% 70%, var(--tint-b), transparent 60%);
+  animation: ambientDriftB 32s ease-in-out infinite alternate;
+}
+
+@keyframes ambientDriftA {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(6vw, 5vh, 0) scale(1.12);
+  }
+}
+
+@keyframes ambientDriftB {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+
+  to {
+    transform: translate3d(-5vw, -4vh, 0) scale(1);
+  }
+}
+
 .workbench-rail {
   display: flex;
   height: 100vh;
@@ -548,8 +633,8 @@ button {
   overflow: hidden;
   position: relative;
   z-index: 1;
-  background: rgba(241, 241, 239, 0.34);
-  backdrop-filter: blur(3px);
+  background: rgba(241, 241, 239, 0.16);
+  backdrop-filter: blur(6px) saturate(140%);
   transition:
     margin-right 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
     padding-right 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -2628,18 +2713,23 @@ button {
   gap: clamp(12px, 1.2vh, 16px);
   min-height: 0;
   height: min(238px, 100%);
-  border: 1px solid rgba(20, 24, 30, 0.07);
+  border: 1px solid var(--glass-edge);
   border-radius: var(--radius-module);
   padding: clamp(18px, 1.6vw, 24px);
   padding-bottom: 66px;
-  background: rgba(255, 255, 255, 0.64);
-  color: #15181d;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--ink-800);
   text-align: left;
-  box-shadow: none;
+  box-shadow:
+    var(--glass-sheen),
+    var(--glass-lift);
   transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    background 180ms ease;
+    border-color 220ms var(--ease-glass),
+    box-shadow 260ms var(--ease-glass),
+    background 220ms var(--ease-glass),
+    transform 260ms var(--ease-glass);
   animation: knowledgeAiCardReveal 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -2656,14 +2746,20 @@ button {
 }
 
 .knowledge-ai-entry-card:hover {
-  border-color: rgba(20, 24, 30, 0.12);
-  background: rgba(255, 255, 255, 0.66);
-  box-shadow: none;
+  border-color: var(--glass-edge-hover);
+  background: var(--glass-bg-hover);
+  box-shadow:
+    var(--glass-sheen),
+    var(--glass-lift-hover);
+  transform: translateY(-4px);
 }
 
 .knowledge-ai-entry-card.is-selected {
   border-color: rgba(20, 24, 30, 0.18);
-  background: rgba(255, 255, 255, 0.78);
+  background: var(--glass-bg-strong);
+  box-shadow:
+    var(--glass-sheen),
+    var(--glass-lift-hover);
 }
 
 .knowledge-ai-entry-card > span {
@@ -3076,6 +3172,15 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .workbench-page::before,
+  .workbench-page::after {
+    animation: none;
+  }
+
+  .knowledge-ai-entry-card:hover {
+    transform: none;
+  }
+
   .knowledge-ai-heading,
   .knowledge-ai-entry-grid,
   .knowledge-ai-entry-card,
