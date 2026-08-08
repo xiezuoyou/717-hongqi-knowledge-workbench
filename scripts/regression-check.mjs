@@ -15,6 +15,24 @@
  * Set REGRESSION_RENDER=1 to additionally validate Remotion compositions
  * (slower, needs a bundle step).
  *
+ * SCOPE — read this before adding a check.
+ *
+ * The 813 platform is the only user-facing product here. Its design rule is
+ * that users see ONE simple action (pick a seed -> get a video); every step in
+ * between runs server-side and is never exposed. The audience is channel staff
+ * with little AI familiarity, so "no visible pipeline" is a product decision,
+ * not an unfinished feature.
+ *
+ * Consequences for this file:
+ *   - 813 platform checks are the health signal. A failure here is a real
+ *     regression.
+ *   - The node canvas (public/workflow-canvas.html) belongs to a SEPARATE
+ *     project that shares ancestry with the auto-edit idea. It is reported for
+ *     information only and never counted as 813 health.
+ *   - AI service routes with no frontend caller are NOT gaps in the UI. They
+ *     are the raw material the one-click flow will call server-side. Listed as
+ *     backend inventory, not as missing entry points.
+ *
  * Scope note: this is a structural check (capability wiring is present). It
  * cannot detect behavioural regressions — for those see the vitest suite.
  */
@@ -77,38 +95,22 @@ const CHECKS = [
   ['知识库', 'platform', 'knowledgeAiModules', 'AI 模块定义'],
   ['知识库', 'platform', 'knowledgeAiEntryCards', 'AI 模板入口卡片'],
 
-  // --- storage / material service ---
+  // --- storage / material service (813 依赖) ---
   ['素材存储', 'storageServer', '/api/storage', '素材存储接口'],
 
-  // --- canvas: node palette ---
-  ['画布节点', 'canvas', "type: 'text-production'", '脚本裂变节点'],
-  ['画布节点', 'canvas', "type: 'script-split'", '脚本拆解节点'],
-  ['画布节点', 'canvas', "type: 'tts'", '语音生成节点'],
-  ['画布节点', 'canvas', "type: 'caption'", '字幕对齐节点'],
-  ['画布节点', 'canvas', "type: 'timeline-beats'", '时间线节点'],
-  ['画布节点', 'canvas', "type: 'material-package'", '素材包节点'],
-  ['画布节点', 'canvas', "type: 'video-recognition'", '视频识别节点'],
-  ['画布节点', 'canvas', "type: 'video-params'", '视频参数节点'],
-  ['画布节点', 'canvas', "type: 'review'", '审核节点'],
-  ['画布节点', 'canvas', "type: 'loop-control'", '循环控制节点'],
-  ['画布节点', 'canvas', "type: 'content-sandbox'", '内容沙盒节点'],
-
-  // --- canvas: wiring to the AI service ---
-  ['画布联通', 'canvas', '/ai/text-production', '脚本裂变调用'],
-  ['画布联通', 'canvas', '/ai/script-split', '脚本拆解调用'],
-  ['画布联通', 'canvas', '/ai/video-recognition', '视频识别调用'],
-  ['画布联通', 'canvas', '/ai/material-package', '素材包调用'],
-  ['画布联通', 'canvas', '/ai/material-upload', '素材上传调用'],
-  ['画布联通', 'canvas', '/tts/voice-package', '语音包合成调用'],
-
-  // --- render layer: these back the material transform baseline ---
-  ['渲染层', 'seedVideo', 'materialPlan', '素材计划读取'],
-  ['渲染层', 'seedVideo', 'activeTransform.fit', 'contain/cover 传入渲染'],
-  ['渲染层', 'seedVideo', 'activeTransform.scale', '缩放传入渲染'],
-  ['渲染层', 'seedVideo', 'activeSourceStart', '源素材起点传入渲染'],
-  ['渲染层', 'remotionRoot', 'function getCompositionSize()', '输出尺寸随画布比例'],
-  ['渲染层', 'remotionRoot', "ratio === '9:16'", '9:16 比例支持'],
-  ['渲染层', 'remotionRoot', "ratio === '4:3'", '4:3 比例支持'],
+  // --- backend services behind the future one-click 裂变 ---
+  // 这些是服务端能力，813 用户不会直接看到它们，也不该看到。
+  ['后端服务', 'aiServer', "req.url === '/ai/text-production'", '脚本生成能力'],
+  ['后端服务', 'aiServer', "req.url === '/ai/script-split'", '脚本拆解能力'],
+  ['后端服务', 'aiServer', "req.url === '/ai/material-package'", '素材包能力'],
+  ['后端服务', 'aiServer', "req.url === '/ai/video-recognition'", '视频识别能力'],
+  ['渲染服务', 'seedVideo', 'materialPlan', '素材计划读取'],
+  ['渲染服务', 'seedVideo', 'activeTransform.fit', 'contain/cover 传入渲染'],
+  ['渲染服务', 'seedVideo', 'activeTransform.scale', '缩放传入渲染'],
+  ['渲染服务', 'seedVideo', 'activeSourceStart', '源素材起点传入渲染'],
+  ['渲染服务', 'remotionRoot', 'function getCompositionSize()', '输出尺寸随画布比例'],
+  ['渲染服务', 'remotionRoot', "ratio === '9:16'", '9:16 比例支持'],
+  ['渲染服务', 'remotionRoot', "ratio === '4:3'", '4:3 比例支持'],
 ];
 
 const groups = new Map();
@@ -126,9 +128,37 @@ for (const [group, key, needle, description] of CHECKS) {
 }
 
 /**
- * Gap inventory: AI service routes that no frontend calls. These are built
- * capabilities with no way for a user to reach them. Parsed from the service
- * itself so the list cannot drift out of date.
+ * --- 813 的真实缺口 ---
+ *
+ * 注意这里的提法和上一版相反。上一版说"后端能力没有前端入口"，把它当成
+ * 813 缺界面。这是错的：脚本拆解、口播、时间线这些*不应该*出现在 813 的
+ * 界面上，用户看不懂也不该看懂。它们是"一键裂变"背后的服务端原料。
+ *
+ * 813 的缺口是反过来的——入口已经有了，但还没接后端：
+ * 用户能点"生成裂变视频 / 素材包 / 脚本"，返回的却是写死的演示数据。
+ */
+const platformText = source.platform || '';
+
+// 813 前端真实发出的请求。只有 chat 相关的话，说明裂变功能还是演示态。
+const platformRequests = [...platformText.matchAll(/fetch\(`\$\{API_ROOT\}([^`?]*)/g)]
+  .map((match) => match[1])
+  .filter((route, index, all) => all.indexOf(route) === index)
+  .sort();
+
+// 演示态的标志：结果由定时器 + 写死文案产生，而不是来自网络。
+const seedActionsAreMocked = /seedAiGenerateTimerRef\.current = window\.setTimeout/.test(platformText);
+
+const platformGaps = [];
+if (seedActionsAreMocked) {
+  platformGaps.push('一键裂变（视频 / 素材包 / 脚本）返回写死的演示数据，未接后端');
+}
+if (platformText.includes('/assets/717-demo/')) {
+  platformGaps.push('种子页素材引用 /assets/717-demo/，该目录不存在，页面会出现碎图');
+}
+
+/**
+ * 后端已建成、但还没被 813 接上的能力。这些不是"缺界面"，而是等着被
+ * 一键裂变在服务端串起来的原料。从服务代码解析，避免清单过期。
  */
 const declaredRoutes = new Set();
 if (source.aiServer) {
@@ -136,25 +166,15 @@ if (source.aiServer) {
     declaredRoutes.add(match[1]);
   }
 }
-
-const frontendText = [source.platform, source.canvas].filter(Boolean).join('\n');
-const unreachable = [...declaredRoutes].filter((route) => !frontendText.includes(route)).sort();
+const notWiredToPlatform = [...declaredRoutes].filter((route) => !platformText.includes(route)).sort();
 
 /**
- * Baseline requirements that have no implementation anywhere. Each entry maps a
- * line from 当前可用流程稳定性基线.md to the marker that would prove it exists.
- * Kept explicit so the doc and the code can be compared at a glance.
+ * 自由画布：同仓库里的另一个项目，不是 813 的界面，也不会给 813 用户看到。
+ * 只统计规模，不计入 813 的健康度，也不因它变化而失败。
  */
-const BASELINE_ITEMS = [
-  ['脚本输入框失焦触发素材支持校验', '/ai/check-material-support'],
-  ['脚本输入框失焦触发病句校验', '/ai/check-grammar'],
-  ['单句 AI 修改窗口', '/ai/refine-line'],
-  ['整体 AI 修改入口', '/ai/refine-script'],
-  ['AI 生成脚本', '/ai/generate-script'],
-  ['包装方案生成', '/ai/package-video'],
-  ['音色试听固定短句', '欢迎使用红旗内容裂变平台'],
-];
-const baselineGaps = BASELINE_ITEMS.filter(([, needle]) => !frontendText.includes(needle));
+const canvasNodeCount = source.canvas
+  ? new Set([...source.canvas.matchAll(/type: '([a-z-]+)'/g)].map((match) => match[1])).size
+  : 0;
 
 function run(command, args) {
   return new Promise((resolve, reject) => {
@@ -179,20 +199,24 @@ for (const [group, { pass, fail }] of groups) {
   console.log(`  ${mark} ${group.padEnd(10)} ${pass} 项通过${fail ? `，${fail} 项缺失` : ''}`);
 }
 
-console.log('\n=== 缺口：已建成但用户到不了的 AI 能力 ===');
-if (unreachable.length === 0) {
+console.log('\n=== 813 的真实缺口 ===');
+if (platformGaps.length === 0) {
   console.log('  无');
 } else {
-  for (const route of unreachable) console.log(`  待接入  ${route}`);
-  console.log(`  共 ${unreachable.length} / ${declaredRoutes.size} 项后端能力没有任何前端入口`);
+  for (const item of platformGaps) console.log(`  待接  ${item}`);
+}
+console.log(`  813 前端真实请求：${platformRequests.length ? platformRequests.join('、') : '无'}`);
+
+console.log('\n=== 后端已建成、等一键裂变在服务端串起来的能力 ===');
+if (notWiredToPlatform.length === 0) {
+  console.log('  无');
+} else {
+  for (const route of notWiredToPlatform) console.log(`  待串接  ${route}`);
+  console.log(`  共 ${notWiredToPlatform.length} / ${declaredRoutes.size} 项。这些不该出现在 813 界面上，只在服务端调用。`);
 }
 
-console.log('\n=== 缺口：基线文档要求但尚未实现 ===');
-if (baselineGaps.length === 0) {
-  console.log('  无');
-} else {
-  for (const [item] of baselineGaps) console.log(`  待建    ${item}`);
-}
+console.log('\n=== 参考：自由画布（同仓库的另一个项目，不计入 813） ===');
+console.log(`  节点类型 ${canvasNodeCount} 个。它的变化不影响 813 的体检结果。`);
 
 if (failures.length) {
   console.error('\n=== 回归失败 ===');
@@ -215,8 +239,8 @@ if (WITH_RENDER) {
   console.log('  跳过 Remotion 合成校验（设 REGRESSION_RENDER=1 开启）');
 }
 
-if (STRICT && (unreachable.length || baselineGaps.length)) {
-  console.error('\n--strict：存在未接入能力或未实现的基线要求，视为失败。');
+if (STRICT && platformGaps.length) {
+  console.error('\n--strict：813 存在未接后端的功能，视为失败。');
   process.exit(1);
 }
 
