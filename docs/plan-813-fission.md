@@ -6,15 +6,23 @@
 ## 进度记录
 
 ### 2026-08-09
-- ✅ **Step 1 数据层**：两层结构从零搭建完成
+- ✅ **Step 1 数据层**：两层结构从零搭建完成（提交 `4cbe0c6`）
   - 第一层（首页内容）：`directions.ts` 4 个方向 + `timeline.ts` 5 天排期
   - 第二层（种子内容）：`seeds.ts` 3 个种子索引 + `seed-006.manifest.json` 素材清单
   - 关键设计：manifest 是唯一事实来源，存储与契约解耦
   - seed-006：6 段节奏、8 条真实素材（65.37s）、5 个已知缺口、所有描述标记 `reviewed: false` 待校对
-  - 交付：7 文件 851 行，已提交 `4cbe0c6`，`pnpm build` + `pnpm regression` 通过
+  - 交付：7 文件 851 行，`pnpm build` + `pnpm regression` 通过
   - 文档：`docs/seed-data-contract.md` 记录字段用途和运行时流程
-- 🔄 **下一步**：接入 `main.tsx`，替换硬编码的 `hotTopics` / `expandedSeedCards` / `publishTimeline`
-- ⏸️ **Step 2-7 暂缓**：视频裂变单独一坨，等数据层接完前端再继续
+- ✅ **前端接入**：新数据层已接入 `main.tsx`（提交 `304d609`）
+  - 删除 252 行硬编码，替换成 61 行适配层
+  - UI 保持不变，数据源从 `src/data/seed/` 导入
+  - 删除 `seedAiActionMeta` 的 `script` 动作（已被砍掉）
+  - 构建 + 回归测试通过
+- 🔄 **下一步**：开始后端能力（Step 3-6）
+  - Step 3: 可行性墙 `/seed/feasibility`
+  - Step 4: 素材包产出 `/seed/package`
+  - Step 5: 视频产出（复用已通的 `/render` + Remotion）
+  - Step 6: 前端接线 + 状态（等待/失败/重试）
 
 ## 一、功能是什么（已对齐，不要再讨论）
 
