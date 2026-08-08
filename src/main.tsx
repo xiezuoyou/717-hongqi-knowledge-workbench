@@ -2322,24 +2322,11 @@ function WorkbenchPage({
 
 
   const handleDownloadMaterialPackage = () => {
-    if (!seedAiResult?.materials?.length) return;
-    const packageText = [
-      selectedSeed?.title || "813粉丝盛典素材包",
-      "",
-      seedAiResult.intro,
-      "",
-      ...seedAiResult.materials.map(
-        (material, index) =>
-          `${index + 1}. ${material.name}\n类型：${material.type}\n说明：${material.note}`,
-      ),
-    ].join("\n\n");
-    const blob = new Blob([packageText], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+    if (!seedAiResult?.downloadUrl) return;
     const link = document.createElement("a");
-    link.href = url;
-    link.download = "813-seed-material-package.txt";
+    link.href = seedAiResult.downloadUrl;
+    link.download = "";
     link.click();
-    URL.revokeObjectURL(url);
   };
 
   React.useLayoutEffect(() => {
@@ -3543,7 +3530,9 @@ function WorkbenchPage({
                       <section
                         className={`seed-ai-result-panel ${
                           seedAiResult.action === "video" ? "is-video-result" : ""
-                        }`}
+                        } ${seedAiResult.isLoading ? "is-loading" : ""} ${
+                          seedAiResult.isError ? "is-error" : ""
+                        } ${seedAiResult.isWarning ? "is-warning" : ""}`}
                         aria-label="AI 生成结果"
                       >
                         <header className="seed-ai-result-head">
@@ -3551,13 +3540,19 @@ function WorkbenchPage({
                             <span>{seedAiResult.title}</span>
                             <p>{seedAiResult.intro}</p>
                           </div>
-                          {seedAiResult.action === "package" ? (
+                          {seedAiResult.action === "package" && seedAiResult.downloadUrl && !seedAiResult.isLoading && !seedAiResult.isError ? (
                             <button type="button" onClick={handleDownloadMaterialPackage}>
                               <Download size={15} />
                               下载素材包
                             </button>
                           ) : null}
                         </header>
+                        {seedAiResult.isLoading ? (
+                          <div className="seed-ai-loading-state">
+                            <ThinkingOrb state="composing" size={24} theme="light" />
+                            <span>处理中...</span>
+                          </div>
+                        ) : null}
                         <div className={seedAiResult.action === "video" ? "seed-ai-video-result" : ""}>
                           {seedAiResult.action === "video" && seedAiResult.video ? (
                             <div className="seed-ai-video-preview">
