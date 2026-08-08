@@ -61,65 +61,48 @@ async function loadSeedManifest(seedId) {
   return JSON.parse(content);
 }
 
-// 选片逻辑：按 priority (P0 > P1 > P2) 和 targetDurationSeconds 选够时长
+// 选片逻辑：按逻辑线顺序，从每段随机选 1 个
 function selectClips(manifest, targetDurationSeconds = null) {
-  const target = targetDurationSeconds || manifest.format?.targetDurationSeconds || 25;
-  const tolerance = manifest.format?.durationToleranceSeconds || 5;
-  const minDuration = target - tolerance;
-  const maxDuration = target + tolerance;
+  const segments = (manifest.segments || []).filter(seg => seg.required !== false);
+  const selected = [];
 
-  const allClips = (manifest.segments || [])
-    .filter(seg => seg.required !== false)
-    .flatMap(seg => (seg.clips || []).map(clip => ({
-      ...clip,
+  for (const seg of segments) {
+    const candidates = (seg.clips || []).filter(c => c.state === 'real');
+
+    if (candidates.length === 0) {
+      console.warn(`[selectClips] segment ${seg.id} 没有可用素材，跳过`);
+      continue;
+    }
+
+    // 按 priority 分组
+    const p0 = candidates.filter(c => c.priority === 'P0');
+    const p1 = candidates.filter(c => c.priority === 'P1');
+    const p2 = candidates.filter(c => c.priority === 'P2');
+
+    // 优先选 P0，没有就选 P1，再没有选 P2
+    const pool = p0.length ? p0 : (p1.length ? p1 : p2);
+
+    // 随机选 1 个
+    const randomIndex = Math.floor(Math.random() * pool.length);
+    const selectedClip = {
+      ...pool[randomIndex],
       segmentId: seg.id,
       segmentLabel: seg.label,
       segmentOrder: seg.order,
       segmentPurpose: seg.purpose,
       segmentTargetDuration: seg.targetDurationSeconds,
-    })));
+    };
 
-  // 按 priority 分组
-  const priorityOrder = ['P0', 'P1', 'P2'];
-  const clipsByPriority = {
-    P0: allClips.filter(c => c.priority === 'P0' && c.state === 'real'),
-    P1: allClips.filter(c => c.priority === 'P1' && c.state === 'real'),
-    P2: allClips.filter(c => c.priority === 'P2' && c.state === 'real'),
-  };
-
-  const selected = [];
-  let totalDuration = 0;
-
-  // 先选 P0
-  for (const clip of clipsByPriority.P0) {
-    if (totalDuration >= maxDuration) break;
-    selected.push(clip);
-    totalDuration += clip.durationSeconds || 0;
+    selected.push(selectedClip);
   }
 
-  // 如果不够，补 P1
-  if (totalDuration < minDuration) {
-    for (const clip of clipsByPriority.P1) {
-      if (totalDuration >= maxDuration) break;
-      selected.push(clip);
-      totalDuration += clip.durationSeconds || 0;
-    }
-  }
-
-  // 还不够，补 P2
-  if (totalDuration < minDuration) {
-    for (const clip of clipsByPriority.P2) {
-      if (totalDuration >= maxDuration) break;
-      selected.push(clip);
-      totalDuration += clip.durationSeconds || 0;
-    }
-  }
+  const totalDuration = selected.reduce((sum, clip) => sum + (clip.durationSeconds || 0), 0);
 
   return {
     clips: selected,
     totalDuration,
-    targetDuration: target,
-    inRange: totalDuration >= minDuration && totalDuration <= maxDuration,
+    segmentCount: segments.length,
+    selectedCount: selected.length,
   };
 }
 
@@ -129,44 +112,66 @@ async function generateScript(seedId, manifest, selectedClips, userRequest) {
     throw new Error('缺少 MIMO_API_KEY，无法生成文案');
   }
 
-  const clipsSummary = selectedClips.map(clip => ({
-    segment: clip.segmentLabel,
-    subject: clip.subject,
-    description: clip.description,
-    proves: clip.proves,
-    duration: clip.durationSeconds,
+  // 构建逻辑线信息
+  const logicLine = selectedClips.map(clip => ({
+    order: clip.segmentOrder,
+    label: clip.segmentLabel,
+    purpose: clip.segmentPurpose,
+    targetDuration: clip.segmentTargetDuration,
+    selectedClip: {
+      subject: clip.subject,
+      description: clip.description,
+      proves: clip.proves,
+      duration: clip.durationSeconds,
+    },
   }));
+
+  const totalDuration = selectedClips.reduce((sum, clip) => sum + (clip.durationSeconds || 0), 0);
 
   const messages = [
     {
       role: 'system',
       content: [
         '你是 813 种子内容裂变的文案生成 Agent。',
-        '你的任务是基于种子素材和用户诉求，生成一份结构化的视频文案脚本。',
-        '脚本必须是 markdown 格式，包含：标题、分镜脚本（按素材段落组织）、素材使用说明。',
-        '分镜脚本的每一段对应一个素材片段，写清楚：画面主体、口播文案、时长。',
-        '口播文案要口语化、适合短视频、符合用户诉求。',
+        '你的任务是基于种子内容的逻辑线和用户诉求，生成一份视频脚本。',
+        '脚本必须严格按照逻辑线的段落顺序组织，每段对应一个素材片段。',
+        '口播文案总长度要匹配总时长（按中文口播速度，约 3-4 字/秒）。',
+        '口播要口语化、适合短视频、符合用户诉求。',
         '只返回 markdown 文本，不要 JSON 包装。',
       ].join('\n'),
     },
     {
       role: 'user',
       content: [
-        `用户诉求：${userRequest || '基于种子内容做一个短视频'}`,
-        `种子内容：${manifest.seedId}`,
-        `活动方向：${manifest.segments?.[0]?.purpose || ''}`,
-        `已选素材（${selectedClips.length} 个片段，总时长 ${selectedClips.reduce((sum, c) => sum + (c.durationSeconds || 0), 0).toFixed(1)}s）：`,
-        JSON.stringify(clipsSummary, null, 2),
+        '请基于以下逻辑线和素材，生成视频脚本：',
         '',
-        '请生成 markdown 格式的视频脚本，结构如下：',
+        `用户诉求：${userRequest || '基于种子内容做一个短视频'}`,
+        `种子内容：${manifest.title || seedId}`,
+        `总时长：${totalDuration.toFixed(1)}s`,
+        '',
+        '逻辑线（按顺序）：',
+        ...logicLine.map(seg => [
+          `${seg.order}. ${seg.label}（${seg.targetDuration}s）`,
+          `   目的：${seg.purpose}`,
+          `   素材：${seg.selectedClip.subject}`,
+          `   画面：${seg.selectedClip.description}`,
+          `   实际时长：${seg.selectedClip.duration}s`,
+        ].join('\n')),
+        '',
+        '返回格式（markdown）：',
         '# 视频标题',
+        '',
         '## 分镜脚本',
-        '### 1. 开场（3s）',
-        '**画面**：红旗盛典拱门',
-        '**口播**：欢迎回家，717 粉丝盛典现场...',
+        '',
+        '### 1. 段落名称（Xs）',
+        '**画面**：画面主体',
+        '**口播**：口播文案（口语化，自然）',
+        '',
+        '### 2. ...',
         '',
         '## 素材使用说明',
-        '- 素材 1：节奏段1_入口开场/红旗盛典拱门/717-拱门.mp4（2.3s）',
+        '- 素材1：文件路径（时长）',
+        '  - 用途说明',
         '- ...',
       ].join('\n'),
     },
