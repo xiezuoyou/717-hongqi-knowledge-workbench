@@ -1962,7 +1962,7 @@ button {
   border: 1px solid rgba(23, 25, 29, 0.08);
   border-radius: var(--radius-shell);
   padding: 32px 36px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.98);
   box-shadow: 0 0 0 1px var(--glass-edge);
   animation: seedModalIn 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -1976,10 +1976,18 @@ button {
 }
 
 .seed-modal-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-4);
+  margin: -32px -36px 0;
+  padding: 20px 36px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(23, 25, 29, 0.06);
 }
 
 .seed-modal-source {
@@ -2021,11 +2029,128 @@ button {
 
 .seed-modal-hero {
   display: grid;
-  justify-items: center;
   gap: var(--spacing-3);
   max-width: 880px;
   margin: 0 auto 8px;
-  text-align: center;
+}
+
+.seed-modal-hero h1 {
+  margin: 0;
+  color: #090d14;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 950;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.seed-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.seed-direction-tag,
+.seed-status-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 860;
+}
+
+.seed-direction-tag {
+  background: rgba(20, 24, 30, 0.06);
+  color: rgba(23, 25, 29, 0.72);
+}
+
+.seed-status-tag {
+  background: rgba(34, 197, 94, 0.1);
+  color: rgba(21, 128, 61, 0.92);
+}
+
+.seed-info-section {
+  display: grid;
+  gap: var(--spacing-3);
+  padding: 24px;
+  border: 1px solid rgba(23, 25, 29, 0.08);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.seed-info-section h2 {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-lg);
+  font-weight: 920;
+}
+
+.seed-info-section p {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.68);
+  font-size: var(--text-base);
+  font-weight: 660;
+  line-height: 1.7;
+}
+
+.seed-segments-section {
+  display: grid;
+  gap: var(--spacing-4);
+  padding: 24px;
+  border: 1px solid rgba(23, 25, 29, 0.08);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.seed-segments-section h2 {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-lg);
+  font-weight: 920;
+}
+
+.seed-segments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.seed-segment-card {
+  display: grid;
+  gap: var(--spacing-2);
+  padding: 16px;
+  border: 1px solid rgba(23, 25, 29, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.seed-segment-card .segment-order {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(20, 24, 30, 0.06);
+  color: rgba(23, 25, 29, 0.58);
+  font-size: var(--text-2xs);
+  font-weight: 860;
+}
+
+.seed-segment-card strong {
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 900;
+}
+
+.seed-segment-card p {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.62);
+  font-size: var(--text-sm);
+  font-weight: 660;
+  line-height: 1.6;
 }
 
 .seed-modal-hero span,
@@ -2179,6 +2304,542 @@ button {
   font-weight: 880;
 }
 
+/* AI 裂变悬浮按钮 */
+.seed-ai-fab-trigger {
+  position: sticky;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 48px;
+  padding: 0 24px;
+  margin: 0 auto;
+  border: 1px solid rgba(23, 25, 29, 0.12);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.seed-ai-fab-trigger:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.seed-ai-fab-trigger svg {
+  color: rgba(23, 25, 29, 0.7);
+}
+
+/* AI 裂变悬浮面板 */
+.seed-ai-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  animation: seedAiOverlayIn 240ms ease both;
+}
+
+@keyframes seedAiOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.seed-ai-panel {
+  position: relative;
+  display: grid;
+  gap: var(--spacing-4);
+  width: min(640px, 100%);
+  max-height: min(720px, 90vh);
+  overflow: auto;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.12);
+  animation: seedAiPanelIn 280ms cubic-bezier(0.2, 0.8, 0.2, 1) 60ms both;
+}
+
+.seed-ai-panel.is-input-mode {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: 12px 16px;
+  width: min(680px, 100%);
+  max-height: unset;
+}
+
+.seed-ai-input {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 660;
+  outline: none;
+}
+
+.seed-ai-input::placeholder {
+  color: rgba(23, 25, 29, 0.4);
+}
+
+.seed-ai-input:focus {
+  background: rgba(23, 25, 29, 0.02);
+}
+
+.seed-ai-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: rgba(23, 25, 29, 0.08);
+  color: rgba(23, 25, 29, 0.92);
+  transition: all 160ms ease;
+}
+
+.seed-ai-submit-btn:hover:not(:disabled) {
+  background: rgba(23, 25, 29, 0.12);
+  transform: scale(1.05);
+}
+
+.seed-ai-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@keyframes seedAiPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.seed-ai-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.seed-ai-panel::-webkit-scrollbar-thumb {
+  background: rgba(20, 24, 30, 0.2);
+  border-radius: 3px;
+}
+
+.seed-ai-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.seed-ai-panel-header > div {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.seed-ai-panel-header h2 {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-xl);
+  font-weight: 920;
+}
+
+.seed-ai-panel-header p {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.54);
+  font-size: var(--text-sm);
+  font-weight: 660;
+}
+
+.seed-ai-panel-header > button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: rgba(23, 25, 29, 0.04);
+  color: rgba(23, 25, 29, 0.6);
+  transition: all 160ms ease;
+}
+
+.seed-ai-panel-header > button:hover {
+  background: rgba(23, 25, 29, 0.08);
+  color: rgba(23, 25, 29, 0.92);
+}
+
+/* AI 裂变功能区 */
+.seed-ai-section {
+  display: grid;
+  gap: var(--spacing-4);
+  margin: 32px 0;
+  padding: 24px;
+  border: 1px solid rgba(23, 25, 29, 0.08);
+  border-radius: var(--radius-lg);
+  background: rgba(23, 25, 29, 0.02);
+  animation: seedAiSectionIn 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes seedAiSectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.seed-ai-section > header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.seed-ai-section > header svg {
+  flex-shrink: 0;
+  color: rgba(23, 25, 29, 0.5);
+}
+
+.seed-ai-section > header > div {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.seed-ai-section h2 {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-lg);
+  font-weight: 920;
+}
+
+.seed-ai-section > header p {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.54);
+  font-size: var(--text-xs);
+  font-weight: 660;
+}
+
+.seed-ai-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-3);
+}
+
+.seed-ai-actions button {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: 18px;
+  border: 1px solid rgba(23, 25, 29, 0.12);
+  border-radius: var(--radius-md);
+  background: rgba(23, 25, 29, 0.03);
+  text-align: left;
+  transition: all 180ms ease;
+  animation: seedAiActionIn 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.seed-ai-actions button:nth-child(1) {
+  animation-delay: 80ms;
+}
+
+.seed-ai-actions button:nth-child(2) {
+  animation-delay: 140ms;
+}
+
+@keyframes seedAiActionIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.seed-ai-actions button svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: rgba(23, 25, 29, 0.6);
+}
+
+.seed-ai-actions button > div {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.seed-ai-actions button strong {
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 900;
+}
+
+.seed-ai-actions button small {
+  color: rgba(23, 25, 29, 0.54);
+  font-size: var(--text-xs);
+  font-weight: 660;
+  line-height: 1.5;
+}
+
+.seed-ai-actions button:hover,
+.seed-ai-actions button:focus-visible {
+  border-color: rgba(23, 25, 29, 0.2);
+  background: rgba(23, 25, 29, 0.06);
+  transform: translateY(-2px);
+}
+
+/* AI 输入和结果区 */
+.seed-ai-workspace {
+  display: grid;
+  gap: var(--spacing-4);
+  animation: seedAiWorkspaceIn 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes seedAiWorkspaceIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.seed-ai-input-form {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: 12px 16px;
+  border: 1px solid rgba(23, 25, 29, 0.1);
+  border-radius: var(--radius-md);
+  background: rgba(23, 25, 29, 0.02);
+  animation: seedAiFormIn 280ms cubic-bezier(0.2, 0.8, 0.2, 1) 60ms both;
+}
+
+@keyframes seedAiFormIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.seed-ai-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: rgba(23, 25, 29, 0.6);
+  transition: all 160ms ease;
+}
+
+.seed-ai-back-btn:hover,
+.seed-ai-back-btn:focus-visible {
+  background: rgba(23, 25, 29, 0.08);
+  color: rgba(23, 25, 29, 0.92);
+}
+
+.seed-ai-input-form input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-sm);
+  font-weight: 660;
+}
+
+.seed-ai-input-form input::placeholder {
+  color: rgba(23, 25, 29, 0.4);
+}
+
+.seed-ai-input-form > button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background: rgba(23, 25, 29, 0.12);
+  color: rgba(23, 25, 29, 0.92);
+  transition: all 160ms ease;
+}
+
+.seed-ai-input-form > button[type="submit"]:hover:not(:disabled),
+.seed-ai-input-form > button[type="submit"]:focus-visible:not(:disabled) {
+  background: rgba(23, 25, 29, 0.18);
+  transform: scale(1.05);
+}
+
+.seed-ai-input-form > button[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.seed-ai-result {
+  display: grid;
+  gap: var(--spacing-3);
+  padding: 20px;
+  border: 1px solid rgba(23, 25, 29, 0.12);
+  border-radius: var(--radius-lg);
+  background: rgba(23, 25, 29, 0.03);
+  animation: seedAiResultIn 320ms cubic-bezier(0.2, 0.8, 0.2, 1) 100ms both;
+}
+
+@keyframes seedAiResultIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.seed-ai-result > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.seed-ai-result > header > div {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.seed-ai-result h3 {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 920;
+}
+
+.seed-ai-result > header p {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.62);
+  font-size: var(--text-xs);
+  font-weight: 660;
+  line-height: 1.6;
+}
+
+.seed-ai-result > header button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(23, 25, 29, 0.16);
+  border-radius: var(--radius-pill);
+  background: rgba(23, 25, 29, 0.06);
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-sm);
+  font-weight: 900;
+  white-space: nowrap;
+  transition: all 160ms ease;
+}
+
+.seed-ai-result > header button:hover,
+.seed-ai-result > header button:focus-visible {
+  background: rgba(23, 25, 29, 0.1);
+  transform: translateY(-1px);
+}
+
+.seed-ai-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: 16px;
+  color: rgba(23, 25, 29, 0.6);
+  font-size: var(--text-sm);
+  font-weight: 660;
+}
+
+.seed-ai-result article {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.seed-ai-result article strong {
+  color: rgba(23, 25, 29, 0.78);
+  font-size: var(--text-sm);
+  font-weight: 880;
+}
+
+.seed-ai-result article p {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.68);
+  font-size: var(--text-sm);
+  font-weight: 660;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.seed-ai-continue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 24px;
+  border: 1px solid rgba(23, 25, 29, 0.18);
+  border-radius: var(--radius-pill);
+  background: rgba(23, 25, 29, 0.06);
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-sm);
+  font-weight: 900;
+  transition: all 180ms ease;
+}
+
+.seed-ai-continue:hover:not(:disabled),
+.seed-ai-continue:focus-visible:not(:disabled) {
+  background: rgba(23, 25, 29, 0.1);
+  transform: translateY(-1px);
+}
+
+.seed-ai-continue:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .seed-modal-ai-fab {
   position: sticky;
   right: 0;
@@ -2186,107 +2847,150 @@ button {
   z-index: 5;
   justify-self: end;
   display: flex;
-  width: 42px;
-  height: 42px;
+  width: auto;
+  height: auto;
   align-items: center;
   justify-content: flex-end;
-  margin-top: -12px;
-  margin-right: 2px;
+  margin-top: 20px;
+  margin-right: 20px;
   transition: width 240ms cubic-bezier(0.18, 0.74, 0.18, 1);
 }
 
 .seed-modal-ai-main {
-  display: inline-grid;
+  display: inline-flex;
   position: relative;
   z-index: 2;
   flex: 0 0 auto;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid rgba(23, 25, 29, 0.1);
+  min-width: 140px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-pill);
-  background: rgba(21, 24, 29, 0.94);
+  padding: 0 24px;
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
   color: #fff;
-  box-shadow: none;
+  font-size: var(--text-base);
+  font-weight: 900;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
   transition:
     transform 180ms ease,
     background 180ms ease,
-    color 180ms ease;
+    box-shadow 180ms ease;
+}
+
+.seed-modal-ai-main::before {
+  content: 'AI 裂变';
+}
+
+.seed-modal-ai-main:hover,
+.seed-modal-ai-main:focus-visible {
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+  box-shadow: 0 6px 20px rgba(147, 51, 234, 0.5), 0 3px 10px rgba(0, 0, 0, 0.25);
 }
 
 .seed-modal-ai-actions {
   position: absolute;
-  right: 52px;
-  bottom: 0;
+  right: 0;
+  bottom: 62px;
   display: flex;
-  width: max-content;
-  height: 42px;
-  align-items: center;
+  flex-direction: column;
+  width: 320px;
   gap: var(--spacing-2);
   pointer-events: none;
 }
 
 .seed-modal-ai-actions button {
   position: relative;
-  display: inline-flex;
-  min-width: 0;
-  height: 42px;
-  align-items: center;
-  gap: var(--spacing-2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 72px;
+  gap: var(--spacing-1);
   border: 1px solid rgba(23, 25, 29, 0.1);
-  border-radius: var(--radius-pill);
-  padding: 0 15px;
+  border-radius: var(--radius-lg);
+  padding: 14px 50px 14px 18px;
   opacity: 0;
-  color: rgba(21, 24, 29, 0.72);
-  font-size: var(--text-sm);
-  font-weight: 880;
-  white-space: nowrap;
-  background: rgba(255, 255, 255, 0.94);
-  transform: translate3d(18px, 0, 0) scaleX(0.72);
-  transform-origin: right center;
+  color: rgba(21, 24, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 900;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.96);
+  transform: translate3d(0, 12px, 0) scale(0.95);
   transition:
-    opacity 180ms ease,
-    transform 240ms cubic-bezier(0.18, 0.74, 0.18, 1),
+    opacity 200ms ease,
+    transform 260ms cubic-bezier(0.18, 0.74, 0.18, 1),
     border-color 180ms ease,
     background 180ms ease,
     color 180ms ease;
 }
 
-.seed-modal-ai-actions button small {
+.seed-modal-ai-actions button svg {
   position: absolute;
-  left: 50%;
-  top: calc(100% + 9px);
-  width: max-content;
-  min-width: 0;
-  opacity: 0;
-  color: rgba(23, 25, 29, 0.48);
-  font-size: var(--text-2xs);
-  font-weight: 760;
-  line-height: 1.45;
-  pointer-events: none;
-  text-align: center;
-  transform: translate3d(-50%, -4px, 0);
-  transition:
-    opacity 160ms ease,
-    transform 180ms ease;
-  white-space: nowrap;
+  top: 16px;
+  right: 18px;
+  opacity: 0.4;
+}
+
+.seed-modal-ai-actions button > span {
+  display: block;
+  color: rgba(21, 24, 29, 0.92);
+  font-size: var(--text-base);
+  font-weight: 900;
+}
+
+.seed-modal-ai-actions button small {
+  display: block;
+  width: 100%;
+  margin: 0;
+  opacity: 1;
+  color: rgba(23, 25, 29, 0.5);
+  font-size: var(--text-xs);
+  font-weight: 660;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
 }
 
 .seed-modal-ai-actions button:hover,
 .seed-modal-ai-actions button:focus-visible {
-  border-color: rgba(21, 24, 29, 0.22);
+  border-color: rgba(147, 51, 234, 0.3);
   background: #fff;
-  color: #15181d;
+  transform: translate3d(0, -2px, 0) scale(1);
+}
+
+.seed-modal-ai-actions button:hover svg,
+.seed-modal-ai-actions button:focus-visible svg {
+  opacity: 0.7;
 }
 
 .seed-modal-ai-actions button:hover small,
 .seed-modal-ai-actions button:focus-visible small {
-  opacity: 1;
-  transform: translate3d(-50%, 0, 0);
+  color: rgba(23, 25, 29, 0.64);
 }
 
 .seed-modal-ai-fab.is-open {
-  width: 438px;
+  width: auto;
+}
+
+.seed-modal-ai-fab.is-open .seed-modal-ai-actions {
+  pointer-events: all;
+}
+
+.seed-modal-ai-fab.is-open .seed-modal-ai-actions button {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.seed-modal-ai-fab.is-open .seed-modal-ai-actions button:nth-child(1) {
+  transition-delay: 60ms;
+}
+
+.seed-modal-ai-fab.is-open .seed-modal-ai-actions button:nth-child(2) {
+  transition-delay: 100ms;
 }
 
 .seed-modal-ai-fab.is-input-mode {
@@ -2635,6 +3339,33 @@ button {
   color: #fff;
   font-size: var(--text-sm);
   font-weight: 900;
+}
+
+.seed-ai-continue-button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  padding: 0 20px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--text-sm);
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.seed-ai-continue-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.seed-ai-continue-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @keyframes seedAiComposerIn {

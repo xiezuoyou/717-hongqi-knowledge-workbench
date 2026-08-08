@@ -1,0 +1,58 @@
+{
+  "seedId": "seed-006",
+  "version": 1,
+  "directionId": "stage-atmosphere",
+  "title": "717粉丝盛典｜晚会舞台种子",
+  "angle": "突出舞台氛围感、灯光节奏和品牌露出",
+  "status": "ready",
+  "format": {
+    "aspectRatio": "9:16",
+    "targetDurationSeconds": 24,
+    "durationToleranceSeconds": 5
+  },
+  "logicalLine": "从入口开场建立活动语境，通过位置指引说明地点和路线，展示节目打卡的可玩可看点，过渡到休闲体验的松弛氛围，承接赛车展示的具体亮点，最后用关注收尾导流。",
+  "segments": [
+    {
+      "id": "seg-1",
+      "order": 1,
+      "label": "入口开场",
+      "purpose": "用于开头快速进入 717 盛典语境",
+      "required": true
+    },
+    {
+      "id": "seg-2",
+      "order": 2,
+      "label": "位置指引",
+      "purpose": "用于说明活动地点和打卡路线",
+      "required": true
+    },
+    {
+      "id": "seg-3",
+      "order": 3,
+      "label": "节目打卡",
+      "purpose": "用于展示现场有东西可玩、可看、可拍",
+      "required": true
+    },
+    {
+      "id": "seg-4",
+      "order": 4,
+      "label": "休闲体验",
+      "purpose": "用于展示更松弛的现场体验",
+      "required": true
+    },
+    {
+      "id": "seg-5",
+      "order": 5,
+      "label": "赛车展示",
+      "purpose": "用于承接具体亮点，让视频从活动氛围进入可看的车",
+      "required": true
+    },
+    {
+      "id": "seg-6",
+      "order": 6,
+      "label": "关注收尾",
+      "purpose": "用于账号导流前的实拍收束画面",
+      "required": true
+    }
+  ]
+}

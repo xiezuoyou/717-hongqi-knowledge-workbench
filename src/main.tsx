@@ -895,7 +895,7 @@ type SeedAiResult = {
   action: SeedAiAction;
   title: string;
   intro: string;
-  sections: Array<{ label: string; content: string }>;
+  sections?: Array<{ label: string; content: string }>;
   scriptRows?: Array<{ time: string; voice: string; visual: string }>;
   materials?: Array<{ name: string; type: string; note: string }>;
   video?: {
@@ -908,6 +908,8 @@ type SeedAiResult = {
   isError?: boolean;
   isLoading?: boolean;
   isWarning?: boolean;
+  needsConfirmation?: boolean;
+  pendingRequest?: { seedId: string; userRequest: string; brief?: string };
 };
 
 const seedAiActionMeta: Record<
@@ -925,6 +927,7 @@ const seedAiActionMeta: Record<
 };
 
 type SeedCard = {
+  id: string;
   title: string;
   topicId: TopicId;
   source: string;
@@ -936,6 +939,7 @@ type SeedCard = {
 };
 
 const seedCards = seeds.map(seed => ({
+  id: seed.id,
   title: seed.title,
   topicId: seed.directionId,
   source: "813 种子内容",
@@ -1480,6 +1484,7 @@ function WorkbenchPage({
   const [displayTab, setDisplayTab] = React.useState("seed");
   const [isContentVisible, setIsContentVisible] = React.useState(true);
   const [selectedSeed, setSelectedSeed] = React.useState<SeedCard | null>(null);
+  const [seedManifest, setSeedManifest] = React.useState<any | null>(null);
   const [isSeedAiOpen, setIsSeedAiOpen] = React.useState(false);
   const [activeSeedAiAction, setActiveSeedAiAction] = React.useState<SeedAiAction | null>(null);
   const [isSeedAiReturning, setIsSeedAiReturning] = React.useState(false);
@@ -2109,6 +2114,22 @@ function WorkbenchPage({
   }, [selectedSeed]);
 
   React.useEffect(() => {
+    if (!selectedSeed) {
+      setSeedManifest(null);
+      return;
+    }
+
+    // 加载种子的 manifest 数据
+    fetch(`/seeds/${selectedSeed.id}.json`)
+      .then(res => res.json())
+      .then(data => setSeedManifest(data))
+      .catch(err => {
+        console.error(`[seed manifest] 加载失败 ${selectedSeed.id}:`, err);
+        setSeedManifest(null);
+      });
+  }, [selectedSeed]);
+
+  React.useEffect(() => {
     setActiveLibraryAnalysisTab("overview");
     if (!selectedLibraryEntry) return;
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -2162,14 +2183,7 @@ function WorkbenchPage({
       const seedTitle = selectedSeed?.title || "813粉丝盛典｜晚会舞台种子";
 
       if (activeSeedAiAction === "package") {
-        // Step 1: 判断可行性
-        setSeedAiResult({
-          action: "package",
-          title: "分析可行性中...",
-          intro: "正在分析当前种子内容是否支持您的需求",
-          isLoading: true,
-        });
-
+        // Step 1: 静默判断可行性（不显示UI）
         const feasibilityResponse = await fetch('http://127.0.0.1:8796/seed/feasibility', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2190,12 +2204,12 @@ function WorkbenchPage({
         if (feasibility.verdict === 'unsupported') {
           setSeedAiResult({
             action: "package",
-            title: "当前种子不支持此需求",
-            intro: feasibility.reason,
+            title: "暂不支持此需求",
+            intro: feasibility.reason.replace(/种子内容|种子/g, "素材库"),
             sections: [
               {
                 label: "建议",
-                content: feasibility.fallback || "请尝试调整需求或选择其他种子内容",
+                content: feasibility.fallback?.replace(/种子内容|种子/g, "素材") || "请尝试调整需求描述",
               },
             ],
             isError: true,
@@ -2204,32 +2218,29 @@ function WorkbenchPage({
         }
 
         if (feasibility.verdict === 'degradable') {
-          // 显示降级提示，但继续生成
+          // 显示调整方案，等待用户确认
           setSeedAiResult({
             action: "package",
-            title: "可以做，但需要调整预期",
-            intro: feasibility.reason,
+            title: "需要调整一下",
+            intro: feasibility.reason.replace(/种子内容|种子/g, "素材库"),
             sections: [
               {
-                label: "调整建议",
-                content: feasibility.fallback,
-              },
-              {
-                label: "继续生成",
-                content: "将根据现有素材生成素材包，请注意查看实际内容是否符合预期。",
+                label: "调整方案",
+                content: feasibility.fallback?.replace(/种子内容|种子/g, "素材") || "根据现有素材生成",
               },
             ],
             isWarning: true,
+            needsConfirmation: true,
+            pendingRequest: { seedId, userRequest: submittedPrompt || '生成素材包', brief: feasibility.brief },
           });
-          // 等待 1 秒让用户看到提示，然后继续
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          return; // 等待用户点击"继续生成"
         }
 
-        // Step 3: 生成素材包
+        // Step 3: supported - 直接生成素材包
         setSeedAiResult({
           action: "package",
-          title: "生成素材包中...",
-          intro: feasibility.brief || "正在生成素材包",
+          title: "生成中...",
+          intro: "正在为你准备素材包",
           isLoading: true,
         });
 
@@ -2259,10 +2270,6 @@ function WorkbenchPage({
             {
               label: "素材包信息",
               content: `包含 ${result.clipCount} 个视频片段，总时长 ${result.totalDuration.toFixed(1)} 秒。`,
-            },
-            {
-              label: "下载地址",
-              content: `[点击下载素材包](http://127.0.0.1:8793${result.zipUrl})`,
             },
           ],
           downloadUrl: `http://127.0.0.1:8793${result.zipUrl}`,
@@ -2327,6 +2334,60 @@ function WorkbenchPage({
     link.href = seedAiResult.downloadUrl;
     link.download = "";
     link.click();
+  };
+
+  const handleContinueGeneration = async () => {
+    if (!seedAiResult?.pendingRequest) return;
+
+    const { seedId, userRequest, brief } = seedAiResult.pendingRequest;
+
+    setIsSeedAiGenerating(true);
+    setSeedAiResult({
+      action: "package",
+      title: "生成中...",
+      intro: brief || "正在为你准备素材包",
+      isLoading: true,
+    });
+
+    try {
+      const response = await fetch('http://127.0.0.1:8793/seed/package', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seedId, userRequest }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: '请求失败' }));
+        throw new Error(error.error || `HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      setSeedAiResult({
+        action: "package",
+        title: "素材包已生成",
+        intro: userRequest !== '生成素材包'
+          ? `已根据你的需求生成素材包：${userRequest}`
+          : "基于当前种子内容，已生成可直接使用的素材包。",
+        sections: [
+          {
+            label: "素材包信息",
+            content: `包含 ${result.clipCount} 个视频片段，总时长 ${result.totalDuration.toFixed(1)} 秒。`,
+          },
+        ],
+        downloadUrl: `http://127.0.0.1:8793${result.zipUrl}`,
+      });
+    } catch (error: any) {
+      console.error("[seed AI continue]", error);
+      setSeedAiResult({
+        action: "package",
+        title: "生成失败",
+        intro: error.message || "生成素材包时出错，请重试",
+        isError: true,
+      });
+    } finally {
+      setIsSeedAiGenerating(false);
+    }
   };
 
   React.useLayoutEffect(() => {
@@ -3436,220 +3497,187 @@ function WorkbenchPage({
               </header>
 
               <div className="seed-modal-hero">
-                <span>种子内容分析</span>
                 <h1>{selectedSeed.title}</h1>
-                <p>
-                  这组素材适合作为活动传播的第一批内容底稿，重点承接舞台氛围、粉丝情绪、品牌共创和盛典记忆点，后续可被 AI 用来生成短视频脚本、图文标题、复盘摘要与素材检索依据。
-                </p>
-              </div>
-
-              <div className="seed-detail-grid">
-                {seedDetailPanels.map((panel) => (
-                  <article className={panel.featured ? "is-featured" : ""} key={panel.title}>
-                    <strong>{panel.title}</strong>
-                    <p>{panel.copy}</p>
-                  </article>
-                ))}
-              </div>
-
-              <section className="seed-keyword-panel">
-                <h2>关键信息</h2>
-                <div>
-                  {seedKeywords.map((keyword) => (
-                    <span key={keyword}>{keyword}</span>
-                  ))}
+                <div className="seed-meta-row">
+                  <span className="seed-direction-tag">
+                    {directions.find(d => d.id === selectedSeed.topicId)?.label || "种子内容"}
+                  </span>
+                  <span className="seed-status-tag">
+                    {selectedSeed.count}
+                  </span>
                 </div>
-              </section>
-
-              <section className="seed-script-panel">
-                <span>脚本拆解</span>
-                <h2>可以把这组素材拆成三个短视频结构。</h2>
-                <div className="seed-script-list">
-                  {seedScripts.map((script) => (
-                    <article key={script.title}>
-                      <strong>{script.title}</strong>
-                      <p>{script.copy}</p>
-                    </article>
-                  ))}
-                </div>
-              </section>
-
-              <div className="seed-visual-row">
-                {seedVisuals.map((visual) => (
-                  <div className="seed-visual-card" key={visual.label}>
-                    <img src={visual.image} alt={visual.label} />
-                    <figcaption>{visual.label}</figcaption>
-                  </div>
-                ))}
               </div>
 
-              <div
-                className={`seed-modal-ai-fab ${isSeedAiOpen ? "is-open" : ""} ${
-                  activeSeedAiAction ? "is-input-mode" : ""
-                } ${isSeedAiReturning ? "is-returning" : ""} ${
-                  isSeedAiGenerating ? "is-generating" : ""
-                } ${seedAiResult ? "is-result-mode" : ""}`}
-                aria-label="AI 功能入口"
+              {seedManifest ? (
+                <>
+                  {/* 内容拆解 */}
+                  <section className="seed-info-section">
+                    <h2>内容拆解</h2>
+                    <p>{seedManifest.angle}</p>
+                  </section>
+
+                  {/* 逻辑线 */}
+                  {seedManifest.logicalLine ? (
+                    <section className="seed-info-section">
+                      <h2>逻辑线</h2>
+                      <p>{seedManifest.logicalLine}</p>
+                    </section>
+                  ) : null}
+
+                  {/* 分段结构 */}
+                  {seedManifest.segments && seedManifest.segments.length > 0 ? (
+                    <section className="seed-segments-section">
+                      <h2>分段结构</h2>
+                      <div className="seed-segments-grid">
+                        {seedManifest.segments.map((seg: any) => (
+                          <article key={seg.id} className="seed-segment-card">
+                            <span className="segment-order">段 {seg.order}</span>
+                            <strong>{seg.label}</strong>
+                            <p>{seg.purpose}</p>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+                </>
+              ) : (
+                <section className="seed-info-section">
+                  <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>正在加载种子内容信息...</p>
+                </section>
+              )}
+
+              {/* AI 裂变悬浮按钮 */}
+              <button
+                className="seed-ai-fab-trigger"
+                type="button"
+                onClick={() => setIsSeedAiOpen(!isSeedAiOpen)}
+                aria-label={isSeedAiOpen ? "关闭 AI 裂变" : "打开 AI 裂变"}
               >
-                {activeSeedAiAction ? (
-                  <form
-                    className="seed-modal-ai-composer"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      handleSeedAiSubmit();
-                    }}
+                <Sparkles size={20} />
+                <span>AI 裂变</span>
+              </button>
+
+              {/* AI 裂变悬浮面板 */}
+              {isSeedAiOpen ? (
+                <div className="seed-ai-overlay" onClick={() => setIsSeedAiOpen(false)}>
+                  <div
+                    className={`seed-ai-panel ${activeSeedAiAction && !seedAiResult ? 'is-input-mode' : ''}`}
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <button
-                      className="seed-modal-ai-back"
-                      type="button"
-                      aria-label="返回 AI 功能列表"
-                      onClick={handleSeedAiBack}
-                    >
-                      <ArrowLeft size={17} />
-                    </button>
-                    <input
-                      aria-label={seedAiActionMeta[activeSeedAiAction].label}
-                      value={seedAiPrompt}
-                      placeholder={
-                        seedAiResult
-                          ? seedAiResult.action === "package"
-                            ? "你可以继续问这个素材包，比如补充封面、分镜或剪辑节奏"
-                            : seedAiResult.action === "video"
-                              ? "你可以继续问这个视频，比如改标题、换发布角度或补充话题标签"
-                            : "你可以继续问这个脚本，比如帮我扩写、换角度、改成更口语化"
-                          : seedAiActionMeta[activeSeedAiAction].placeholder
-                      }
-                      onChange={(event) => setSeedAiPrompt(event.target.value)}
-                    />
-                    <button className="seed-modal-ai-main" type="submit" aria-label="发送">
-                      {isSeedAiGenerating ? (
-                        <ThinkingOrb state="composing" size={20} theme="light" aria-label="正在生成" />
-                      ) : <Send size={17} />}
-                    </button>
-                    {seedAiResult ? (
-                      <section
-                        className={`seed-ai-result-panel ${
-                          seedAiResult.action === "video" ? "is-video-result" : ""
-                        } ${seedAiResult.isLoading ? "is-loading" : ""} ${
-                          seedAiResult.isError ? "is-error" : ""
-                        } ${seedAiResult.isWarning ? "is-warning" : ""}`}
-                        aria-label="AI 生成结果"
-                      >
-                        <header className="seed-ai-result-head">
+                    {activeSeedAiAction && !seedAiResult ? (
+                      <>
+                        <button
+                          type="button"
+                          className="seed-ai-back-btn"
+                          onClick={handleSeedAiBack}
+                          aria-label="返回 AI 功能列表"
+                        >
+                          <ArrowLeft size={18} />
+                        </button>
+                        <input
+                          type="text"
+                          className="seed-ai-input"
+                          aria-label={seedAiActionMeta[activeSeedAiAction].label}
+                          value={seedAiPrompt}
+                          placeholder={seedAiActionMeta[activeSeedAiAction].placeholder}
+                          onChange={(event) => setSeedAiPrompt(event.target.value)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' && !isSeedAiGenerating) {
+                              event.preventDefault();
+                              handleSeedAiSubmit();
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="seed-ai-submit-btn"
+                          disabled={isSeedAiGenerating}
+                          onClick={handleSeedAiSubmit}
+                          aria-label="提交"
+                        >
+                          {isSeedAiGenerating ? (
+                            <ThinkingOrb state="composing" size={20} theme="light" aria-label="正在生成" />
+                          ) : (
+                            <Send size={18} />
+                          )}
+                        </button>
+                      </>
+                    ) : !activeSeedAiAction && !seedAiResult ? (
+                      <>
+                        <header className="seed-ai-panel-header">
                           <div>
-                            <span>{seedAiResult.title}</span>
+                            <h2>AI 裂变</h2>
+                            <p>基于种子内容生成素材包或成片视频</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setIsSeedAiOpen(false)}
+                            aria-label="关闭"
+                          >
+                            <X size={18} />
+                          </button>
+                        </header>
+                        <div className="seed-ai-actions">
+                          <button type="button" onClick={() => setActiveSeedAiAction("package")}>
+                            <Package size={18} />
+                            <div>
+                              <strong>素材包生成</strong>
+                              <small>适合具备视频剪辑能力、需要素材包支持的用户</small>
+                            </div>
+                          </button>
+                          <button type="button" onClick={() => setActiveSeedAiAction("video")}>
+                            <Clapperboard size={18} />
+                            <div>
+                              <strong>视频生成</strong>
+                              <small>根据需求自动生成种子裂变视频</small>
+                            </div>
+                          </button>
+                        </div>
+                      </>
+                    ) : seedAiResult ? (
+                      <div className="seed-ai-result">
+                        <header>
+                          <div>
+                            <h3>{seedAiResult.title}</h3>
                             <p>{seedAiResult.intro}</p>
                           </div>
-                          {seedAiResult.action === "package" && seedAiResult.downloadUrl && !seedAiResult.isLoading && !seedAiResult.isError ? (
+                          {seedAiResult.downloadUrl && !seedAiResult.isLoading && !seedAiResult.isError ? (
                             <button type="button" onClick={handleDownloadMaterialPackage}>
-                              <Download size={15} />
+                              <Download size={16} />
                               下载素材包
                             </button>
                           ) : null}
                         </header>
+
                         {seedAiResult.isLoading ? (
-                          <div className="seed-ai-loading-state">
-                            <ThinkingOrb state="composing" size={24} theme="light" />
+                          <div className="seed-ai-loading">
+                            <ThinkingOrb state="composing" size={20} theme="light" aria-label="正在处理" />
                             <span>处理中...</span>
                           </div>
                         ) : null}
-                        <div className={seedAiResult.action === "video" ? "seed-ai-video-result" : ""}>
-                          {seedAiResult.action === "video" && seedAiResult.video ? (
-                            <div className="seed-ai-video-preview">
-                              <video
-                                src={seedAiResult.video.src}
-                                controls
-                                playsInline
-                                preload="metadata"
-                              />
-                              <span>{seedAiResult.video.title}</span>
-                            </div>
-                          ) : null}
-                          <div className={seedAiResult.action === "video" ? "seed-ai-video-copy" : ""}>
-                          {seedAiResult.sections.map((section) => (
-                            <article key={section.label}>
-                              <strong>{section.label}</strong>
-                              <p>{section.content}</p>
-                            </article>
-                          ))}
-                          {seedAiResult.action === "script" ? (
-                            <article className="seed-ai-script-table-card">
-                              <strong>发布脚本</strong>
-                              <div className="seed-ai-script-table">
-                                <span>时间</span>
-                                <span>口播文案</span>
-                                <span>素材画面建议</span>
-                                {seedAiResult.scriptRows?.map((row) => (
-                                  <React.Fragment key={row.time}>
-                                    <em>{row.time}</em>
-                                    <p>{row.voice}</p>
-                                    <p>{row.visual}</p>
-                                  </React.Fragment>
-                                ))}
-                              </div>
-                            </article>
-                          ) : null}
-                          {seedAiResult.action === "package" ? (
-                            <article className="seed-ai-material-card">
-                              <strong>素材包内容</strong>
-                              <div className="seed-ai-material-list">
-                                {seedAiResult.materials?.map((material) => (
-                                  <section key={material.name}>
-                                    <span>{material.type}</span>
-                                    <b>{material.name}</b>
-                                    <p>{material.note}</p>
-                                  </section>
-                                ))}
-                              </div>
-                            </article>
-                          ) : null}
-                          {seedAiResult.action === "video" && seedAiResult.video ? (
-                            <article className="seed-ai-video-tags">
-                              <strong>推荐标签</strong>
-                              <div>
-                                {seedAiResult.video.tags.map((tag) => (
-                                  <span key={tag}>{tag}</span>
-                                ))}
-                              </div>
-                              <p>{seedAiResult.video.copy}</p>
-                            </article>
-                          ) : null}
-                          </div>
-                        </div>
-                      </section>
+
+                        {seedAiResult.sections?.map((section) => (
+                          <article key={section.label}>
+                            <strong>{section.label}</strong>
+                            <p>{section.content}</p>
+                          </article>
+                        ))}
+
+                        {seedAiResult.needsConfirmation ? (
+                          <button
+                            type="button"
+                            className="seed-ai-continue"
+                            onClick={handleContinueGeneration}
+                            disabled={isSeedAiGenerating}
+                          >
+                            继续生成
+                          </button>
+                        ) : null}
+                      </div>
                     ) : null}
-                  </form>
-                ) : (
-                  <>
-                    <button
-                      className="seed-modal-ai-main"
-                      type="button"
-                      aria-label={isSeedAiOpen ? "收起 AI 功能" : "打开 AI 功能"}
-                      aria-expanded={isSeedAiOpen}
-                      onClick={() => setIsSeedAiOpen((current) => !current)}
-                    >
-                      <Sparkles size={18} />
-                    </button>
-                    <div className="seed-modal-ai-actions" aria-label="AI 功能列表">
-                      <button type="button" onClick={() => setActiveSeedAiAction("script")}>
-                        <PenLine size={15} />
-                        输出脚本
-                        <small>适合已有素材、想自行剪辑的用户</small>
-                      </button>
-                      <button type="button" onClick={() => setActiveSeedAiAction("package")}>
-                        <Package size={15} />
-                        素材包生成
-                        <small>适合具备视频剪辑能力、需要素材包支持的用户</small>
-                      </button>
-                      <button type="button" onClick={() => setActiveSeedAiAction("video")}>
-                        <Clapperboard size={15} />
-                        视频生成
-                        <small>根据需求自动生成种子裂变视频</small>
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </div>
+              ) : null}
             </section>
 
           </div>
