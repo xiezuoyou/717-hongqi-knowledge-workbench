@@ -2142,59 +2142,58 @@ function WorkbenchPage({
     }, 190);
   };
 
-  const handleSeedAiSubmit = () => {
+  const handleSeedAiSubmit = async () => {
     if (!activeSeedAiAction || isSeedAiGenerating) return;
     const submittedPrompt = seedAiPrompt;
+    const seedId = selectedSeed?.id;
+
     setIsSeedAiGenerating(true);
-    if (!seedAiResult) {
-      setSeedAiResult(null);
-    }
+    setSeedAiResult(null);
+
     if (seedAiGenerateTimerRef.current) {
       window.clearTimeout(seedAiGenerateTimerRef.current);
     }
-    seedAiGenerateTimerRef.current = window.setTimeout(() => {
+
+    try {
       const seedTitle = selectedSeed?.title || "813粉丝盛典｜晚会舞台种子";
+
       if (activeSeedAiAction === "package") {
+        const response = await fetch('http://127.0.0.1:8793/seed/package', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            seedId,
+            userRequest: submittedPrompt || '生成素材包',
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: '请求失败' }));
+          throw new Error(error.error || `HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+
         setSeedAiResult({
           action: "package",
-          title: "素材包生成结果",
+          title: "素材包已生成",
           intro: submittedPrompt
-            ? `已根据你的剪辑需求整理素材包：${submittedPrompt}`
-            : "基于当前种子内容，整理可直接交给剪辑使用的画面、文案和节奏素材。",
+            ? `已根据你的需求生成素材包：${submittedPrompt}`
+            : "基于当前种子内容，已生成可直接使用的素材包。",
           sections: [
             {
-              label: "素材包说明",
-              content: `这组素材围绕 ${seedTitle} 生成，重点保留舞台氛围、粉丝互动、品牌露出和可做封面的高光瞬间。适合具备视频剪辑能力的用户继续拆条、混剪或做短视频模板。`,
+              label: "素材包信息",
+              content: `包含 ${result.clipCount} 个视频片段，总时长 ${result.totalDuration.toFixed(1)} 秒。`,
             },
             {
-              label: "剪辑建议",
-              content: "建议先用现场大景建立氛围，再切粉丝互动和舞台高光，最后用品牌符号和人群情绪收束。整体节奏控制在 20-35 秒，适合小红书、视频号、抖音同步改版。",
+              label: "下载地址",
+              content: `[点击下载素材包](http://127.0.0.1:8793${result.zipUrl})`,
             },
           ],
-          materials: [
-            {
-              name: "舞台氛围精选图",
-              type: "图片 12 张",
-              note: "用于封面、开头氛围和活动回顾配图。",
-            },
-            {
-              name: "粉丝互动切片",
-              type: "视频线索 9 条",
-              note: "用于转场、情绪铺垫和现场真实感表达。",
-            },
-            {
-              name: "发布标题与字幕底稿",
-              type: "文案 6 组",
-              note: "用于短视频字幕、封面标题和朋友圈转发文案。",
-            },
-            {
-              name: "剪辑节奏建议",
-              type: "结构说明 1 份",
-              note: "用于指导开头、中段、收尾的画面组合。",
-            },
-          ],
+          downloadUrl: `http://127.0.0.1:8793${result.zipUrl}`,
         });
       } else if (activeSeedAiAction === "video") {
+        await new Promise(resolve => setTimeout(resolve, 2000));
         setSeedAiResult({
           action: "video",
           title: "视频生成结果",
@@ -2208,7 +2207,7 @@ function WorkbenchPage({
             },
             {
               label: "发布文案",
-              content: "从舞台灯光到粉丝互动，从现场欢呼到品牌共创，这支视频适合用作活动后第一波裂变传播。建议搭配“我在现场”的口吻发布，突出真实到场感和高光瞬间。",
+              content: "从舞台灯光到粉丝互动，从现场欢呼到品牌共创，这支视频适合用作活动后第一波裂变传播。",
             },
             {
               label: "发布话题标签",
@@ -2218,51 +2217,34 @@ function WorkbenchPage({
           video: {
             src: seedDeliveryDemoVideo,
             title: "813粉丝盛典裂变视频",
-            copy: "建议发布在抖音 / 视频号 / 小红书，首帧选择舞台大景，前 3 秒保留人群与灯光高光。",
+            copy: "建议发布在抖音 / 视频号 / 小红书。",
             tags: ["#813粉丝盛典", "#现场高光", "#品牌共创", "#活动回顾"],
           },
         });
       } else {
+        throw new Error('不支持的操作类型');
+      }
+    } catch (error) {
+      console.error('[seed AI] 生成失败:', error);
       setSeedAiResult({
-        action: "script",
-        title: "脚本生成结果",
-        intro: submittedPrompt
-          ? `已根据你的要求调整：${submittedPrompt}`
-          : "基于当前种子内容，默认从现场氛围、粉丝情绪和品牌记忆点生成发布脚本。",
+        action: activeSeedAiAction,
+        title: "生成失败",
+        intro: error.message || "请求失败，请稍后重试",
         sections: [
           {
-            label: "发布标题",
-            content: `813粉丝盛典现场直击：把热爱、舞台和品牌记忆装进这一晚`,
-          },
-          {
-            label: "发布文案",
-            content: `这组 ${seedTitle} 适合用“我在现场看到什么”作为开头，把舞台灯光、粉丝互动、嘉宾出场和品牌共创串成一条现场体验线。内容不用讲得太官方，重点保留真实感、到场感和情绪高点，让用户觉得这不是一场单向发布，而是一群人一起参与的盛典记忆。`,
+            label: "错误信息",
+            content: String(error.message || error),
           },
         ],
-        scriptRows: [
-          {
-            time: "0-3s",
-            voice: "813粉丝盛典的现场，第一眼就是被舞台和人群的热情拉进去。",
-            visual: "舞台大屏、灯光扫过观众席、现场欢呼近景。",
-          },
-          {
-            time: "4-12s",
-            voice: "这不是单向看一场表演，而是粉丝、品牌和现场一起完成的一次共创。",
-            visual: "粉丝互动、合影墙、嘉宾登台、品牌符号穿插。",
-          },
-          {
-            time: "13-20s",
-            voice: "当热爱被记录下来，它就变成了每个人都愿意分享的盛典记忆。",
-            visual: "高光合影、舞台全景、红旗标识与人群情绪收尾。",
-          },
-        ],
+        isError: true,
       });
-      }
+    } finally {
       setIsSeedAiGenerating(false);
       setSeedAiPrompt("");
       seedAiGenerateTimerRef.current = null;
-    }, 2000);
+    }
   };
+
 
   const handleDownloadMaterialPackage = () => {
     if (!seedAiResult?.materials?.length) return;
