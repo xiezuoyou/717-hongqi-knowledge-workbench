@@ -2,8 +2,21 @@
 
 ## 当前在做什么（进来先读这条）
 
-813 种子内容裂变的落地施工，计划在 **`docs/plan-813-fission.md`**。
-新会话开始时先读那份计划确认进度，不要重新设计方案 —— 方案已和用户对齐过。
+813 种子内容裂变 · 数据层与前端接入已完成。
+
+**已完成**（2026-08-09）：
+- ✅ Step 1 数据层：两层结构（directions + seeds + timeline + manifest），7 文件 851 行，提交 `4cbe0c6`
+- ✅ 前端接入：`main.tsx` 已切换到新数据源，删除 252 行硬编码，提交 `304d609`
+- ✅ 构建 + 回归测试通过
+
+**下一步**：
+按 `docs/plan-813-fission.md` Step 3-6 做后端能力：
+- Step 3: 可行性墙 `/seed/feasibility`（MiMo 判断用户诉求）
+- Step 4: 素材包产出 `/seed/package`（选片 + 文案 + zip）
+- Step 5: 视频产出（复用 `/render`，先修并发 bug）
+- Step 6: 前端接线 + 状态（等待/失败/重试）
+
+详细计划和进度记录在 `docs/plan-813-fission.md`。
 
 ## 前端 UI 验证：截图工作流
 
