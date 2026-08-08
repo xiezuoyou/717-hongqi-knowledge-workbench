@@ -8,3 +8,9 @@ deploy-package.tar.gz
 openreel-video.zip
 .DS_Store
 *.log
+
+# UI 验证用的临时截图产物（见 CLAUDE.md）
+_shots/
+_shots-flat/
+shot-tmp.mjs
+shot-flat.mjs
