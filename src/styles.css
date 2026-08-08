@@ -5009,6 +5009,15 @@ button {
 .knowledge-ai-thinking-content{padding:0 0 12px 22px;color:rgba(20,24,30,.52);font-size:12px}.knowledge-ai-thinking-content p{margin:0 0 8px}.knowledge-ai-tool-row{display:flex;align-items:center;gap:8px;padding:5px 0}.knowledge-ai-tool-row>span{display:grid;width:20px;height:20px;flex:0 0 20px;place-items:center;border-radius:999px;background:rgba(20,24,30,.08)}.knowledge-ai-tool-row>span.is-success{background:rgba(38,130,82,.12);color:#277e52}.knowledge-ai-tool-row p{flex:1;margin:0}.knowledge-ai-tool-row p strong{margin-right:6px;color:#25272b}.knowledge-ai-tool-row em{font-style:normal}
 .knowledge-ai-references>div{display:grid;gap:6px;padding:0 0 12px}.knowledge-ai-references a{display:flex;align-items:center;gap:8px;color:#25272b;text-decoration:none}.knowledge-ai-references a span{display:grid}.knowledge-ai-references a em{color:rgba(20,24,30,.45);font-size:11px;font-style:normal}
 .knowledge-ai-answer-actions{display:flex;gap:5px;margin-top:12px}.knowledge-ai-answer-actions button{display:grid;width:30px;height:30px;place-items:center;border:0;border-radius:999px;background:transparent;color:rgba(20,24,30,.5)}.knowledge-ai-answer-actions button:hover{background:rgba(20,24,30,.08);color:#17191d}.knowledge-ai-answer-loading{min-height:26px}.knowledge-ai-answer-error{color:#a33a3a}.knowledge-ai-composer{grid-template-columns:minmax(0,1fr) 42px}
+/* Empty state is NOT an error: it is the "nothing came back, here is what to do"
+   case. It used to reuse .knowledge-ai-answer-error, so a fresh page looked
+   broken in red to users who do not know the tool. Neutral grey + guidance. */
+.knowledge-ai-answer-failed p{margin:0;color:#a33a3a}
+.knowledge-ai-answer-empty{margin:0;color:rgba(20,24,30,.52)}
+.knowledge-ai-answer-empty em{display:block;margin-top:4px;color:rgba(20,24,30,.4);font-size:12px;font-style:normal}
+.knowledge-ai-answer-retry{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:7px 12px;border:1px solid var(--glass-edge);border-radius:999px;background:var(--surface-1);color:#25272b;font-size:12px}
+.knowledge-ai-answer-retry:hover{border-color:var(--glass-edge-hover);background:var(--surface-2);color:#15181d}
+.knowledge-ai-answer-retry:disabled{opacity:.5}
 @media (max-width:760px){.knowledge-ai-user-turn p,.knowledge-ai-assistant-body{width:auto;max-width:94%}}
 
 /* ADP-style conversation surface: messages, execution trace, answer and composer stay independent. */

@@ -123,6 +123,38 @@ const isKnowledgeAiSearchResultCandidate = (content: string) => {
 
 const scoreLabel = (score?: number) => typeof score === "number" ? `${Math.round(score)} 分` : "语义匹配";
 
+/**
+ * Carries the HTTP status so the message shown to the user can depend on it,
+ * without ever putting the raw upstream body on screen.
+ */
+class KnowledgeAiRequestError extends Error {
+  status: number;
+  constructor(status: number) {
+    super(`chat request failed with status ${status}`);
+    this.name = "KnowledgeAiRequestError";
+    this.status = status;
+  }
+}
+
+/**
+ * Turns a failure into something a non-technical user can act on.
+ *
+ * The audience here is channel staff who mostly know AI as a chat box, so the
+ * message must say what happened and what to do next — never a status code, a
+ * stack, or the upstream JSON body (which is what this used to render).
+ */
+const describeKnowledgeAiError = (error: unknown) => {
+  if (error instanceof KnowledgeAiRequestError) {
+    if (error.status === 429) return "提问的人太多，稍等一下再试。";
+    if (error.status === 401 || error.status === 403) return "没有访问知识库的权限，请联系管理员。";
+    if (error.status >= 500) return "知识库服务暂时没有响应，稍后再试一次。";
+    if (error.status === 400) return "这个问题服务暂时没能处理，换一种说法试试。";
+    return "提问没有成功，请再试一次。";
+  }
+  if (error instanceof TypeError) return "网络连接不上，检查一下网络后再试。";
+  return "提问没有成功，请再试一次。";
+};
+
 function KnowledgeAiSearchResults({ result }: { result: KnowledgeAiSearchResult }) {
   const items = result.items || [];
   const imageItems = items.filter((item) => item.kind === "image");
@@ -1594,6 +1626,13 @@ function WorkbenchPage({
   ]);
   const [hasKnowledgeAiResult, setHasKnowledgeAiResult] = React.useState(false);
   const [knowledgeAiAnswer, setKnowledgeAiAnswer] = React.useState("");
+  // Failures are kept separate from the answer. Previously the raw backend
+  // response body was written into knowledgeAiAnswer, which showed users a JSON
+  // blob and left no way to retry.
+  const [knowledgeAiError, setKnowledgeAiError] = React.useState("");
+  // Set when the user stops generation, so the UI can say so instead of
+  // rendering the "no answer yet" placeholder as if something broke.
+  const [wasKnowledgeAiStopped, setWasKnowledgeAiStopped] = React.useState(false);
   const [knowledgeAiSearchModalResult, setKnowledgeAiSearchModalResult] = React.useState<KnowledgeAiSearchResult | null>(null);
   const [isKnowledgeAiSearchModalOpen, setIsKnowledgeAiSearchModalOpen] = React.useState(false);
   const [knowledgeAiToolCalls, setKnowledgeAiToolCalls] = React.useState<KnowledgeAiToolCall[]>([]);
@@ -1982,6 +2021,8 @@ function WorkbenchPage({
     setKnowledgeAiReferences([]);
     setKnowledgeAiLastQuestion(question);
     setIsKnowledgeAiCopied(false);
+    setKnowledgeAiError("");
+    setWasKnowledgeAiStopped(false);
     setIsKnowledgeAiStreaming(true);
     if (selectedKnowledgeSources.length === 0) {
       setSelectedKnowledgeSources([
@@ -2000,7 +2041,11 @@ function WorkbenchPage({
           ApplicationId: ADP_APPLICATION_ID,
         }),
       });
-      if (!response.ok || !response.body) throw new Error((await response.text()) || "ADP 问答请求失败");
+      if (!response.ok || !response.body) {
+        // Carry the status code, not the upstream body: the body is raw JSON or a
+        // stack trace, and these users cannot act on either.
+        throw new KnowledgeAiRequestError(response.status);
+      }
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
@@ -2092,8 +2137,11 @@ function WorkbenchPage({
         }
       }
     } catch (error) {
+      // Aborts are a user action, not a failure: handleKnowledgeAiStop owns that
+      // message. Everything else becomes plain language — the raw upstream body
+      // (often a JSON error envelope) must never reach a non-technical user.
       if (!(error instanceof DOMException && error.name === "AbortError")) {
-        setKnowledgeAiAnswer(`暂时无法回答：${error instanceof Error ? error.message : "ADP 请求失败"}`);
+        setKnowledgeAiError(describeKnowledgeAiError(error));
       }
     } finally {
       flushKnowledgeAiStream();
@@ -2107,6 +2155,10 @@ function WorkbenchPage({
   const handleKnowledgeAiStop = () => {
     knowledgeAiAbortControllerRef.current?.abort();
     knowledgeAiAbortControllerRef.current = null;
+    // Flush whatever already arrived so the user keeps the partial answer
+    // instead of watching it disappear.
+    flushKnowledgeAiStream();
+    setWasKnowledgeAiStopped(true);
     setIsKnowledgeAiStreaming(false);
   };
 
@@ -2634,7 +2686,7 @@ function WorkbenchPage({
                             setIsKnowledgeAiSearchModalOpen(true);
                           }} />
                           : <div className="knowledge-ai-answer-content"><ReactMarkdown>{turn.answer}</ReactMarkdown></div>;
-                      })() : <p className="knowledge-ai-answer-error">暂未获得有效回答。</p>}
+                      })() : <p className="knowledge-ai-answer-empty">这一轮没有得到回答。</p>}
                     </div>
                   </div>
                 </React.Fragment>
@@ -2690,8 +2742,29 @@ function WorkbenchPage({
                   ) : isKnowledgeAiStreaming || isKnowledgeAiConversationLoading ? (
                     <div className="knowledge-ai-answer-loading" aria-label="正在生成回答">
                       <ThinkingOrb state="searching" size={20} theme="light" aria-label="正在检索并生成回答" />
+                      <p>正在检索知识库，请稍等…</p>
                     </div>
-                  ) : <p className="knowledge-ai-answer-error">暂未获得有效回答。</p>}
+                  ) : knowledgeAiError ? (
+                    // A real failure: say what happened in plain language and offer
+                    // the one action that helps, instead of dumping the raw response.
+                    <div className="knowledge-ai-answer-failed" aria-label="回答失败">
+                      <p>{knowledgeAiError}</p>
+                      {knowledgeAiLastQuestion ? (
+                        <button
+                          type="button"
+                          className="knowledge-ai-answer-retry"
+                          onClick={() => handleKnowledgeAiSubmit(knowledgeAiLastQuestion)}
+                        >
+                          <RotateCcw size={14} />
+                          重新提问
+                        </button>
+                      ) : null}
+                    </div>
+                  ) : wasKnowledgeAiStopped ? (
+                    <p className="knowledge-ai-answer-empty">已停止生成。可以换个问法再问一次。</p>
+                  ) : (
+                    <p className="knowledge-ai-answer-empty">这次没有找到可用的资料，试着把问题说得更具体一些。</p>
+                  )}
 
                   {knowledgeAiAnswer ? (
                     <>
@@ -2758,11 +2831,21 @@ function WorkbenchPage({
                 onChange={(event) => setKnowledgeAiPrompt(event.currentTarget.value)}
                 placeholder="你可以参考上边提示词完成需求，或直接点击后修改提示词"
               />
+              {/*
+                Always type="button". It used to flip to "submit" when idle, but
+                the flip happens in the same click that clears the streaming
+                state, so the browser then ran the (now submit) button's default
+                action and re-sent the question — stopping appeared to restart
+                generation. Dispatching here keeps the click on one path.
+              */}
               <button
-                type={isKnowledgeAiStreaming ? "button" : "submit"}
+                type="button"
                 className={isKnowledgeAiStreaming ? "is-stopping" : ""}
                 aria-label={isKnowledgeAiStreaming ? "停止生成" : "发送"}
-                onClick={isKnowledgeAiStreaming ? handleKnowledgeAiStop : undefined}
+                onClick={() => {
+                  if (isKnowledgeAiStreaming) handleKnowledgeAiStop();
+                  else handleKnowledgeAiSubmit();
+                }}
               >
                 {isKnowledgeAiStreaming ? <Square size={17} fill="currentColor" /> : <ArrowUp size={21} strokeWidth={2.4} />}
               </button>

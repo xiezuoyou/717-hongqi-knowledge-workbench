@@ -160,36 +160,41 @@ describe("知识问答：等待状态", () => {
 
 describe("知识问答：中止生成", () => {
   /**
-   * KNOWN DEFECT — pinned as a failing test on purpose.
+   * Regression guard for a fixed defect.
    *
-   * Clicking stop does abort the in-flight request, but the very same click
-   * immediately fires a NEW request, so generation never actually stops from
-   * the user's point of view.
+   * The button used to derive its `type` from the same state its click handler
+   * mutated: handleKnowledgeAiStop set isKnowledgeAiStreaming to false, React
+   * applied type="button" -> type="submit" while the click was still being
+   * dispatched, and the browser then performed the submit default action. Net
+   * effect: stop aborted the request and immediately started a new one, so
+   * generation never stopped. Measured then: 2 POSTs for one stop click.
    *
-   * Cause: one button serves both "send" and "stop", and its `type` is derived
-   * from the same state the click handler mutates. handleKnowledgeAiStop sets
-   * isKnowledgeAiStreaming to false, React applies the resulting
-   * type="button" -> type="submit" change while the click is still being
-   * dispatched, and the browser then performs the submit default action.
-   * Measured directly: 1 POST after send, 2 POSTs after the stop click.
-   *
-   * Fix direction: give the button a stable type="button" and drive both
-   * actions from onClick, or split send and stop into two separate controls.
-   *
-   * When fixed, change `it.fails` back to `it` in the same change.
+   * The POST count assertion below is the part that actually pins the fix —
+   * the visible label alone would not have caught it.
    */
-  it.fails("点击停止后立即退出生成状态（当前有缺陷：会重新发起一次请求）", async () => {
+  it("点击停止后退出生成状态，且不会重新发起请求", async () => {
     const { page, context } = await openAiPage();
     try {
+      let posts = 0;
+      page.on("request", (request) => {
+        if (request.method() === "POST" && request.url().includes("/chat/message")) posts += 1;
+      });
+
       await ask(page, "永不回答：这个流不会结束");
 
       // While streaming, the same button becomes a stop control.
       await page.waitForSelector('[aria-label="停止生成"]', { timeout: 10_000 });
+      expect(posts).toBe(1);
+
       await page.getByLabel("停止生成").click();
 
-      // Streaming state should clear and the send affordance should return.
+      // Streaming state clears and the send affordance returns.
       await expect.poll(() => page.getByLabel("发送").count(), { timeout: 10_000 }).toBe(1);
       expect(await page.locator('[aria-label="停止生成"]').count()).toBe(0);
+
+      // The stop click must not have started another request.
+      await page.waitForTimeout(500);
+      expect(posts).toBe(1);
     } finally {
       await context.close();
     }
@@ -197,26 +202,45 @@ describe("知识问答：中止生成", () => {
 });
 
 describe("知识问答：报错处理", () => {
-  it("后端 500 时给出可见的失败提示", async () => {
+  it("后端 500 时说人话并给出重试入口", async () => {
     const { page, context } = await openAiPage();
     try {
       await ask(page, "服务器错误：触发 500");
 
       await expect
-        .poll(() => page.locator(".knowledge-ai-answer-content").innerText(), { timeout: 15_000 })
-        .toContain("暂时无法回答");
+        .poll(() => page.locator(".knowledge-ai-answer-failed").innerText(), { timeout: 15_000 })
+        .toContain("稍后再试");
 
-      const shown = await page.locator(".knowledge-ai-answer-content").innerText();
+      const shown = await page.locator(".knowledge-ai-answer-failed").innerText();
 
-      // Known defect (pinned): the raw upstream body is shown to the user.
-      // When error messages get humanised, flip this to expect the opposite.
-      expect(shown).toContain("InternalError");
+      // The upstream body and status code must never reach the user.
+      expect(shown).not.toContain("InternalError");
+      expect(shown).not.toContain("500");
+      expect(shown).not.toContain("stub upstream failure");
 
-      // Known defect (pinned): there is no retry affordance after a failure.
-      expect(await page.getByRole("button", { name: /重试|重新提问/ }).count()).toBe(0);
+      // A retry affordance exists and re-sends the same question.
+      const retry = page.getByRole("button", { name: "重新提问" });
+      expect(await retry.count()).toBe(1);
 
-      // Whatever happens, the UI must not stay stuck in the streaming state.
+      // The UI must not stay stuck in the streaming state.
       await expect.poll(() => page.getByLabel("发送").count(), { timeout: 15_000 }).toBe(1);
+    } finally {
+      await context.close();
+    }
+  }, 60_000);
+
+  it("空状态用中性提示，不用红色报错样式", async () => {
+    const { page, context } = await openAiPage();
+    try {
+      // A stream that completes without ever producing reply text.
+      await ask(page, "只有思考：内部推理不应外泄");
+      await expect.poll(() => page.getByLabel("发送").count(), { timeout: 15_000 }).toBe(1);
+
+      // It is an empty result, not a failure: no error element, neutral copy.
+      expect(await page.locator(".knowledge-ai-answer-failed").count()).toBe(0);
+      const empty = page.locator(".knowledge-ai-answer-empty");
+      expect(await empty.count()).toBe(1);
+      expect(await empty.innerText()).toContain("更具体");
     } finally {
       await context.close();
     }
