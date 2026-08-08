@@ -153,9 +153,22 @@ const buildPlan = () => {
 
 const { plan, missing } = buildPlan();
 
-const bucket = process.env.COS_BUCKET || "";
-const region = process.env.COS_REGION || "";
-const cdnBase = (process.env.COS_CDN_BASE || "").replace(/\/+$/, "");
+/**
+ * The public asset bucket is NOT the same bucket as the knowledge base.
+ *
+ * scripts/storage-server.mjs reads COS_BUCKET / COS_REGION for two things: the
+ * knowledge-library browser, and the MetaInsight `ci` host it derives from them
+ * (`${appId}.ci.${COS_REGION}.myqcloud.com`). Those point at the private Beijing
+ * bucket that holds the multimodal search datasets. If this script reused the
+ * same vars, pointing them at the public Guangzhou asset bucket would silently
+ * send MetaInsight queries to the wrong region and break image search.
+ *
+ * So assets get their own vars, falling back to COS_* only when ASSET_* is unset
+ * (single-bucket setups still work).
+ */
+const bucket = process.env.ASSET_BUCKET || process.env.COS_BUCKET || "";
+const region = process.env.ASSET_REGION || process.env.COS_REGION || "";
+const cdnBase = (process.env.ASSET_CDN_BASE || process.env.COS_CDN_BASE || "").replace(/\/+$/, "");
 const origin = cdnBase || (bucket && region ? `https://${bucket}.cos.${region}.myqcloud.com` : "");
 
 // Objects are uploaded under this prefix, so the frontend base must include it.
@@ -215,8 +228,13 @@ if (!commit) {
   process.exit(0);
 }
 
-const requiredEnv = ["COS_SECRET_ID", "COS_SECRET_KEY", "COS_BUCKET", "COS_REGION"];
-const absent = requiredEnv.filter((name) => !process.env[name]);
+// 校验解析后的值，而不是某个具体变量名 —— 桶和地域可以来自 ASSET_* 或
+// COS_*，写死 COS_BUCKET 会让正确配了 ASSET_BUCKET 的人被拦下。
+const absent = [];
+if (!process.env.COS_SECRET_ID) absent.push("COS_SECRET_ID");
+if (!process.env.COS_SECRET_KEY) absent.push("COS_SECRET_KEY");
+if (!bucket) absent.push("ASSET_BUCKET（或 COS_BUCKET）");
+if (!region) absent.push("ASSET_REGION（或 COS_REGION）");
 if (absent.length) {
   console.error(`\n缺少环境变量：${absent.join(", ")}`);
   console.error("在项目根目录建 .env（参考 .env.example）后重试。凭证不会被打印。\n");
