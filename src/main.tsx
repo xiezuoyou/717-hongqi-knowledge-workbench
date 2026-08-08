@@ -4,6 +4,12 @@ import { gsap } from "gsap";
 import ReactMarkdown from "react-markdown";
 import { ThinkingOrb } from "thinking-orbs";
 import {
+  directions,
+  seeds,
+  timeline,
+  type DirectionId,
+} from "./data/seed";
+import {
   ArrowLeft,
   ArrowUp,
   BookOpen,
@@ -870,39 +876,20 @@ const majorTabs = [
   },
 ];
 
-const hotTopics = [
-  {
-    id: "tech-experience",
-    label: "智能科技体验",
-    tag: "热点方向",
-    topics: ["#智能科技", "#现场体验", "#真实感知"],
-    desc: "把技术点转成用户能听懂、能感知的体验表达，重点放在现场感、交互感和看得见的变化，让参数变成能被拍摄、转述和讨论的体验证据。",
-  },
-  {
-    id: "fan-cocreation",
-    label: "粉丝共创现场",
-    tag: "热点方向",
-    topics: ["#粉丝共创", "#现场互动", "#社群氛围"],
-    desc: "围绕签到、互动、合影和现场反馈沉淀真实片段，让内容更像现场正在发生的事，强调参与者视角和自传播动机。",
-  },
-  {
-    id: "family-travel",
-    label: "家庭出行场景",
-    tag: "热点方向",
-    topics: ["#家庭出行", "#舒适安全", "#陪伴场景"],
-    desc: "面向家庭用户，讲清舒适、安全和陪伴，把产品价值放进具体场景里，用具体人物关系承接产品卖点。",
-  },
-  {
-    id: "brand-memory",
-    label: "品牌记忆共鸣",
-    tag: "热点方向",
-    topics: ["#品牌记忆", "#情绪共鸣", "#经典焕新"],
-    desc: "把品牌积累转成可被年轻用户理解的情绪表达，串联经典符号、用户故事和当下体验。",
-  },
-] as const;
+// ============================================================
+// 适配层：新数据层 → 旧 UI 格式
+// ============================================================
 
-type TopicId = (typeof hotTopics)[number]["id"];
-type SeedAiAction = "script" | "package" | "video";
+const hotTopics = directions.map(d => ({
+  id: d.id,
+  label: d.label,
+  tag: "热点方向",
+  topics: d.hashtags,
+  desc: d.summary,
+}));
+
+type TopicId = DirectionId;
+type SeedAiAction = "package" | "video"; // "script" 已被砍掉
 type SeedScope = "current" | "all";
 type SeedAiResult = {
   action: SeedAiAction;
@@ -923,10 +910,6 @@ const seedAiActionMeta: Record<
   SeedAiAction,
   { label: string; placeholder: string }
 > = {
-  script: {
-    label: "输出脚本",
-    placeholder: "例如：我是小红书用户，想从真实体验角度输出一篇口播脚本",
-  },
   package: {
     label: "素材包生成",
     placeholder: "例如：我具备视频剪辑能力，请按现场感和互动感生成素材包",
@@ -937,122 +920,29 @@ const seedAiActionMeta: Record<
   },
 };
 
-const seedCards = [
-  {
-    title: "813粉丝盛典｜晚会舞台种子",
-    topicId: "tech-experience",
-    source: "813粉丝盛典",
-    mediaType: "图文",
-    image: seedStageImage.main,
-    desc: "围绕 813 粉丝盛典晚会现场整理，可用于检索舞台大屏、灯光氛围、嘉宾互动、粉丝情绪和品牌共创场景。适合后续生成活动回顾、短视频口播、海报文案与传播标题。",
-    topics: ["种子内容", "可检索", "待沉淀"],
-    count: "12 张图片",
-  },
-  {
-    title: "813粉丝盛典｜开场氛围线索",
-    topicId: "brand-memory",
-    source: "813粉丝盛典",
-    mediaType: "视频",
-    image: seedStageImage.crowd,
-    desc: "记录活动开场阶段的视觉情绪：红色主视觉、舞台纵深、灯光节奏和观众期待感。后续可作为“盛典开场”“高燃入场”“品牌仪式感”类内容的底稿。",
-    topics: ["种子内容", "可检索", "待沉淀"],
-    count: "6 条线索",
-  },
-  {
-    title: "813粉丝盛典｜粉丝互动线索",
-    topicId: "fan-cocreation",
-    source: "813粉丝盛典",
-    mediaType: "视频",
-    image: seedStageImage.interaction,
-    desc: "聚焦粉丝签到、互动区、合影墙、应援动作和现场反馈，沉淀能够表现“红旗与用户同行”的真实片段，适合裂变成图文笔记和短视频脚本。",
-    topics: ["种子内容", "可检索", "待沉淀"],
-    count: "9 条线索",
-  },
-  {
-    title: "813粉丝盛典｜产品露出线索",
-    topicId: "family-travel",
-    source: "813粉丝盛典",
-    mediaType: "图文",
-    image: seedStageImage.product,
-    desc: "整理活动中车辆、展台、品牌符号和产品亮点的露出位置。后续可帮助 AI 判断哪些图片适合做封面，哪些适合做传播配图。",
-    topics: ["种子内容", "可检索", "待沉淀"],
-    count: "5 条素材",
-  },
-];
+type SeedCard = {
+  title: string;
+  topicId: TopicId;
+  source: string;
+  mediaType: string;
+  image: string;
+  desc: string;
+  topics: string[];
+  count: string;
+};
 
-type SeedCard = (typeof seedCards)[number];
+const seedCards = seeds.map(seed => ({
+  title: seed.title,
+  topicId: seed.directionId,
+  source: "813 种子内容",
+  mediaType: "视频",
+  image: seedStageImage.main,
+  desc: seed.angle,
+  topics: ["种子内容", seed.status === "ready" ? "可用" : "准备中"],
+  count: seed.status === "ready" ? "素材齐全" : "准备中",
+}));
 
-const expandedSeedCards = [
-  ...seedCards,
-  {
-    ...seedCards[0],
-    title: "智能座舱体验｜现场互动种子",
-    topicId: "tech-experience",
-    image: seedStageImage.crowd,
-    mediaType: "视频",
-    desc: "适合把智能体验拆成用户能感受到的现场变化，强调交互、反馈和真实体验，不堆参数。",
-    count: "8 条线索",
-  },
-  {
-    ...seedCards[0],
-    title: "科技体验日｜用户视角种子",
-    topicId: "tech-experience",
-    image: seedStageImage.interaction,
-    desc: "从参与者第一视角记录体验路径，适合生成短视频开头、体验口播和小红书种草标题。",
-    count: "10 张图片",
-  },
-  {
-    ...seedCards[2],
-    title: "粉丝合影墙｜打卡裂变种子",
-    topicId: "fan-cocreation",
-    image: seedStageImage.product,
-    mediaType: "图文",
-    desc: "围绕合影、签到、应援动作沉淀可转发内容，适合做朋友圈裂变和视频号现场切片。",
-    count: "14 张图片",
-  },
-  {
-    ...seedCards[2],
-    title: "粉丝留言｜真实反馈种子",
-    topicId: "fan-cocreation",
-    image: seedStageImage.main,
-    desc: "保留用户现场反馈和互动情绪，可用于活动复盘、用户证言和社群传播素材。",
-    count: "7 条线索",
-  },
-  {
-    ...seedCards[3],
-    title: "家庭出行｜舒适体验种子",
-    topicId: "family-travel",
-    image: seedStageImage.crowd,
-    desc: "用家庭关系和出行场景承接产品卖点，把舒适、安全、陪伴讲成具体画面。",
-    count: "9 条素材",
-  },
-  {
-    ...seedCards[3],
-    title: "亲子陪伴｜周末出行种子",
-    topicId: "family-travel",
-    image: seedStageImage.interaction,
-    mediaType: "视频",
-    desc: "适合做亲子场景脚本，突出孩子、父母、长途舒适和轻松到达的故事线。",
-    count: "6 条视频",
-  },
-  {
-    ...seedCards[1],
-    title: "品牌符号｜经典焕新种子",
-    topicId: "brand-memory",
-    image: seedStageImage.product,
-    desc: "串联品牌标识、现场装置和用户记忆点，把经典感转成更年轻的情绪表达。",
-    count: "11 张图片",
-  },
-  {
-    ...seedCards[1],
-    title: "老友新声｜品牌记忆种子",
-    topicId: "brand-memory",
-    image: seedStageImage.main,
-    mediaType: "图文",
-    desc: "适合做品牌故事短片和用户回忆征集，用一个符号、一个故事、一个当下体验组织内容。",
-    count: "5 组文案",
-  },
-] satisfies SeedCard[];
+const expandedSeedCards = seedCards; // 不再展开假卡
 
 const seedDetailPanels = [
   {
@@ -1112,52 +1002,22 @@ const seedVisuals = [
   { label: "传播画面", image: seedStageImage.crowd },
 ];
 
-const topicAnalysis: Record<TopicId, { explain: string; direction: string }> = {
-  "tech-experience": {
-    explain: "当前适合从体验感切入，少讲参数，多讲现场可感知的智能细节。比如智能座舱、交互反馈、现场试乘感受，都可以转成用户第一视角的观察。重点不是证明技术多强，而是让用户看到这些技术在现场如何被用到、如何被感受到。",
-    direction: "适合做短视频开头、小红书图文种草和现场看点合集。内容重点放在“我看到了什么、我感受到什么、它解决了什么小麻烦”。可以用一条内容讲一个细节，避免把所有卖点堆在一起。",
-  },
-  "fan-cocreation": {
-    explain: "把粉丝参与过程做成内容主线，让用户看到真实互动和社群氛围。签到、合影、互动、留言这些片段，本身就是现场热度的证据。这里更适合强调“我参与了”“我在现场”“我和品牌发生了连接”。",
-    direction: "适合做朋友圈裂变素材、视频号现场切片和活动复盘短视频。内容要弱化官方口吻，多保留参与者的动作、表情和即时反馈。可以把用户的一句话、一张合影、一次互动拆成多个轻量内容点。",
-  },
-  "family-travel": {
-    explain: "用家庭场景承接产品价值，重点表达舒适、安全、陪伴。把抽象卖点放进出行、等待、休息和照顾家人的具体时刻里。用户更容易被“家人坐得舒服”“孩子不闹”“长途更安心”这类具体画面打动。",
-    direction: "适合做亲子场景脚本、图文种草和产品细节说明。建议围绕人物关系组织内容，比如父母、孩子、长途出行和周末短途。表达上少讲配置清单，多讲一个家庭为什么会需要它。",
-  },
-  "brand-memory": {
-    explain: "从品牌符号和用户记忆切入，把经典感转成更年轻的情绪连接。不要只讲历史，而是讲这些符号今天为什么仍然能被看见、被讨论。现场如果有装置、车型、标识或老用户故事，都可以成为情绪入口。",
-    direction: "适合做品牌故事短片、用户回忆征集和经典元素解读。内容可以串联老用户记忆、新用户体验和现场装置打卡。建议用“一个符号 + 一个故事 + 一个当下体验”的结构，避免做成品牌年表。",
-  },
-};
+const topicAnalysis: Record<TopicId, { explain: string; direction: string }> =
+  Object.fromEntries(
+    directions.map(d => [d.id, { explain: d.whyNow, direction: d.howTo }])
+  ) as Record<TopicId, { explain: string; direction: string }>;
 
-const publishTimeline = [
-  {
-    day: "08/09",
-    status: "active",
-    seeds: [
-      { title: "No.1 智能科技体验", status: "已发布" },
-      { title: "粉丝共创现场", status: "准备中" },
-      { title: "现场打卡裂变包", status: "待发布" },
-    ],
-  },
-  {
-    day: "08/10",
-    status: "next",
-    seeds: [
-      { title: "家庭出行场景", status: "待发布" },
-      { title: "粉丝视角口播", status: "准备中" },
-    ],
-  },
-  {
-    day: "08/11",
-    status: "next",
-    seeds: [
-      { title: "用户真实反馈", status: "待发布" },
-      { title: "产品细节种草", status: "已失效" },
-    ],
-  },
-];
+const publishTimeline = timeline.map(day => ({
+  day: day.label,
+  status: day.status === "active" ? "active" : day.status === "event" ? "event" : "next",
+  seeds: day.seedIds.map(id => {
+    const seed = seeds.find(s => s.id === id);
+    return seed ? {
+      title: seed.title,
+      status: seed.status === "ready" ? "已发布" : "准备中",
+    } : { title: "未知种子", status: "待发布" };
+  }),
+}));
 
 type KnowledgeAiModuleId = "qa" | "review" | "analysis" | "copy" | "material";
 
