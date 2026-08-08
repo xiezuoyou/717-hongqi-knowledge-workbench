@@ -904,6 +904,10 @@ type SeedAiResult = {
     copy: string;
     tags: string[];
   };
+  downloadUrl?: string;
+  isError?: boolean;
+  isLoading?: boolean;
+  isWarning?: boolean;
 };
 
 const seedAiActionMeta: Record<
@@ -2158,6 +2162,77 @@ function WorkbenchPage({
       const seedTitle = selectedSeed?.title || "813粉丝盛典｜晚会舞台种子";
 
       if (activeSeedAiAction === "package") {
+        // Step 1: 判断可行性
+        setSeedAiResult({
+          action: "package",
+          title: "分析可行性中...",
+          intro: "正在分析当前种子内容是否支持您的需求",
+          isLoading: true,
+        });
+
+        const feasibilityResponse = await fetch('http://127.0.0.1:8796/seed/feasibility', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            seedId,
+            userRequest: submittedPrompt || '生成素材包',
+          }),
+        });
+
+        if (!feasibilityResponse.ok) {
+          const error = await feasibilityResponse.json().catch(() => ({ error: '可行性判断失败' }));
+          throw new Error(error.error || `HTTP ${feasibilityResponse.status}`);
+        }
+
+        const feasibility = await feasibilityResponse.json();
+
+        // Step 2: 根据可行性决定是否继续
+        if (feasibility.verdict === 'unsupported') {
+          setSeedAiResult({
+            action: "package",
+            title: "当前种子不支持此需求",
+            intro: feasibility.reason,
+            sections: [
+              {
+                label: "建议",
+                content: feasibility.fallback || "请尝试调整需求或选择其他种子内容",
+              },
+            ],
+            isError: true,
+          });
+          return;
+        }
+
+        if (feasibility.verdict === 'degradable') {
+          // 显示降级提示，但继续生成
+          setSeedAiResult({
+            action: "package",
+            title: "可以做，但需要调整预期",
+            intro: feasibility.reason,
+            sections: [
+              {
+                label: "调整建议",
+                content: feasibility.fallback,
+              },
+              {
+                label: "继续生成",
+                content: "将根据现有素材生成素材包，请注意查看实际内容是否符合预期。",
+              },
+            ],
+            isWarning: true,
+          });
+          // 等待 1 秒让用户看到提示，然后继续
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        // Step 3: 生成素材包
+        setSeedAiResult({
+          action: "package",
+          title: "生成素材包中...",
+          intro: feasibility.brief || "正在生成素材包",
+          isLoading: true,
+        });
+
         const response = await fetch('http://127.0.0.1:8793/seed/package', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
