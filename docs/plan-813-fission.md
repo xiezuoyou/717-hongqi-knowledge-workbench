@@ -1,196 +1,262 @@
-# 813 种子裂变 · 落地施工计划
+# 813 种子内容裂变 - 实施计划（2026-08-09 重新规划）
 
-状态：Step 1 数据层完成，准备接入前端。最后更新 2026-08-09。
-读这份文件前先读项目 `CLAUDE.md`（架构、凭证状态、口径规则、踩过的坑）。
+## 核心认知
 
-## 进度记录
+### 两个阶段，不要混淆
 
-### 2026-08-09
-- ✅ **Step 1 数据层**：两层结构从零搭建完成（提交 `4cbe0c6`）
-  - 第一层（首页内容）：`directions.ts` 4 个方向 + `timeline.ts` 5 天排期
-  - 第二层（种子内容）：`seeds.ts` 3 个种子索引 + `seed-006.manifest.json` 素材清单
-  - 关键设计：manifest 是唯一事实来源，存储与契约解耦
-  - seed-006：6 段节奏、8 条真实素材（65.37s）、5 个已知缺口、所有描述标记 `reviewed: false` 待校对
-  - 交付：7 文件 851 行，`pnpm build` + `pnpm regression` 通过
-  - 文档：`docs/seed-data-contract.md` 记录字段用途和运行时流程
-- ✅ **前端接入**：新数据层已接入 `main.tsx`（提交 `304d609`）
-  - 删除 252 行硬编码，替换成 61 行适配层
-  - UI 保持不变，数据源从 `src/data/seed/` 导入
-  - 删除 `seedAiActionMeta` 的 `script` 动作（已被砍掉）
-  - 构建 + 回归测试通过
-- 🔄 **下一步**：开始后端能力（Step 3-6）
-  - Step 3: 可行性墙 `/seed/feasibility`
-  - Step 4: 素材包产出 `/seed/package`
-  - Step 5: 视频产出（复用已通的 `/render` + Remotion）
-  - Step 6: 前端接线 + 状态（等待/失败/重试）
+**阶段 A：B 端 - 生成种子内容**（目前缺失，优先级最高）
+- 输入：内容方向 + 策略
+- 处理：AI 规划逻辑线、拍摄要求、素材结构
+- 产出：素材拍摄指南 + 结构化 manifest
+- 使用者：主持方（内容策划 + 摄影师）
 
-## 一、功能是什么（已对齐，不要再讨论）
+**阶段 B：C 端 - 用户裂变**（之前在做的，但基础还没有）
+- 输入：用户诉求（"我想强调智能座舱"）
+- 处理：读取种子内容 → 选片 → 生成文案/视频
+- 产出：素材包 / 成片
+- 使用者：各端口使用者（4S 店员工等）
 
-四层，全部要上，因为 813 之前有预热动作就要用：
+**目前状态**：阶段 A 完全没做，阶段 B 做了一半但用不了（因为没有真实种子内容）。
 
-1. **时间线看板** —— 每天的节奏点、今天可关注哪些方向、后面还有什么
-2. **热点方向** —— 方向解析 + 创作建议。**这层要能独立成为完整交付**：很多用户压根不需要素材包，只想看今天有什么可发、可蹭。裂变入口不要在视觉上压过这层
-3. **种子内容** —— 一个方向下挂 1~N 个种子，种子 = 一个具体可执行的角度
-4. **效果回传 + 种子推荐** —— 用户已明确后置，本轮不做
+---
 
-裂变只出 **两种**产物：**素材包（含文案）** 和 **视频**。
-"只给文案"已被用户砍掉（"没有人去用的"）。`seedAiActionMeta` 里的 `script` 动作要删。
+## 阶段 A：生成种子内容（重点）
 
-## 二、运行时流程（两条链 + 一个接口）
+### 输入
 
-**链 A 内容供给（人工为主）**
-① 官方定方向 → ② 排期（哪天放哪些方向/种子）→ ③ 方向下拆种子 →
-④ 按叙事节奏建空文件夹（文件夹名就是分镜清单）→ ⑤ 摄影师填素材 →
-⑥ **写素材描述库 json**
+从 `src/data/seed/directions.ts` 选一个内容方向，例如：
 
-**链 B 用户消费（运行时）**
-① 看时间线 → ② 读方向解析（**很多人到这里就走，目的已达成**）→ ③ 看该方向下的种子 →
-④ 提交自由文本诉求 → ⑤ **可行性墙**判断 → ⑥ 选产物（素材包 / 视频）→
-⑦ 等待态·失败态·重试 → ⑧（后置）效果回传
-
-**接口 = 链 A ⑥ 的 `素材描述库.json`。** 链 B 只读这份 json 做判断、选片、生成，
-两条链之间没有其他耦合。没有它，墙只能靠猜，会推给用户一个素材根本不支持的脚本。
-
-格式已存在，**沿用不要重新设计**：`素材库/种子内容/seed-005-非遗天青色国雅爆款反拆/素材描述库.template.json`
-
-```
-seedId / version / targetDurationSeconds
-assets[]:
-  filePath              素材路径
-  durationSeconds       选片凑时长用
-  visualSubject         主体，选片用
-  visualDescription     画面里实际拍到了什么
-  supportsScriptLines[] 能支撑哪些口播句  → 脚本生成的可用句池
-  doesNotSupport[]      明确不能证明什么  → 墙判"不支持"的依据
-  priority              P0/P1/P2         → 选片优先级
+```javascript
+{
+  id: "tech-experience",
+  label: "智能科技体验",
+  summary: "把技术点转成用户能听懂、能感知的体验表达",
+  whyNow: "当前适合从体验感切入，用户对参数疲劳，更关注实际用起来的感受。",
+  howTo: "适合做短视频开头、小红书图文种草，重点放在'我看到了什么'而不是'配置表上有什么'。",
+  formats: ["short-video", "note"],
+  guardrails: ["不要堆参数清单", "不要写成技术说明书"],
+}
 ```
 
-## 三、开工前必须定的两件事
+### AI 处理逻辑
 
-1. **seed-006 的素材描述库谁写？** 我按文件夹名 + 参考截图生成初稿、用户校对；还是用户写、我只做格式校验。
-   这个决定直接影响 8/13 摄影师填完素材后到上线的时间。
-2. **素材包走哪条路？** 复用 `/ai/material-package`（现有，返回真 zipUrl，但入参是 `scriptSplitResult`，
-   是自由画布流水线的中间态）还是新写 `/seed/package`。
-   我倾向新写：输入是文件夹清单不是脚本切分结果，硬接会把两个流程绑死。
+**Step A1: 生成逻辑线**
 
-## 四、施工步骤
-
-### Step 1 · 数据层（全部后续的前提）
-
-现状：三层数据都在 `src/main.tsx` 里硬编码，且**方向→种子的一对多关系已经用 `topicId` 建好了**。
-所以不是搭骨架，是抽数据 + 补关联。
-
-- `publishTimeline`（1134 行）3 天，seed 只有 `title`+`status` 字符串，**不指向真实种子**
-- `hotTopics`（4 个方向，`as const` 派生 `TopicId`）+ `topicAnalysis`（每方向 explain/direction 两段长文案）
-  —— 这层信息密度已够，最接近可用
-- `expandedSeedCards`（985 行）8 张卡全是 `...seedCards[n]` 展开改标题，
-  `count: "8 条线索"` 是装饰，**不指向 `素材库/种子内容/` 任何真实文件夹**
-
-做：新建 `src/data/seed/`
+AI 根据方向 + 活动背景（813 粉丝盛典），规划表达逻辑：
 
 ```
-directions.ts  id / label / topics[] / explain / direction     （合并 hotTopics + topicAnalysis）
-seeds.ts       id / directionId / title / cover / manifest / outputs / status
-timeline.ts    day / status / seedIds[]                        （引用 seeds 的 id，不再写字符串标题）
+输入：
+- 内容方向：智能科技体验
+- 表达方式：把技术点转成体验表达
+- 活动背景：813 粉丝盛典现场
+- 禁止：不要堆参数清单、不要写成技术说明书
+
+输出：
+逻辑线（不固定段数，根据内容决定）：
+1. 开场钩子（3s）：用什么画面快速进入语境
+2. 体验引入（5s）：从哪个角度切入科技体验
+3. 核心展示（10s）：重点展示什么功能/场景
+4. 感受强化（5s）：用什么画面强化"体验感"
+5. 行动引导（2s）：如何收尾、引导关注/转发
 ```
 
-关键新增 `manifest`：指向该种子的 `素材描述库.json`。墙和选片唯一的输入。
+**注意**：
+- 段数不是固定 5 段，可以是 3 段、4 段、6 段，根据内容方向的表达需求决定
+- 每段有：`label`（段落名）、`purpose`（这段的传播作用）、`targetDurationSeconds`（建议时长）
 
-只把 **seed-006 做成真链路**，其余卡 `status: "preparing"` 不给裂变入口。
+**Step A2: 规划素材拍摄要求**
 
-这一层就是后面那个「Skill」的目标产物 —— 种子方向定稿后，Skill 只需重写这三个文件。
-
-验证：`pnpm build` + `pnpm regression`。提交。
-
-### Step 2 · seed-006 素材描述库（最硬的缺口）
-
-`素材库/种子内容/seed-006-717粉丝盛典现场打卡探场/素材描述库.json`
-
-实际盘点（**不是之前说的 20 个真实片段**）：13 个场景文件夹，
-**8 个有真实 717 片段**：拱门、红毯人流、欢迎回家、互动打卡、精彩演出区域、露营休闲区、车身外观、红旗粉丝墙
-**5 个只有占位素材**：活动地图与路标、现场活动物料、赛道围栏与打卡位、人群空镜、红色品牌视觉
-
-真片标 real、占位标 placeholder，墙要能区分（占位素材不能进真实产物）。
-按 Step 3 的输入需求填 `doesNotSupport`，这是最需要人判断的字段。提交。
-
-### Step 3 · 可行性墙 `/seed/feasibility`
-
-唯一真正新增的核心能力。输入 `{ seedId, userRequest }`，
-读该 seed 的 manifest 作上下文，MiMo `response_format: json_object` 强制返回：
+对每一段，AI 生成拍摄指南：
 
 ```
-verdict: "supported" | "degradable" | "unsupported"
-reason:  为什么
-fallback: 不支持时的替代方案（换哪个种子能做这个角度）
-brief:   { tone, identity, emphasis[], avoid[] }   → Step 4/5 的输入
+第 1 段：开场钩子（3s）
+目的：快速进入 813 盛典 + 科技体验的语境
+要拍的画面：
+  - 盛典入口 + 科技元素（大屏、互动装置）
+  - 人流 + 科技氛围（灯光、屏幕）
+  - 品牌露出（红旗车标 + 科技感）
+画面要求：
+  - 冲击力强，3 秒内建立"在现场 + 有科技"的认知
+  - 避免单纯的空镜，要有人和互动
+素材数量：建议拍 3-5 个不同角度的视频，裂变时随机选 1 个
 ```
 
-三类对应用户的原话：
-- 口吻/身份/侧重 → supported
-- 具体信息能靠字幕口播带 → degradable，告诉用户"画面用通用镜头，信息放字幕"
-- 要新场景新镜头 → unsupported，说清为什么 + 给替代方案
+**Step A3: 生成结构化 manifest**
 
-**必须说人话。** 用户群体（4S 店员工）不了解 AI，只说"无法生成"等于坏了。
+输出 JSON 格式的 manifest：
 
-可复用：MiMo `/chat/completions` 已验证可用（HTTP 200，`mimo-v2.5-pro`，key 已在 `.env`）。
-**不复用** `/ai/text-production` —— 它是自由画布的输入契约，硬套要改它的入参。
+```json
+{
+  "seedId": "seed-007",
+  "directionId": "tech-experience",
+  "title": "813 智能科技体验探场",
+  "angle": "用现场实拍混剪，展示智能科技的真实体验感",
+  "status": "planning",
+  "segments": [
+    {
+      "id": "seg-1-hook",
+      "order": 1,
+      "label": "开场钩子",
+      "purpose": "快速进入 813 盛典 + 科技体验的语境",
+      "targetDurationSeconds": 3,
+      "shootingGuide": {
+        "subjects": ["盛典入口 + 科技元素", "人流 + 科技氛围", "品牌露出 + 科技感"],
+        "requirements": ["冲击力强", "3 秒内建立认知", "避免空镜"],
+        "suggestedClipCount": "3-5"
+      },
+      "clips": []  // 拍摄后填充
+    },
+    // ... 其他段
+  ]
+}
+```
 
-测试打 stub，参照 `tests/stub-adp-server.mjs` 的做法。提交。
+**Step A4: 生成文件结构**
 
-### Step 4 · 素材包产出
+在 `素材库/种子内容/` 下创建：
 
-输入 `{ seedId, brief }` → 按 `priority` + `durationSeconds` 选片 → 生成口播文案 md → 连素材打 zip。
-现有 `handleDownloadMaterialPackage` 只是拼纯文本 blob 下载 `813-seed-material-package.txt`，不是真包，要替换。
-路由归属见第三节第 2 件事。提交。
+```
+seed-007-813智能科技体验探场/
+├── README.md                    # 种子说明（AI 生成）
+├── 拍摄指南.md                   # 人类可读的拍摄要求（AI 生成）
+├── manifest.json                # 结构化数据（AI 生成）
+└── 素材包/
+    ├── 01_开场钩子/
+    │   ├── 素材说明.md          # 这段要拍什么（AI 生成）
+    │   └── (摄影师拍摄后放视频)
+    ├── 02_体验引入/
+    │   ├── 素材说明.md
+    │   └── (视频...)
+    └── ...
+```
 
-### Step 5 · 视频产出
+### 产出
 
-`/render` + Remotion `SeedVideo` 已通，且**不需要第三方 key**（只要 `RENDER_PORT` / `PUBLIC_RENDER_BASE_URL`）。
+1. **给策划看的**：`README.md` + `拍摄指南.md`（markdown，人类可读）
+2. **给摄影师看的**：每个文件夹下的 `素材说明.md`
+3. **给系统用的**：`manifest.json`（结构化，C 端裂变时读这个）
 
-**必修 bug**：`/render` 把参数写进**共用的** `src/remotion/render-data.json` 再同步渲染，
-两个用户同时点会互相覆盖。改成每次渲染写独立临时文件、渲完删。提交。
+---
 
-### Step 6 · 前端接线 + 状态（体感分水岭）
+## 阶段 B：用户裂变（暂缓，等阶段 A 完成）
 
-- 删 `seedAiActionMeta` 的 `script` 动作
-- 换掉 `handleSeedAiSubmit`（2285-2405 行）的 `setTimeout(2000)` + 写死文案三分支
-- 墙的三种 verdict 各有对应展示；degradable 要让用户能确认后继续
-- 补等待态 / 失败态 / 重试。**照搬知识问答已做过的四件套**：
-  等待有明确提示、报错说人话、给重试入口、空结果用中性灰不用红色。不用重新设计。
+阶段 A 完成后，摄影师拍摄并上传视频，manifest 里的 `clips` 数组被填充：
 
-全仓库共 9 处 `setTimeout` 模拟延迟，本轮只动裂变这条链上的。提交。
+```json
+{
+  "id": "seg-1-hook",
+  "clips": [
+    {
+      "id": "clip-001",
+      "file": "01_开场钩子/盛典入口-科技屏幕.mp4",
+      "state": "real",
+      "durationSeconds": 2.8,
+      "subject": "盛典入口科技屏幕",
+      "description": "入口拱门 + 大屏显示智驾系统动画，人流经过，科技氛围强",
+      "proves": ["813 现场", "有科技元素展示"],
+      "doesNotProve": ["具体功能细节"],
+      "priority": "P0"
+    },
+    // ... 其他 2-4 个同一段的视频
+  ]
+}
+```
 
-### Step 7 · 收口
+此时才能做用户裂变：
 
-`pnpm build` + `pnpm test` + `pnpm regression`，删临时脚本，检查工作区干净。
+### Step B1: 可行性判断（之前的 Step 3）
 
-## 五、顺序与并行
+用户输入："我想强调智能座舱的大屏体验"
 
-Step 1 是全部依赖的前提，做完立刻提交基线。
-Step 2 和 Step 1 可并行（不同文件）。
-Step 3 依赖 Step 2。Step 4/5 依赖 Step 3 的 brief 契约（契约先定，实现可并行）。
-Step 6 依赖 3/4/5。
+AI 读取 manifest，判断：
+- 种子内容是"智能科技体验"，用户诉求"强调智能座舱大屏"
+- 看 clips 里的 `proves` / `subject` / `description`，有没有能支持这个诉求的素材
+- 返回：`supported` / `degradable` / `unsupported`
 
-## 六、clear 后会忘掉的关键事实
+### Step B2: 选片（之前的 Step 4，但逻辑要改）
 
-- `pnpm` 11.20.0；**`npx` 不在 PATH**，用 `pnpm exec` 或 `node_modules/.bin/`
-- 没有 `tsconfig.json`，没有类型检查
-- dev server 端口 5175；`ai-server` 8790 上跑着 **Codex 起的旧进程（8/7 22:08 启动，没加载 key），不要杀**，
-  需要时另起一个实例（上次用 8795）
-- `.env`：`MIMO_*` 已填并验证；`MINIMAX_API_KEY`（TTS）、`GRSAI_API_KEY` 仍为空；`ADP_*` 为空
-- `COS_BUCKET`/`COS_REGION` = 北京知识桶（storage-server + MetaInsight 用），
-  `ASSET_BUCKET`/`ASSET_REGION` = 广州资产桶（cos:sync 用）。**动之前先想清楚是哪个用途**
-- `pnpm test` 的 6 个测试打 stub，只验前端逻辑，**不验真实 ADP 链路**。别说成"RAG 已上线"
-- `seed-delivery-demo.mp4` 全仓库无源文件，是裂变演示态占位，接真后应该是跑出来的
-- 素材库那 45 张位图**不要 Read 进上下文**，`ls`/`find` 看路径就行
-- 方法论（用户明确要求）：**先按需求设计落地逻辑，再回头看仓库里有没有现成能用的路径，
-  通了才借来用并做测试。不要拿着已有代码猜怎么整合** —— 仓库混着自由画布等别的项目的死代码
-- 缺仓库里读不出来的外部信息（云上怎么配的、某能力是自研还是买的、某目录将来放什么）→ **停下来问，不要推理填空**
+**不是按优先级凑时长**，而是：
 
-## 七、本轮不做（记着，别顺手做了）
+```javascript
+// 按逻辑线顺序，从每个 segment 的 clips 里选 1 个
+segments.forEach(segment => {
+  // 优先选 priority 高的，同优先级随机
+  const selected = selectOneClip(segment.clips);
+  result.push(selected);
+});
 
-- 效果回传 + 种子推荐（用户已定后置）
-- ADP / 知识库那条线（用户已定往后放）
-- 种子内容定稿后的部署 Skill（等方向定下来）
-- `/ai/material-upload` 的方向问题（它要浏览器上传，和摄影师→素材库→COS 相反）—— 先确认是否在范围内
-- 717→813 口径统一、`public/` 137M Remotion 产物瘦身、断点整合
+// 计算总时长
+const totalDuration = result.reduce((sum, clip) => sum + clip.durationSeconds, 0);
+
+// 用总时长 + 逻辑线 + 用户诉求 → 让 MiMo 生成对应长度的口播文案
+```
+
+### Step B3: 生成文案（之前的 Step 4）
+
+```
+输入给 MiMo：
+- 用户诉求："我想强调智能座舱的大屏体验"
+- 逻辑线：[开场钩子 3s, 体验引入 5s, 核心展示 10s, ...]
+- 选中的片段：[clip-001, clip-005, clip-012, ...]
+- 总时长：25s
+
+输出：
+按逻辑线结构，生成 25s 能念完的口播文案
+```
+
+### Step B4: 打包 / 生成视频
+
+同之前的 Step 4/5。
+
+---
+
+## 实施顺序（重新规划）
+
+### 优先级 1：阶段 A - 生成种子内容（现在做）
+
+**Step A1**: 构建 AI 生成种子内容的接口
+- 输入：`directionId`（从 directions.ts 选一个）
+- 输出：逻辑线 + 拍摄指南 + manifest + 文件结构
+
+**Step A2**: 前端接入（可选，先用 API 测试）
+- 策划人员选择内容方向
+- 点击"生成种子内容"
+- 系统生成拍摄指南和文件结构
+- 策划审核、调整
+- 交给摄影师拍摄
+
+**产出标志**：
+- ✅ `/seed/generate` 接口跑通
+- ✅ 能生成完整的种子内容文件夹结构
+- ✅ manifest.json 结构正确
+- ✅ 拍摄指南可读、可执行
+
+### 优先级 2：摄影师拍摄 + 回传（手动）
+
+摄影师按指南拍摄，手动上传视频到对应文件夹。
+
+### 优先级 3：阶段 B - 用户裂变（之前做的，需要改）
+
+**Step B1**: 改选片逻辑（按逻辑线选，不是按优先级凑时长）
+**Step B2**: 可行性墙（判断用户诉求是否可行）
+**Step B3**: 视频生成（Remotion）
+
+---
+
+## 当前已完成（但可能要调整）
+
+- ✅ 数据层：`directions.ts` / `seeds.ts` / `timeline.ts`
+- ✅ 前端展示：种子卡片、内容方向
+- ⚠️ `/seed/package` 接口（选片逻辑要改）
+- ⚠️ 前端裂变入口（等阶段 A 完成后才能用）
+
+---
+
+## 下一步行动
+
+1. 更新 `CLAUDE.md`，同步当前状态
+2. 开始做 **Step A1**：构建 `/seed/generate` 接口
+   - 输入 `directionId`
+   - 调用 MiMo 生成逻辑线、拍摄指南
+   - 输出 manifest + 文件结构
+3. 测试验证生成的种子内容是否可用
