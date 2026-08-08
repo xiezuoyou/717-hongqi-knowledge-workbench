@@ -42,6 +42,21 @@ const API_ROOT = (import.meta.env.VITE_STORAGE_API || "http://127.0.0.1:8791/api
 );
 const ADP_APPLICATION_ID = "2084629648176788096";
 
+// 图片和视频不进前端构建产物：素材统一放对象存储 + CDN，前端只存路径。
+// VITE_ASSET_BASE 配成 CDN 域名（如 https://cdn.example.com/813）后，
+// 所有素材走 CDN；不配时回落到 /assets，本地开发仍能用 public/assets 下的文件。
+const ASSET_BASE = (import.meta.env.VITE_ASSET_BASE || "/assets").replace(/\/+$/, "");
+const assetUrl = (path: string) => `${ASSET_BASE}/${path.replace(/^\/+/, "")}`;
+
+// 这批素材来自去年的 717 粉丝盛典现场，路径沿用 717 是事实描述，不跟着口径改 813。
+const seedStageImage = {
+  main: assetUrl("717-demo/stage-01.jpg"),
+  crowd: assetUrl("717-demo/stage-02.jpg"),
+  interaction: assetUrl("717-demo/stage-03.jpg"),
+  product: assetUrl("717-demo/stage-04.jpg"),
+};
+const seedDeliveryDemoVideo = assetUrl("717-demo/seed-delivery-demo.mp4");
+
 type KnowledgeAiMessageType = "thought" | "tool_call" | "reply" | string;
 
 type KnowledgeAiToolCall = {
@@ -928,7 +943,7 @@ const seedCards = [
     topicId: "tech-experience",
     source: "813粉丝盛典",
     mediaType: "图文",
-    image: "/assets/717-demo/stage-01.jpg",
+    image: seedStageImage.main,
     desc: "围绕 813 粉丝盛典晚会现场整理，可用于检索舞台大屏、灯光氛围、嘉宾互动、粉丝情绪和品牌共创场景。适合后续生成活动回顾、短视频口播、海报文案与传播标题。",
     topics: ["种子内容", "可检索", "待沉淀"],
     count: "12 张图片",
@@ -938,7 +953,7 @@ const seedCards = [
     topicId: "brand-memory",
     source: "813粉丝盛典",
     mediaType: "视频",
-    image: "/assets/717-demo/stage-02.jpg",
+    image: seedStageImage.crowd,
     desc: "记录活动开场阶段的视觉情绪：红色主视觉、舞台纵深、灯光节奏和观众期待感。后续可作为“盛典开场”“高燃入场”“品牌仪式感”类内容的底稿。",
     topics: ["种子内容", "可检索", "待沉淀"],
     count: "6 条线索",
@@ -948,7 +963,7 @@ const seedCards = [
     topicId: "fan-cocreation",
     source: "813粉丝盛典",
     mediaType: "视频",
-    image: "/assets/717-demo/stage-03.jpg",
+    image: seedStageImage.interaction,
     desc: "聚焦粉丝签到、互动区、合影墙、应援动作和现场反馈，沉淀能够表现“红旗与用户同行”的真实片段，适合裂变成图文笔记和短视频脚本。",
     topics: ["种子内容", "可检索", "待沉淀"],
     count: "9 条线索",
@@ -958,7 +973,7 @@ const seedCards = [
     topicId: "family-travel",
     source: "813粉丝盛典",
     mediaType: "图文",
-    image: "/assets/717-demo/stage-04.jpg",
+    image: seedStageImage.product,
     desc: "整理活动中车辆、展台、品牌符号和产品亮点的露出位置。后续可帮助 AI 判断哪些图片适合做封面，哪些适合做传播配图。",
     topics: ["种子内容", "可检索", "待沉淀"],
     count: "5 条素材",
@@ -973,7 +988,7 @@ const expandedSeedCards = [
     ...seedCards[0],
     title: "智能座舱体验｜现场互动种子",
     topicId: "tech-experience",
-    image: "/assets/717-demo/stage-02.jpg",
+    image: seedStageImage.crowd,
     mediaType: "视频",
     desc: "适合把智能体验拆成用户能感受到的现场变化，强调交互、反馈和真实体验，不堆参数。",
     count: "8 条线索",
@@ -982,7 +997,7 @@ const expandedSeedCards = [
     ...seedCards[0],
     title: "科技体验日｜用户视角种子",
     topicId: "tech-experience",
-    image: "/assets/717-demo/stage-03.jpg",
+    image: seedStageImage.interaction,
     desc: "从参与者第一视角记录体验路径，适合生成短视频开头、体验口播和小红书种草标题。",
     count: "10 张图片",
   },
@@ -990,7 +1005,7 @@ const expandedSeedCards = [
     ...seedCards[2],
     title: "粉丝合影墙｜打卡裂变种子",
     topicId: "fan-cocreation",
-    image: "/assets/717-demo/stage-04.jpg",
+    image: seedStageImage.product,
     mediaType: "图文",
     desc: "围绕合影、签到、应援动作沉淀可转发内容，适合做朋友圈裂变和视频号现场切片。",
     count: "14 张图片",
@@ -999,7 +1014,7 @@ const expandedSeedCards = [
     ...seedCards[2],
     title: "粉丝留言｜真实反馈种子",
     topicId: "fan-cocreation",
-    image: "/assets/717-demo/stage-01.jpg",
+    image: seedStageImage.main,
     desc: "保留用户现场反馈和互动情绪，可用于活动复盘、用户证言和社群传播素材。",
     count: "7 条线索",
   },
@@ -1007,7 +1022,7 @@ const expandedSeedCards = [
     ...seedCards[3],
     title: "家庭出行｜舒适体验种子",
     topicId: "family-travel",
-    image: "/assets/717-demo/stage-02.jpg",
+    image: seedStageImage.crowd,
     desc: "用家庭关系和出行场景承接产品卖点，把舒适、安全、陪伴讲成具体画面。",
     count: "9 条素材",
   },
@@ -1015,7 +1030,7 @@ const expandedSeedCards = [
     ...seedCards[3],
     title: "亲子陪伴｜周末出行种子",
     topicId: "family-travel",
-    image: "/assets/717-demo/stage-03.jpg",
+    image: seedStageImage.interaction,
     mediaType: "视频",
     desc: "适合做亲子场景脚本，突出孩子、父母、长途舒适和轻松到达的故事线。",
     count: "6 条视频",
@@ -1024,7 +1039,7 @@ const expandedSeedCards = [
     ...seedCards[1],
     title: "品牌符号｜经典焕新种子",
     topicId: "brand-memory",
-    image: "/assets/717-demo/stage-04.jpg",
+    image: seedStageImage.product,
     desc: "串联品牌标识、现场装置和用户记忆点，把经典感转成更年轻的情绪表达。",
     count: "11 张图片",
   },
@@ -1032,7 +1047,7 @@ const expandedSeedCards = [
     ...seedCards[1],
     title: "老友新声｜品牌记忆种子",
     topicId: "brand-memory",
-    image: "/assets/717-demo/stage-01.jpg",
+    image: seedStageImage.main,
     mediaType: "图文",
     desc: "适合做品牌故事短片和用户回忆征集，用一个符号、一个故事、一个当下体验组织内容。",
     count: "5 组文案",
@@ -1092,9 +1107,9 @@ const seedScripts = [
 ];
 
 const seedVisuals = [
-  { label: "主视觉", image: "/assets/717-demo/stage-01.jpg" },
-  { label: "互动瞬间", image: "/assets/717-demo/stage-03.jpg" },
-  { label: "传播画面", image: "/assets/717-demo/stage-02.jpg" },
+  { label: "主视觉", image: seedStageImage.main },
+  { label: "互动瞬间", image: seedStageImage.interaction },
+  { label: "传播画面", image: seedStageImage.crowd },
 ];
 
 const topicAnalysis: Record<TopicId, { explain: string; direction: string }> = {
@@ -2341,7 +2356,7 @@ function WorkbenchPage({
             },
           ],
           video: {
-            src: "/assets/717-demo/seed-delivery-demo.mp4",
+            src: seedDeliveryDemoVideo,
             title: "813粉丝盛典裂变视频",
             copy: "建议发布在抖音 / 视频号 / 小红书，首帧选择舞台大景，前 3 秒保留人群与灯光高光。",
             tags: ["#813粉丝盛典", "#现场高光", "#品牌共创", "#活动回顾"],

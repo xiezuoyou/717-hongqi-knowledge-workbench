@@ -38,6 +38,7 @@
  */
 
 import { readFile } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -152,8 +153,68 @@ const platformGaps = [];
 if (seedActionsAreMocked) {
   platformGaps.push('一键裂变（视频 / 素材包 / 脚本）返回写死的演示数据，未接后端');
 }
-if (platformText.includes('/assets/717-demo/')) {
-  platformGaps.push('种子页素材引用 /assets/717-demo/，该目录不存在，页面会出现碎图');
+/**
+ * 素材是否真的能加载。这条检查改过两次，两次都因为"检查的东西和前端实际用的
+ * 东西脱钩"而假绿，所以把原因记在这里：
+ *   1. 最早匹配 '/assets/717-demo/' 字面量。前端换成 assetUrl() 后字面量消失，
+ *      检查永远通过。
+ *   2. 然后改成查 public/assets/ 文件系统。但配了 VITE_ASSET_BASE 指向 CDN 之后
+ *      本地文件是故意删掉的，检查开始误报 4 个不存在的问题。
+ * 现在按前端真实的解析规则来：配了 base 就走网络 HEAD，没配才查本地磁盘。
+ */
+const referencedAssets = [...platformText.matchAll(/assetUrl\("([^"]+)"\)/g)]
+  .map((match) => match[1])
+  .filter((asset, index, all) => all.indexOf(asset) === index)
+  .sort();
+
+/** 只读 .env 里的 VITE_ASSET_BASE，不碰任何密钥。 */
+function readAssetBase() {
+  if (process.env.VITE_ASSET_BASE) return process.env.VITE_ASSET_BASE;
+  try {
+    const text = readFileSync(path.join(root, '.env'), 'utf8');
+    const line = text.split('\n').find((l) => l.trim().startsWith('VITE_ASSET_BASE='));
+    return line ? line.slice(line.indexOf('=') + 1).trim() : '';
+  } catch (error) {
+    // 只容忍"没有 .env"这一种情况。其它错误（比如这里曾经漏 import
+    // readFileSync 导致的 ReferenceError）必须炸出来，否则体检会安静地
+    // 退回本地模式、报一串假缺口，看上去像素材没上传。
+    if (error?.code === 'ENOENT') return '';
+    throw error;
+  }
+}
+
+const assetBase = readAssetBase().replace(/\/+$/, '');
+const assetsAreRemote = /^https?:\/\//.test(assetBase);
+
+const missingAssets = [];
+if (assetsAreRemote) {
+  // 线上模式：真发 HEAD。碎图在这里就是 404，本地有没有文件无关。
+  await Promise.all(
+    referencedAssets.map(async (asset) => {
+      const url = `${assetBase}/${asset.replace(/^\/+/, '')}`;
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        if (!response.ok) missingAssets.push(`${asset}（HTTP ${response.status}）`);
+      } catch (error) {
+        missingAssets.push(`${asset}（请求失败：${error?.message || error}）`);
+      }
+    }),
+  );
+} else {
+  for (const asset of referencedAssets) {
+    if (!existsSync(path.join(root, 'public/assets', asset))) missingAssets.push(asset);
+  }
+}
+
+if (missingAssets.length) {
+  missingAssets.sort();
+  const where = assetsAreRemote ? `CDN（${assetBase}）` : '本地 public/assets';
+  platformGaps.push(
+    `素材缺 ${missingAssets.length} 个，${where} 读不到：${missingAssets.join('、')}` +
+      (assetsAreRemote
+        ? '（跑 pnpm cos:sync 上传）'
+        : '（跑 node scripts/sync-materials-to-cos.mjs --local 补齐，或配 VITE_ASSET_BASE 指向 CDN）'),
+  );
 }
 
 /**

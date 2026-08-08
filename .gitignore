@@ -14,3 +14,7 @@ _shots/
 _shots-flat/
 shot-tmp.mjs
 shot-flat.mjs
+
+# cos:sync --local 从 素材库/ 复制过来的过渡素材。
+# 真实图片走 COS + CDN，不进仓库、也不该进 dist/。
+public/assets/717-demo/
