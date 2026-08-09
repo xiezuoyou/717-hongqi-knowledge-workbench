@@ -12,6 +12,7 @@
     "render:server": "node scripts/render-server.mjs",
     "render:seed": "remotion render src/remotion/index.jsx SeedVideo outputs/seed-717-live.mp4",
     "render:materials": "node scripts/render-material-package.mjs",
+    "seed:sync": "node scripts/sync-seed-manifests.mjs",
     "regression": "node scripts/regression-check.mjs",
     "test": "vitest run",
     "test:watch": "vitest",

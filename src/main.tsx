@@ -1485,6 +1485,8 @@ function WorkbenchPage({
   const [isContentVisible, setIsContentVisible] = React.useState(true);
   const [selectedSeed, setSelectedSeed] = React.useState<SeedCard | null>(null);
   const [seedManifest, setSeedManifest] = React.useState<any | null>(null);
+  const [seedManifestState, setSeedManifestState] =
+    React.useState<"loading" | "ready" | "missing">("loading");
   const [isSeedAiOpen, setIsSeedAiOpen] = React.useState(false);
   const [activeSeedAiAction, setActiveSeedAiAction] = React.useState<SeedAiAction | null>(null);
   const [isSeedAiReturning, setIsSeedAiReturning] = React.useState(false);
@@ -2116,17 +2118,47 @@ function WorkbenchPage({
   React.useEffect(() => {
     if (!selectedSeed) {
       setSeedManifest(null);
+      setSeedManifestState("loading");
       return;
     }
 
-    // 加载种子的 manifest 数据
-    fetch(`/seeds/${selectedSeed.id}.json`)
-      .then(res => res.json())
-      .then(data => setSeedManifest(data))
-      .catch(err => {
-        console.error(`[seed manifest] 加载失败 ${selectedSeed.id}:`, err);
+    // manifest 是 public/seeds/ 下的生成产物，由 scripts/sync-seed-manifests.mjs
+    // 从 src/data/seed/manifests/ 同步而来。没有 manifest 的种子（素材还没拍）
+    // 会拿到 404，这不是错误，是「素材准备中」的正常状态。
+    let cancelled = false;
+    const seedId = selectedSeed.id;
+    setSeedManifest(null);
+    setSeedManifestState("loading");
+
+    fetch(`/seeds/${seedId}.json`)
+      .then(async (res) => {
+        if (!res.ok) return null;
+        // 404 时 dev server 会回 index.html，不是 JSON，所以解析失败也算「没有」
+        try {
+          return await res.json();
+        } catch {
+          return null;
+        }
+      })
+      .then((data) => {
+        if (cancelled) return;
+        if (data && Array.isArray(data.segments) && data.segments.length > 0) {
+          setSeedManifest(data);
+          setSeedManifestState("ready");
+        } else {
+          setSeedManifest(null);
+          setSeedManifestState("missing");
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
         setSeedManifest(null);
+        setSeedManifestState("missing");
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedSeed]);
 
   React.useEffect(() => {
@@ -3508,14 +3540,14 @@ function WorkbenchPage({
                 </div>
               </div>
 
-              {seedManifest ? (
-                <>
-                  {/* 内容拆解 */}
-                  <section className="seed-info-section">
-                    <h2>内容拆解</h2>
-                    <p>{seedManifest.angle}</p>
-                  </section>
+              {/* 内容拆解：来自 seeds.ts，不依赖 manifest */}
+              <section className="seed-info-section">
+                <h2>内容拆解</h2>
+                <p>{selectedSeed.desc}</p>
+              </section>
 
+              {seedManifestState === "ready" && seedManifest ? (
+                <>
                   {/* 逻辑线 */}
                   {seedManifest.logicalLine ? (
                     <section className="seed-info-section">
@@ -3525,36 +3557,57 @@ function WorkbenchPage({
                   ) : null}
 
                   {/* 分段结构 */}
-                  {seedManifest.segments && seedManifest.segments.length > 0 ? (
-                    <section className="seed-segments-section">
-                      <h2>分段结构</h2>
-                      <div className="seed-segments-grid">
-                        {seedManifest.segments.map((seg: any) => (
+                  <section className="seed-segments-section">
+                    <h2>分段结构</h2>
+                    <div className="seed-segments-grid">
+                      {seedManifest.segments.map((seg: any) => {
+                        const realCount = (seg.clips || []).filter(
+                          (clip: any) => clip.state === "real",
+                        ).length;
+                        return (
                           <article key={seg.id} className="seed-segment-card">
                             <span className="segment-order">段 {seg.order}</span>
                             <strong>{seg.label}</strong>
                             <p>{seg.purpose}</p>
+                            <span className="segment-clip-count">
+                              {realCount > 0 ? `${realCount} 个可用素材` : "素材待补"}
+                            </span>
                           </article>
-                        ))}
-                      </div>
-                    </section>
-                  ) : null}
+                        );
+                      })}
+                    </div>
+                  </section>
                 </>
+              ) : seedManifestState === "loading" ? (
+                <section className="seed-info-section">
+                  <p className="seed-info-muted">正在读取分段结构…</p>
+                </section>
               ) : (
                 <section className="seed-info-section">
-                  <p style={{ color: "rgba(255, 255, 255, 0.4)" }}>正在加载种子内容信息...</p>
+                  <h2>分段结构</h2>
+                  <p className="seed-info-muted">
+                    这条种子的拍摄结构还没定稿，素材也还没入库，所以暂时不能做 AI 裂变。
+                    可以先看「717 粉丝盛典现场打卡探场」，那条已经可用。
+                  </p>
                 </section>
               )}
 
-              {/* AI 裂变悬浮按钮 */}
+              {/* AI 裂变悬浮按钮：没有素材的种子不给点，避免点了才报错 */}
               <button
                 className="seed-ai-fab-trigger"
                 type="button"
+                disabled={seedManifestState !== "ready"}
                 onClick={() => setIsSeedAiOpen(!isSeedAiOpen)}
-                aria-label={isSeedAiOpen ? "关闭 AI 裂变" : "打开 AI 裂变"}
+                aria-label={
+                  seedManifestState !== "ready"
+                    ? "素材准备中，暂不能裂变"
+                    : isSeedAiOpen
+                      ? "关闭 AI 裂变"
+                      : "打开 AI 裂变"
+                }
               >
                 <Sparkles size={20} />
-                <span>AI 裂变</span>
+                <span>{seedManifestState === "ready" ? "AI 裂变" : "素材准备中"}</span>
               </button>
 
               {/* AI 裂变悬浮面板 */}

@@ -1,58 +1,268 @@
 {
   "seedId": "seed-006",
   "version": 1,
-  "directionId": "stage-atmosphere",
-  "title": "717粉丝盛典｜晚会舞台种子",
-  "angle": "突出舞台氛围感、灯光节奏和品牌露出",
-  "status": "ready",
+  "updatedAt": "2026-08-09",
+  "logicalLine": "从入口开场建立活动现场感，用位置指引说明地点和路线，再展示节目打卡的可看可玩点，过渡到休闲体验的松弛氛围，承接赛车展示这个具体亮点，最后用粉丝墙收尾导流。",
   "format": {
     "aspectRatio": "9:16",
-    "targetDurationSeconds": 24,
+    "targetDurationSeconds": 25,
     "durationToleranceSeconds": 5
   },
-  "logicalLine": "从入口开场建立活动语境，通过位置指引说明地点和路线，展示节目打卡的可玩可看点，过渡到休闲体验的松弛氛围，承接赛车展示的具体亮点，最后用关注收尾导流。",
+  "productionRules": [
+    "裂变成片不出现真人主持或出镜口播",
+    "原片中的真人只作为参考，不作为后续裂变必须复用的视觉主体",
+    "素材包只放实拍素材，字幕、贴纸、转场、尾板、关注引导画面属于后期 AI/Remotion 制作",
+    "目标比例 9:16 竖屏"
+  ],
   "segments": [
     {
-      "id": "seg-1",
+      "id": "seg-1-opening",
       "order": 1,
       "label": "入口开场",
-      "purpose": "用于开头快速进入 717 盛典语境",
-      "required": true
+      "purpose": "快速进入 717 盛典语境，建立活动现场感",
+      "required": true,
+      "targetDurationSeconds": 3,
+      "clips": [
+        {
+          "id": "clip-001",
+          "file": "节奏段1_入口开场/红旗盛典拱门/717-拱门.mp4",
+          "state": "real",
+          "durationSeconds": 2.3,
+          "subject": "红旗盛典拱门",
+          "description": "红色入口拱门，717 粉丝盛典主视觉，红毯入口",
+          "proves": [
+            "这是 717 粉丝盛典现场",
+            "活动入口有红色主视觉",
+            "现场有红毯和仪式感"
+          ],
+          "doesNotProve": [
+            "具体活动内容",
+            "参与人数",
+            "活动规模"
+          ],
+          "priority": "P0",
+          "reviewed": false
+        },
+        {
+          "id": "clip-002",
+          "file": "节奏段1_入口开场/红毯人流/717-红毯人流.mp4",
+          "state": "real",
+          "durationSeconds": 3.73,
+          "subject": "红毯人流",
+          "description": "现场观众、工作人员、入场动线",
+          "proves": [
+            "现场有真实观众",
+            "活动有人流和热度",
+            "入场动线流畅"
+          ],
+          "doesNotProve": [
+            "具体参与人数",
+            "观众身份",
+            "活动具体项目"
+          ],
+          "priority": "P1",
+          "reviewed": false
+        }
+      ]
     },
     {
-      "id": "seg-2",
+      "id": "seg-2-location",
       "order": 2,
       "label": "位置指引",
-      "purpose": "用于说明活动地点和打卡路线",
-      "required": true
+      "purpose": "说明活动地点和打卡路线，让用户知道在哪、怎么走",
+      "required": false,
+      "targetDurationSeconds": 3,
+      "clips": [
+        {
+          "id": "clip-003",
+          "file": "节奏段2_位置指引/欢迎回家指示牌/717-欢迎回家.mp4",
+          "state": "real",
+          "durationSeconds": 3.3,
+          "subject": "欢迎回家指示牌",
+          "description": "欢迎回家、这很红旗、活动路线牌",
+          "proves": [
+            "活动主题是「欢迎回家」",
+            "现场有品牌情感表达",
+            "有活动路线指引"
+          ],
+          "doesNotProve": [
+            "具体活动地点",
+            "路线具体内容",
+            "分区布局"
+          ],
+          "priority": "P1",
+          "reviewed": false
+        }
+      ]
     },
     {
-      "id": "seg-3",
+      "id": "seg-3-activity",
       "order": 3,
       "label": "节目打卡",
-      "purpose": "用于展示现场有东西可玩、可看、可拍",
-      "required": true
+      "purpose": "展示现场有东西可玩、可看、可拍，建立参与感",
+      "required": true,
+      "targetDurationSeconds": 8,
+      "clips": [
+        {
+          "id": "clip-004",
+          "file": "节奏段3_节目打卡/精彩演出区域/717-精彩演出区域.mp4",
+          "state": "real",
+          "durationSeconds": 6.13,
+          "subject": "精彩演出区域",
+          "description": "演出、舞台、节目提示、表演区",
+          "proves": [
+            "现场有演出节目",
+            "有舞台和表演区",
+            "活动内容丰富"
+          ],
+          "doesNotProve": [
+            "具体演出内容",
+            "演出嘉宾",
+            "节目时长"
+          ],
+          "priority": "P0",
+          "reviewed": false
+        },
+        {
+          "id": "clip-005",
+          "file": "节奏段3_节目打卡/互动打卡动作/717-互动打卡.mp4",
+          "state": "real",
+          "durationSeconds": 9.37,
+          "subject": "互动打卡动作",
+          "description": "观众互动、打卡动作、现场互动装置，不以真人主持为核心",
+          "proves": [
+            "现场有互动装置",
+            "观众可以打卡",
+            "有参与感和互动性"
+          ],
+          "doesNotProve": [
+            "互动装置具体玩法",
+            "打卡奖励",
+            "参与人数"
+          ],
+          "priority": "P0",
+          "reviewed": false,
+          "note": "9.37 秒较长，实际可能含多个镜头，选片时可能需要切分"
+        }
+      ]
     },
     {
-      "id": "seg-4",
+      "id": "seg-4-leisure",
       "order": 4,
       "label": "休闲体验",
-      "purpose": "用于展示更松弛的现场体验",
-      "required": true
+      "purpose": "展示更松弛的现场体验，营造轻松氛围",
+      "required": false,
+      "targetDurationSeconds": 5,
+      "clips": [
+        {
+          "id": "clip-006",
+          "file": "节奏段4_休闲体验/露营休闲区/717-露营休闲区.mp4",
+          "state": "real",
+          "durationSeconds": 27.67,
+          "subject": "露营休闲区",
+          "description": "露营区、草坪、户外休息区",
+          "proves": [
+            "现场有露营休闲区",
+            "有草坪户外体验",
+            "活动氛围轻松"
+          ],
+          "doesNotProve": [
+            "露营区具体设施",
+            "草坪活动项目",
+            "休闲区规模"
+          ],
+          "priority": "P1",
+          "reviewed": false,
+          "note": "27.67 秒很长，实际含多个镜头和场景，选片时必须切分，不能整条用"
+        }
+      ]
     },
     {
-      "id": "seg-5",
+      "id": "seg-5-vehicle",
       "order": 5,
       "label": "赛车展示",
-      "purpose": "用于承接具体亮点，让视频从活动氛围进入可看的车",
-      "required": true
+      "purpose": "从活动氛围进入具体亮点，让视频有车可看",
+      "required": false,
+      "targetDurationSeconds": 4,
+      "clips": [
+        {
+          "id": "clip-007",
+          "file": "节奏段5_赛车展示/车身外观/717-车身外观.mp4",
+          "state": "real",
+          "durationSeconds": 7.4,
+          "subject": "车身外观",
+          "description": "车身侧面、前脸、局部线条",
+          "proves": [
+            "现场有展车",
+            "可以看到车身外观细节",
+            "有产品露出"
+          ],
+          "doesNotProve": [
+            "具体车型",
+            "车辆配置",
+            "赛车性能"
+          ],
+          "priority": "P1",
+          "reviewed": false
+        }
+      ]
     },
     {
-      "id": "seg-6",
+      "id": "seg-6-closing",
       "order": 6,
       "label": "关注收尾",
-      "purpose": "用于账号导流前的实拍收束画面",
-      "required": true
+      "purpose": "账号导流前的实拍收束画面，真正的关注文字和尾板由后期生成",
+      "required": true,
+      "targetDurationSeconds": 3,
+      "clips": [
+        {
+          "id": "clip-008",
+          "file": "节奏段6_关注收尾/红旗粉丝墙/717-红旗粉丝墙.mp4",
+          "state": "real",
+          "durationSeconds": 5.47,
+          "subject": "红旗粉丝墙",
+          "description": "粉丝墙、红旗主题背景板、车模背景板",
+          "proves": [
+            "现场有粉丝墙打卡点",
+            "有品牌主题背景",
+            "适合作为收尾画面"
+          ],
+          "doesNotProve": [
+            "粉丝墙具体内容",
+            "打卡人数",
+            "粉丝互动形式"
+          ],
+          "priority": "P0",
+          "reviewed": false
+        }
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "segmentId": "seg-2-location",
+      "expected": "红旗国际汽车公园定位 / 活动地图与路标",
+      "impact": "无法明确说出活动具体地点，不能做「如何到达」类内容"
+    },
+    {
+      "segmentId": "seg-3-activity",
+      "expected": "现场活动物料",
+      "impact": "缺少活动物料特写，不能展示现场装置和互动道具细节"
+    },
+    {
+      "segmentId": "seg-4-leisure",
+      "expected": "草坪帐篷 / 轻松玩乐氛围",
+      "impact": "休闲体验只有露营区远景，缺少亲子、朋友互动的具体画面"
+    },
+    {
+      "segmentId": "seg-5-vehicle",
+      "expected": "超哇赛车展车 / 赛道围栏与打卡位",
+      "impact": "只有车身外观，缺少赛车亮点和赛道氛围，不能强调「赛车」这个关键点"
+    },
+    {
+      "segmentId": "通用补充",
+      "expected": "人群空镜 / 红色品牌视觉",
+      "impact": "缺少通用转场和氛围镜头，成片节奏可能生硬"
     }
   ]
 }

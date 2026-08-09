@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, createReadStream } from 'node:fs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
@@ -239,16 +239,30 @@ async function createPackage(seedId, manifest, selectedClips, scriptMarkdown) {
   const materialsDir = path.join(packageDir, 'materials');
   await mkdir(materialsDir, { recursive: true });
 
-  const packageRoot = path.join(root, manifest.packageRoot || '素材库/种子内容');
+  // clip.file 是相对素材包目录的路径，所以 packageRoot 必须指到「.../素材包」这一层。
+  // manifest 里没写就没法拼对，之前静默 skip 会产出一个只有文案的空包，所以这里直接报错。
+  if (!manifest.packageRoot) {
+    throw new Error(`种子 ${seedId} 的 manifest 缺少 packageRoot，无法定位素材文件`);
+  }
+  const packageRoot = path.join(root, manifest.packageRoot);
+  let copied = 0;
+  const missing = [];
   for (const clip of selectedClips) {
     const sourcePath = path.join(packageRoot, clip.file);
     if (!existsSync(sourcePath)) {
-      console.warn(`素材文件不存在，跳过：${clip.file}`);
+      missing.push(clip.file);
       continue;
     }
     const fileName = path.basename(clip.file);
     const destPath = path.join(materialsDir, fileName);
     await execFileAsync('cp', [sourcePath, destPath]);
+    copied += 1;
+  }
+  if (missing.length > 0) {
+    console.warn(`[seed/package] ${missing.length} 个素材文件不存在：\n  ${missing.join('\n  ')}`);
+  }
+  if (copied === 0) {
+    throw new Error('选中的素材文件都不存在，素材包里会没有视频，已终止');
   }
 
   // 打包成 zip
@@ -281,6 +295,31 @@ const server = createServer(async (req, res) => {
         service: 'seed-package-server',
         hasKey: Boolean(MIMO_API_KEY),
       });
+      return;
+    }
+
+    // zip 下载。前端下载按钮直接指到这里，没有这个路由 zipUrl 就是个 404。
+    if (req.method === 'GET' && req.url?.startsWith('/outputs/seed-packages/')) {
+      const requested = decodeURIComponent(req.url.split('?')[0]);
+      const outputRoot = path.join(root, 'outputs', 'seed-packages');
+      const filePath = path.resolve(root, `.${requested}`);
+
+      // 只允许读 outputs/seed-packages 下的 .zip，挡掉 ../ 穿越
+      if (!filePath.startsWith(outputRoot + path.sep) || !filePath.endsWith('.zip')) {
+        sendJson(res, 403, { ok: false, error: 'Forbidden' });
+        return;
+      }
+      if (!existsSync(filePath)) {
+        sendJson(res, 404, { ok: false, error: '素材包不存在或已过期' });
+        return;
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'application/zip',
+        'Content-Disposition': `attachment; filename="${path.basename(filePath)}"`,
+        'Access-Control-Allow-Origin': '*',
+      });
+      createReadStream(filePath).pipe(res);
       return;
     }
 

@@ -2,6 +2,8 @@
   "seedId": "seed-006",
   "version": 1,
   "updatedAt": "2026-08-09",
+  "packageRoot": "素材库/种子内容/seed-006-717粉丝盛典现场打卡探场/素材包",
+  "logicalLine": "从入口开场建立活动现场感，用位置指引说明地点和路线，再展示节目打卡的可看可玩点，过渡到休闲体验的松弛氛围，承接赛车展示这个具体亮点，最后用粉丝墙收尾导流。",
   "format": {
     "aspectRatio": "9:16",
     "targetDurationSeconds": 25,

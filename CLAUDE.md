@@ -43,10 +43,21 @@
   - 输入状态：面板直接变形为输入框（无嵌套边框）
   - 黑白灰配色，适配白色背景
 
-**manifest 数据文件**
-- ✅ 为 4 个种子创建了 manifest：seed-005、seed-006、seed-007、seed-199
-- ✅ 存放位置：`public/seeds/{seedId}.json`
-- ✅ 包含：seedId、title、angle、logicalLine、segments（分段结构）
+**manifest 只有一个源（重要，别再手写第二份）**
+
+唯一权威源是 `src/data/seed/manifests/*.manifest.json` —— 后端 8793 / 8796 直接读它。
+前端要的那份用 `pnpm seed:sync` 生成到 `public/seeds/{seedId}.json`，
+**`public/seeds/` 是产出物，不要手改**。
+
+展示字段（标题、热点方向、内容拆解 = `angle`、状态）在 `src/data/seed/seeds.ts`，
+不放进 manifest。manifest 只负责 `logicalLine` + `segments`/`clips`。
+
+现在真的有素材的只有 **seed-006**（6 段 / 8 个真实片段，文件都在盘上）。
+005、007 的 `manifestPath: null`，二级页显示「素材准备中」，AI 裂变按钮置灰不可点 ——
+否则点下去后端会抛「manifest 文件不存在」。
+
+之前踩的坑：手写过 4 份 `public/seeds/*.json`，字段和 seeds.ts 重复、segments 和后端不一致、
+`clips` 全空，导致前端能展示一条后端根本做不出来的种子。已删除。
 
 ### 进行中
 
