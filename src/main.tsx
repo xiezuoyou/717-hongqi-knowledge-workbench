@@ -888,7 +888,17 @@ const hotTopics = directions.map(d => ({
   desc: d.summary,
 }));
 
-type TopicId = DirectionId;
+// 当天的热点方向：优先显示活动日(8/13)，否则显示第一天
+const todayTimeline = timeline.find(day => day.status === "event") || timeline[0];
+const todayHotTopics = todayTimeline.directions.map((direction, index) => ({
+  id: `today-${index}`,
+  label: direction,
+  tag: "当日热点",
+  topics: [],
+  desc: direction,
+}));
+
+type TopicId = DirectionId | string;
 type SeedAiAction = "package" | "video"; // "script" 已被砍掉
 type SeedScope = "current" | "all";
 type SeedAiResult = {
@@ -1014,6 +1024,21 @@ const topicAnalysis: Record<TopicId, { explain: string; direction: string }> =
   Object.fromEntries(
     directions.map(d => [d.id, { explain: d.whyNow, direction: d.howTo }])
   ) as Record<TopicId, { explain: string; direction: string }>;
+
+// 当天热点方向的分析数据
+const todayTopicAnalysis: Record<string, { explain: string; direction: string }> =
+  Object.fromEntries(
+    todayHotTopics.map(topic => [
+      topic.id,
+      {
+        explain: `${todayTimeline.label}的重点传播方向之一`,
+        direction: `${todayTimeline.focus}。这个方向下，可以围绕"${topic.label}"展开内容创作。`,
+      }
+    ])
+  );
+
+// 合并两个分析数据源
+const allTopicAnalysis = { ...topicAnalysis, ...todayTopicAnalysis };
 
 type KnowledgeAiModuleId = "qa" | "review" | "analysis" | "copy" | "material";
 
@@ -1463,7 +1488,7 @@ function WorkbenchPage({
 }) {
   const [activeTab, setActiveTab] = React.useState("seed");
   const [activeSubTab, setActiveSubTab] = React.useState("topic-board");
-  const [activeTopicId, setActiveTopicId] = React.useState<TopicId>(hotTopics[0].id);
+  const [activeTopicId, setActiveTopicId] = React.useState<TopicId>(todayHotTopics[0].id);
   const [seedScope, setSeedScope] = React.useState<SeedScope>("current");
   const topicDetailRef = React.useRef<HTMLElement | null>(null);
   const topicChangeTweenRef = React.useRef<gsap.core.Tween | null>(null);
@@ -3013,11 +3038,11 @@ function WorkbenchPage({
             <div>
               <span>HOTSPOT</span>
               <h1>热点方向</h1>
-              <p className="hot-topic-note">这是今天的传播热点，你可以选择并查看相关的热点解读，以及内容制作方向的推荐。</p>
+              <p className="hot-topic-note">{todayTimeline.label} · 今日可参与的具体热点方向</p>
             </div>
           </div>
           <section className="hot-topic-menu">
-            {hotTopics.map((topic) => (
+            {todayHotTopics.map((topic) => (
               <button
                 className={topic.id === activeTopicId ? "active" : ""}
                 key={topic.id}
@@ -3047,11 +3072,11 @@ function WorkbenchPage({
             <div className="hot-topic-detail-body">
               <article>
                 <span>热点解读</span>
-                <p>{topicAnalysis[activeTopicId].explain}</p>
+                <p>{allTopicAnalysis[activeTopicId]?.explain || "暂无解读"}</p>
               </article>
               <article>
                 <span>内容方向推荐</span>
-                <p>{topicAnalysis[activeTopicId].direction}</p>
+                <p>{allTopicAnalysis[activeTopicId]?.direction || "暂无推荐"}</p>
               </article>
             </div>
           </section>
