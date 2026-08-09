@@ -3000,28 +3000,6 @@ function WorkbenchPage({
                   {day.note && (
                     <p className="timeline-day-note">{day.note}</p>
                   )}
-
-                  {day.seedIds && day.seedIds.length > 0 && (
-                    <div className="timeline-day-seeds">
-                      <span className="timeline-seeds-label">可用种子:</span>
-                      {day.seedIds.map((seedId) => {
-                        const seed = seeds.find((s) => s.id === seedId);
-                        return seed ? (
-                          <button
-                            key={seedId}
-                            type="button"
-                            className="timeline-seed-link"
-                            onClick={() => {
-                              const seedCard = seedCards.find((c) => c.id === seedId);
-                              if (seedCard) setSelectedSeed(seedCard);
-                            }}
-                          >
-                            {seed.title}
-                          </button>
-                        ) : null;
-                      })}
-                    </div>
-                  )}
                 </article>
               );
             })}
