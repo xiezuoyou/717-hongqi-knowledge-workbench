@@ -2971,10 +2971,6 @@ function WorkbenchPage({
           </div>
           <div className="timeline-view-grid">
             {timeline.map((day) => {
-              const dayDirections = day.directionIds
-                .map((id) => directions.find((d) => d.id === id))
-                .filter(Boolean) as Direction[];
-
               return (
                 <article
                   key={day.date}
@@ -2990,9 +2986,9 @@ function WorkbenchPage({
                   </header>
 
                   <div className="timeline-day-directions">
-                    {dayDirections.map((direction) => (
-                      <span key={direction.id} className="timeline-direction-tag">
-                        {direction.label}
+                    {day.directions.map((direction, idx) => (
+                      <span key={idx} className="timeline-direction-tag">
+                        {direction}
                       </span>
                     ))}
                   </div>

@@ -79,8 +79,8 @@ export type TimelineDay = {
   status: TimelineDayStatus;
   /** 这天的节奏点，一句话 */
   focus: string;
-  /** 这天放出哪些方向 */
-  directionIds: DirectionId[];
+  /** 这天可参与的具体热点方向（不再引用 DirectionId，每天独立） */
+  directions: string[];
   /**
    * 这天放出哪些种子。存 id，不存标题字符串。
    * 存字符串是上一版的问题：时间线和真实种子对不上，点进去没有东西。
