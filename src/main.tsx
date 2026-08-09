@@ -888,8 +888,8 @@ const hotTopics = directions.map(d => ({
   desc: d.summary,
 }));
 
-// 当天的热点方向：优先显示活动日(8/13)，否则显示第一天
-const todayTimeline = timeline.find(day => day.status === "event") || timeline[0];
+// 当天的热点方向：默认显示第一天(8/11)
+const todayTimeline = timeline[0];
 const todayHotTopics = todayTimeline.directions.map((direction, index) => ({
   id: `today-${index}`,
   label: direction,
