@@ -890,12 +890,41 @@ const hotTopics = directions.map(d => ({
 
 // 当天的热点方向：默认显示第一天(8/11)
 const todayTimeline = timeline[0];
-const todayHotTopics = todayTimeline.directions.map((direction, index) => ({
+
+// 为每个具体方向定义详细的内容
+const todayDirectionDetails = [
+  {
+    label: "长春文旅打卡地推荐",
+    desc: "从长春本地特色景点和文旅地标切入，通过打卡点推荐营造活动预热氛围",
+    explain: "813粉丝盛典在长春举办，活动前期需要从本地视角切入预热。长春作为东北重要城市，有独特的城市记忆和文旅资源。通过推荐长春本地打卡地，既能吸引本地用户关注，也能让外地用户对活动举办地产生兴趣，为813传播造势。",
+    direction: "可以从这几个角度切入：推荐长春必打卡的文旅地标（如伪满皇宫、南湖公园、这有山等），结合HS6/H7的空间、舒适度自然带出产品。内容形态建议小红书图文笔记或短视频，标题可用「813前先逛长春」、「打卡长春等你来」等本地生活化表达，避免硬广植入。",
+  },
+  {
+    label: "城市溜达路线种草",
+    desc: "推荐长春citywalk路线和城市探索玩法，用生活化场景自然展示车型",
+    explain: "Citywalk（城市漫步）是当下年轻人喜欢的城市探索方式。813活动前，通过推荐长春的溜达路线、探店路线、工业风拍照地等内容，可以把「去长春参加活动」这件事包装成一次城市文化体验。这个角度更生活化，传播阻力小，容易引发本地用户共鸣和外地用户向往。",
+    direction: "内容可以这样做：设计2-3条长春特色路线（如文艺青年线、美食探店线、工业风打卡线），每条路线3-5个点位，用地图+实拍图呈现。车在路线里自然出现：HS6的后备箱装城市探索装备、H7后排适合休息调整。发布平台优先小红书（种草属性强）和抖音本地生活频道，标题避免提813，先种草路线本身。",
+  },
+  {
+    label: "活动搭建花絮预热",
+    desc: "通过活动现场搭建过程和筹备花絮，提前释放活动信息制造期待感",
+    explain: "大型活动的搭建过程本身就是话题点。提前1-2天释放现场搭建花絮、舞台灯光调试、彩排片段等内容，可以给粉丝「偷看幕后」的新鲜感，同时制造「大事将至」的悬念和期待。这个角度适合调动已有粉丝的参与热情，让他们成为活动预热的传播节点。",
+    direction: "内容方向：拍摄舞台搭建延时、灯光调试画面、工作人员筹备状态、活动物料到场等花絮素材。文案可以用倒计时、悬念式表达（「长春准备好了」、「813倒计时2天，现场已经...」），配合现场大场景和细节特写。发布渠道建议视频号（粉丝聚集）和抖音，内容轻量不要太正式，保持「提前看到内部消息」的感觉。",
+  },
+  {
+    label: "露营带娃场景(HS6轻植入)",
+    desc: "以露营、家庭出行等生活场景展示HS6空间和舒适性，产品植入自然不突兀",
+    explain: "预热期不适合直接推产品，但可以通过生活场景自然带出。露营、带娃出行是HS6目标用户的真实使用场景，这个时间点（8月暑期）也是家庭出游高峰。通过展示「带着HS6去露营」、「周末带娃去长春郊外」等内容，把产品融入生活方式里，用户接受度更高。",
+    direction: "内容可以这样组织：选择长春周边露营地或亲子出游目的地，拍摄HS6在这些场景里的使用画面——后备箱装露营装备、车内空间让孩子舒适、座椅通风在夏日的实用性等。文案重点放在场景体验而非产品参数，标题可用「周末带娃长春周边一日游」、「HS6露营实测」等。平台优先小红书和抖音生活频道，植入轻、场景真、不说教。",
+  },
+];
+
+const todayHotTopics = todayDirectionDetails.map((detail, index) => ({
   id: `today-${index}`,
-  label: direction,
+  label: detail.label,
   tag: "当日热点",
   topics: [],
-  desc: direction,
+  desc: detail.desc,
 }));
 
 type TopicId = DirectionId | string;
@@ -1028,11 +1057,11 @@ const topicAnalysis: Record<TopicId, { explain: string; direction: string }> =
 // 当天热点方向的分析数据
 const todayTopicAnalysis: Record<string, { explain: string; direction: string }> =
   Object.fromEntries(
-    todayHotTopics.map(topic => [
-      topic.id,
+    todayDirectionDetails.map((detail, index) => [
+      `today-${index}`,
       {
-        explain: `${todayTimeline.label}的重点传播方向之一`,
-        direction: `${todayTimeline.focus}。这个方向下，可以围绕"${topic.label}"展开内容创作。`,
+        explain: detail.explain,
+        direction: detail.direction,
       }
     ])
   );
