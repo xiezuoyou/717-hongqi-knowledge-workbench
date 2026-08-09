@@ -1511,19 +1511,24 @@ button {
 }
 
 .timeline-day-note {
-  display: none;
   margin: 0;
-  padding: 10px;
+  padding: 0 10px;
+  max-height: 0;
+  overflow: hidden;
   border-radius: var(--radius-md);
   background: rgba(23, 25, 29, 0.03);
   color: rgba(23, 25, 29, 0.58);
   font-size: 11px;
   font-weight: 680;
   line-height: 1.5;
+  opacity: 0;
+  transition: max-height 240ms ease, padding 240ms ease, opacity 200ms ease;
 }
 
 .timeline-day-card:hover .timeline-day-note {
-  display: block;
+  max-height: 200px;
+  padding: 10px;
+  opacity: 1;
 }
 
 .timeline-day-seeds {
