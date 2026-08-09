@@ -1015,18 +1015,6 @@ const topicAnalysis: Record<TopicId, { explain: string; direction: string }> =
     directions.map(d => [d.id, { explain: d.whyNow, direction: d.howTo }])
   ) as Record<TopicId, { explain: string; direction: string }>;
 
-const publishTimeline = timeline.map(day => ({
-  day: day.label,
-  status: day.status === "active" ? "active" : day.status === "event" ? "event" : "next",
-  seeds: day.seedIds.map(id => {
-    const seed = seeds.find(s => s.id === id);
-    return seed ? {
-      title: seed.title,
-      status: seed.status === "ready" ? "已发布" : "准备中",
-    } : { title: "未知种子", status: "待发布" };
-  }),
-}));
-
 type KnowledgeAiModuleId = "qa" | "review" | "analysis" | "copy" | "material";
 
 const knowledgeAiModules: Array<{
@@ -2964,38 +2952,79 @@ function WorkbenchPage({
           <span>你可以关注这些相关热点</span>
         </section>
 
+        {/* 热点日视图 */}
         <section
-          className="publish-board"
+          className="timeline-view-shell"
           ref={(node) => {
             sectionRefs.current["topic-board"] = node;
           }}
         >
-          <div className="publish-board-head">
+          <div className="timeline-view-head">
             <div>
-              <span>SEED STATUS</span>
-              <h1>种子发布状态</h1>
-              <p className="publish-board-note">每天会发布不同的热点方向，你可以根据自己的兴趣关注相关热点并参与传播。</p>
+              <span>CAMPAIGN TIMELINE</span>
+              <h1>热点日视图</h1>
+              <p className="timeline-view-note">
+                813传播分三段节奏:预热(8/11-8/13白天)、爆发(8/13晚-8/14)、长尾(8/15-8/20)。
+                每天有不同的热点方向和传播焦点,摄影师按日拍摄,用户按需裂变。
+              </p>
             </div>
-            <button type="button">日视图</button>
           </div>
-          <div className="publish-timeline">
-            {publishTimeline.map((item) => (
-              <div className={`publish-day is-${item.status}`} key={item.day}>
-                <span>{item.day}</span>
-                <i />
-                <div className="publish-seed-stack">
-                  {item.seeds.map((seed) => (
-                    <button type="button" className="publish-day-card" key={seed.title}>
-                      <strong>{seed.title}</strong>
-                      <em data-status={seed.status}>{seed.status}</em>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div className="publish-marker">
-              <em>TIMELINE</em>
-            </div>
+          <div className="timeline-view-grid">
+            {timeline.map((day) => {
+              const dayDirections = day.directionIds
+                .map((id) => directions.find((d) => d.id === id))
+                .filter(Boolean) as Direction[];
+
+              return (
+                <article
+                  key={day.date}
+                  className={`timeline-day-card status-${day.status}`}
+                  data-date={day.date}
+                >
+                  <header className="timeline-day-header">
+                    <div className="timeline-day-label">
+                      <span className="timeline-day-date">{day.label}</span>
+                      {day.status === "event" && <em className="timeline-day-badge">活动日</em>}
+                    </div>
+                    <h3 className="timeline-day-focus">{day.focus}</h3>
+                  </header>
+
+                  <div className="timeline-day-directions">
+                    {dayDirections.map((direction) => (
+                      <span key={direction.id} className="timeline-direction-tag">
+                        {direction.label}
+                      </span>
+                    ))}
+                  </div>
+
+                  {day.note && (
+                    <p className="timeline-day-note">{day.note}</p>
+                  )}
+
+                  {day.seedIds && day.seedIds.length > 0 && (
+                    <div className="timeline-day-seeds">
+                      <span className="timeline-seeds-label">可用种子:</span>
+                      {day.seedIds.map((seedId) => {
+                        const seed = seeds.find((s) => s.id === seedId);
+                        return seed ? (
+                          <button
+                            key={seedId}
+                            type="button"
+                            className="timeline-seed-link"
+                            onClick={() => {
+                              const seedCard = seedCards.find((c) => c.id === seedId);
+                              if (seedCard) setSelectedSeed(seedCard);
+                            }}
+                          >
+                            {seed.title}
+                          </button>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </section>
 

@@ -1362,6 +1362,174 @@ button {
   white-space: nowrap;
 }
 
+/* ========== 热点日视图 ========== */
+.timeline-view-shell {
+  position: relative;
+  margin-bottom: 24px;
+  overflow: hidden;
+  border-radius: var(--radius-module);
+  padding: 26px 30px 28px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.timeline-view-head {
+  margin-bottom: 24px;
+}
+
+.timeline-view-head span {
+  display: block;
+  color: rgba(20, 24, 30, 0.38);
+  font-size: var(--text-2xs);
+  font-weight: 840;
+  letter-spacing: 0.22em;
+}
+
+.timeline-view-head h1 {
+  margin: 8px 0 0;
+  color: #15181d;
+  font-size: var(--text-xl);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+.timeline-view-note {
+  max-width: 760px;
+  margin: 8px 0 0;
+  color: rgba(20, 24, 30, 0.48);
+  font-size: var(--text-xs);
+  font-weight: 680;
+  line-height: 1.75;
+}
+
+.timeline-view-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.timeline-day-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(23, 25, 29, 0.08);
+  transition: all 180ms ease;
+}
+
+.timeline-day-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(23, 25, 29, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-day-card.status-event {
+  background: linear-gradient(135deg, rgba(255, 245, 235, 0.95), rgba(255, 255, 255, 0.85));
+  border-color: rgba(255, 140, 0, 0.2);
+}
+
+.timeline-day-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timeline-day-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeline-day-date {
+  font-size: var(--text-xs);
+  font-weight: 880;
+  color: rgba(23, 25, 29, 0.45);
+  letter-spacing: 0.02em;
+}
+
+.timeline-day-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 140, 0, 0.12);
+  color: rgba(200, 80, 0, 0.92);
+  font-size: var(--text-2xs);
+  font-weight: 880;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.timeline-day-focus {
+  margin: 0;
+  color: rgba(23, 25, 29, 0.92);
+  font-size: var(--text-sm);
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.timeline-day-directions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.timeline-direction-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(23, 25, 29, 0.06);
+  color: rgba(23, 25, 29, 0.72);
+  font-size: var(--text-2xs);
+  font-weight: 820;
+  letter-spacing: 0.01em;
+}
+
+.timeline-day-note {
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: rgba(23, 25, 29, 0.03);
+  color: rgba(23, 25, 29, 0.62);
+  font-size: var(--text-xs);
+  font-weight: 680;
+  line-height: 1.6;
+}
+
+.timeline-day-seeds {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(23, 25, 29, 0.06);
+}
+
+.timeline-seeds-label {
+  color: rgba(23, 25, 29, 0.38);
+  font-size: var(--text-2xs);
+  font-weight: 820;
+  letter-spacing: 0.02em;
+}
+
+.timeline-seed-link {
+  padding: 4px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: rgba(23, 25, 29, 0.08);
+  color: rgba(23, 25, 29, 0.82);
+  font-size: var(--text-xs);
+  font-weight: 820;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.timeline-seed-link:hover {
+  background: rgba(23, 25, 29, 0.14);
+  color: rgba(23, 25, 29, 0.96);
+}
+
 .topic-hero {
   position: relative;
   display: flex;
