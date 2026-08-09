@@ -1403,20 +1403,44 @@ button {
 }
 
 .timeline-view-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  display: flex;
   gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 12px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timeline-view-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.timeline-view-grid::-webkit-scrollbar-track {
+  background: rgba(23, 25, 29, 0.04);
+  border-radius: 3px;
+}
+
+.timeline-view-grid::-webkit-scrollbar-thumb {
+  background: rgba(23, 25, 29, 0.18);
+  border-radius: 3px;
+}
+
+.timeline-view-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(23, 25, 29, 0.28);
 }
 
 .timeline-day-card {
+  flex: 0 0 340px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 18px 20px;
+  padding: 16px 18px;
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(23, 25, 29, 0.08);
   transition: all 180ms ease;
+  scroll-snap-align: start;
 }
 
 .timeline-day-card:hover {
@@ -1464,37 +1488,42 @@ button {
 .timeline-day-focus {
   margin: 0;
   color: rgba(23, 25, 29, 0.92);
-  font-size: var(--text-sm);
-  font-weight: 900;
+  font-size: var(--text-xs);
+  font-weight: 880;
   line-height: 1.4;
 }
 
 .timeline-day-directions {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
 }
 
 .timeline-direction-tag {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: var(--radius-sm);
   background: rgba(23, 25, 29, 0.06);
-  color: rgba(23, 25, 29, 0.72);
-  font-size: var(--text-2xs);
+  color: rgba(23, 25, 29, 0.68);
+  font-size: 10px;
   font-weight: 820;
   letter-spacing: 0.01em;
 }
 
 .timeline-day-note {
+  display: none;
   margin: 0;
-  padding: 12px;
+  padding: 10px;
   border-radius: var(--radius-md);
   background: rgba(23, 25, 29, 0.03);
-  color: rgba(23, 25, 29, 0.62);
-  font-size: var(--text-xs);
+  color: rgba(23, 25, 29, 0.58);
+  font-size: 11px;
   font-weight: 680;
-  line-height: 1.6;
+  line-height: 1.5;
+}
+
+.timeline-day-card:hover .timeline-day-note {
+  display: block;
 }
 
 .timeline-day-seeds {
