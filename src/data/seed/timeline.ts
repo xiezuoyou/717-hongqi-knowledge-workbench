@@ -15,7 +15,7 @@ export const timeline: TimelineDay[] = [
     focus: "长春文旅预热+活动期待 #长春最近要搞大事情#",
     directionIds: ["event-atmosphere", "user-experience"],
     seedIds: [],
-    note: "同城抖音热搜×1:长春文旅打卡、溜达路线、活动搭建花絮。车型轻铺垫(露营/带娃场景带出HS6),不硬广。",
+    note: "从长春本地文旅切入,通过打卡地点、溜达路线、城市氛围营造活动预热。内容以生活场景为主,露营、带娃出行等日常用车画面自然带出产品。",
   },
   {
     date: "2026-08-12",
@@ -24,7 +24,7 @@ export const timeline: TimelineDay[] = [
     focus: "活动还没开始,长春这波文旅先玩明白",
     directionIds: ["event-atmosphere", "user-experience"],
     seedIds: [],
-    note: "长春玩法路线、儿童婚纱打卡、城市工业风拍照。车型生活场景轻植入:HS6露营空间、H7带娃舒适。",
+    note: "继续长春本地玩法种草,儿童婚纱打卡点、城市工业风拍照地、citywalk 路线。HS6 的露营空间、H7 的带娃舒适度在这些场景里自然出现。",
   },
   {
     date: "2026-08-13",
@@ -33,7 +33,7 @@ export const timeline: TimelineDay[] = [
     focus: "本来以为就是个车展,结果长春把科技卷成这样",
     directionIds: ["tech-safety", "user-experience"],
     seedIds: [],
-    note: "技术环节预告(配合晚场,不死发):提前放现场科技体验素材合集(四电机、智能泊车)勾食欲。钩子:'今晚还有文娱惊喜,蹲住'。",
+    note: "科技体验环节预告,提前释放现场四电机、智能泊车等画面勾起好奇。话题从'长春卷科技'的角度切入,为晚上的爆发做铺垫。",
   },
 
   // ========== 爆发段 8/13晚-8/14 (峰值) ==========
@@ -44,7 +44,7 @@ export const timeline: TimelineDay[] = [
     focus: "今天在活动现场,我整个人都看傻了",
     directionIds: ["celebrity-experience", "tech-safety", "user-experience", "event-atmosphere"],
     seedIds: ["seed-006"],
-    note: "同城热搜×1(科技新花样)+文娱热搜×1(袁娅维)。四线并发:①明星·袁娅维→H7随心悦唱;②技术·G919四电机/智能泊车实拍;③活动·813晚会现场氛围;④体验·试驾/泊车PK/露营区。小红书汉服达人:反差感小姑娘开大车。",
+    note: "四条线同时发力:袁娅维现场唱歌自然带出 H7 随心悦唱、G919 四电机双层极限突围实拍、智能泊车街区各种复杂场景演示、813 晚会现场氛围和粉丝互动。小红书还有汉服达人开大车的反差感内容。",
   },
   {
     date: "2026-08-14",
@@ -53,7 +53,7 @@ export const timeline: TimelineDay[] = [
     focus: "昨晚的名场面,我二刷了,越看越上头",
     directionIds: ["celebrity-experience", "tech-safety", "user-experience"],
     seedIds: [],
-    note: "①明星:袁娅维Vlog+长春文旅'欢迎大家来玩'话题链、徐梦桃夫妇自动泊车PK;②技术名场面:安全测试混剪'战损电池包先挨枪子再泡盐水又被电锯切';③民间证言:不卷概念不炫技,用户实测什么才叫好用的智能。",
+    note: "袁娅维的东北话金句和长春文旅联动、徐梦桃夫妇的自动泊车 PK 人工停车、安全测试名场面混剪(电池包挨枪子泡盐水电锯切)、用户真实体验证言。把昨晚的高光做二次发酵。",
   },
 
   // ========== 长尾段 8/15-8/20 ==========
@@ -64,7 +64,7 @@ export const timeline: TimelineDay[] = [
     focus: "看完红旗安全测试,我后背发凉但也踏实了",
     directionIds: ["tech-safety"],
     seedIds: [],
-    note: "#枪机火烧电锯...红旗为了安全真对自己下死手# #看完安全测试合集,这下懂了为什么红旗能掀半挂# —— 24h盐水浸泡、九宫格底部撞击、温度冲击、火烧切割、战损电池包枪击。",
+    note: "聚焦安全测试的极限画面:24 小时盐水浸泡、九宫格底部撞击、零下 40 度到零上 60 度温度冲击、火烧切割、战损电池包多重枪击。用'红旗对自己下死手'的角度讲安全偏执。",
   },
   {
     date: "2026-08-16",
@@ -73,7 +73,7 @@ export const timeline: TimelineDay[] = [
     focus: "这几天被红旗刷屏,但我服",
     directionIds: ["celebrity-experience", "user-experience"],
     seedIds: [],
-    note: "袁娅维金句混剪;用户实测智能体验 #不卷概念不炫技...#;媒体实测HS6完胜Model3素材。",
+    note: "袁娅维的金句继续发酵,媒体实测 HS6 完胜 Model3 的对比内容,用户真实体验分享。从明星话题和实测数据两个角度延续热度。",
   },
   {
     date: "2026-08-17",
@@ -82,7 +82,7 @@ export const timeline: TimelineDay[] = [
     focus: "带娃露营一趟,HS6这车真香",
     directionIds: ["user-experience"],
     seedIds: [],
-    note: "HS6三大方向:①座椅'同级最优乘坐体验'(多向调节/加热通风按摩);②灵犀座舱'智能不止于功能,更在于懂你'(连续语音指令/场景模式自定义);③空间'大空间也能很聪明'(灵活储物/后排/露营扩展)。",
+    note: "深挖 HS6 三个方向:座椅的多向调节、加热通风按摩;灵犀座舱的连续语音指令和场景模式;空间的灵活储物、后排舒适度、露营场景扩展。从家庭用车的实际需求切入。",
   },
   {
     date: "2026-08-18",
@@ -91,7 +91,7 @@ export const timeline: TimelineDay[] = [
     focus: "红旗这测试,卷得离谱但我是服的",
     directionIds: ["tech-safety"],
     seedIds: [],
-    note: "#原来红旗是个细节控!连篮球砸车这种小概率事件都算进去了# #别人家测试叫安全验证,红旗测试叫极限生存# —— 天工九考、天工X中汽试炼场(爆胎/飞坡/跨层记忆泊车)、840次多场景仿真。",
+    note: "天工的安全技术深度内容:天工九考、天工 X 中汽试炼场的高速爆胎/高速飞坡/跨层记忆泊车、840 次多场景仿真覆盖 200+ 事故场景。讲红旗把篮球砸车这种小概率都要算进去的细节控属性。",
   },
   {
     date: "2026-08-19",
@@ -100,7 +100,7 @@ export const timeline: TimelineDay[] = [
     focus: "这越野车当场给我看傻",
     directionIds: ["tech-safety", "user-experience"],
     seedIds: [],
-    note: "G919鸿鹄越野平台矢量四电机、四轮转向、双层极限突围/实景挑战;#车企安全测试卷成这样了?红旗:我还没发力#。",
+    note: "G919 的越野能力展示:鸿鹄越野平台、矢量四电机、四轮转向、双层极限突围和实景挑战。从越野性能和极限场景的角度讲产品硬实力。",
   },
   {
     date: "2026-08-20",
@@ -109,6 +109,6 @@ export const timeline: TimelineDay[] = [
     focus: "这半个月被红旗硬核种草了",
     directionIds: ["tech-safety", "user-experience", "event-atmosphere"],
     seedIds: [],
-    note: "#国标只是红旗的起点并非上限# 合集;用户证言'不吹不黑,真实体验';工程师幕后 #为什么说红旗技术专家人均'被迫害妄想'?# #工程师现身说法:红旗上市前要渡多少劫#。",
+    note: "用户证言合集、工程师幕后揭秘(为什么红旗技术专家人均'被迫害妄想')、国标只是起点的技术态度总结。把这半个月的技术传播做一个情绪化的收尾。",
   },
 ];
