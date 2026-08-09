@@ -1623,7 +1623,7 @@ button {
   margin-top: 20px;
   margin-bottom: 0;
   overflow-x: auto;
-  padding: 0 0 10px;
+  padding: 6px 0 10px;
   background: transparent;
   scrollbar-width: thin;
   scrollbar-color: rgba(20, 24, 30, 0.2) transparent;
